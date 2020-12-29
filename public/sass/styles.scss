@@ -1,0 +1,32 @@
+@import 'variables';
+@import 'navbar';
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  text-decoration: none;
+  scroll-behavior: smooth;
+  font-family: $font-primary;
+}
+
+.pl {
+  padding-left: 15px;
+}
+
+.pr {
+  padding-right: 15px;
+}
+
+.primer-div{
+  margin-top: 80px;
+}
+
+.bg-main-green {
+  background-color: $main-green
+}
+
+.subtle-background {
+  background-color: $subtle-background;
+}
