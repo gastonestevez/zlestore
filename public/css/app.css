@@ -10909,8 +10909,13 @@ a.text-dark:focus {
   box-sizing: border-box;
 }
 
-body {
-  background-color: white;
-  height: 100vh;
+.warehouse-card--add {
+  cursor: pointer;
+}
+
+.icon {
+  display: inline-block;
+  color: #333;
+  font-size: 22px;
 }
 

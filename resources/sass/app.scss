@@ -14,8 +14,12 @@
     box-sizing: border-box;
 }
 
+.warehouse-card--add {
+        cursor: pointer;
+}
 
-body {
-    background-color: white;
-    height: 100vh;
-} 
+.icon {
+    display: inline-block;
+    color: #333;
+    font-size: 22px;
+}
