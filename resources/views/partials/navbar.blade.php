@@ -29,7 +29,7 @@
                         <a href="#">Stock</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="#">Gestionar Stock</a></li>
+                                <li><a href="{{url('/newProducts')}}">Gestionar Stock</a></li>
                             </ul>
                         </div>
                     </li>

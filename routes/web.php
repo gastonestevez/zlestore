@@ -33,6 +33,10 @@ Route::get('/woocommerce', [App\Http\Controllers\WooCommerceController::class, '
 Route::get('/users', [App\Http\Controllers\UserController::class, 'directory']);
 
 Route::post('/adduser', [App\Http\Controllers\UserController::class, 'store']);
-Route::get('/warehouse/list', function () { return view('warehouse'); } );
+Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list'] );
 
 Route::get('/warehouse/create', function () { return view('createWarehouse'); } );
+Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::class, 'create']);
+
+
+Route::get('/newProducts', [App\Http\Controllers\ProductsController::class, 'newProducts'] );

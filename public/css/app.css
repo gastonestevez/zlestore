@@ -10916,6 +10916,7 @@ a.text-dark:focus {
 .icon {
   display: inline-block;
   color: #333;
-  font-size: 22px;
+  font-size: 18px;
+  margin-right: 10px;
 }
 
