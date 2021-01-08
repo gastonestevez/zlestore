@@ -1,0 +1,50 @@
+@import "~bootstrap/scss/bootstrap";
+
+nav a {
+    color: red;
+}
+
+.logo-nav {
+    width: 100px;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    font-family: "Montserrat", sans-serif;
+}
+
+.pl {
+    padding-left: 15px;
+}
+
+.pr {
+    padding-right: 15px;
+}
+
+.primer-div {
+    margin-top: 80px;
+}
+
+.bg-main-green {
+    background-color: #badbd5;
+}
+
+.subtle-background {
+    background-color: #eeeeee;
+}
+
+.item {
+    background-color: #e7f1e5 !important;
+}
+
+.boxform {
+  border: 0.5px solid #a3a3a3;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 10px;
+}

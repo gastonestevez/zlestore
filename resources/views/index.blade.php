@@ -62,7 +62,7 @@ ZLE - Control de Stock
               <td>$5.000</td>
               <td><a href="" uk-icon="icon: close"></a></td>
           </tr>
-          <tr>
+          <tr class="item">
               <td></td>
               <td></td>
               <td></td>
@@ -75,7 +75,7 @@ ZLE - Control de Stock
               <td></td>
               <td></td>
           </tr>
-          <tr>
+          <tr class="item">
               <td></td>
               <td></td>
               <td></td>
@@ -88,7 +88,7 @@ ZLE - Control de Stock
               <td></td>
               <td></td>
           </tr>
-          <tr>
+          <tr class="item">
               <td></td>
               <td></td>
               <td></td>
