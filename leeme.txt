@@ -1,0 +1,10 @@
+Hacer footer con Desarrollado por Dakota
+
+Hacer formularios CRUD
+
+Hace falta hacer los modelos y guardar los datos en la base de datos de esta web app?
+o simplemente haciendo peticiones con la API es suficiente?
+
+Cambiar un poco la base de datos . Tabla notificaciones seria PEDIDOS. los PEDIDOS estan relacionados con 1 o muchos PRODUCTOS
+
+Crear middleware de Admin

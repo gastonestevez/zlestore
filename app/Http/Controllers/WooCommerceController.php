@@ -20,18 +20,25 @@ class WooCommerceController extends Controller
       ]
     );
 
+    try {
 
+      // Seleccionamos, recorremos cada producto y vemos cuanta cantidad piden del producto
+      $cantidad = $woocommerce->get('orders')[0]->line_items[0]->quantity;
 
-    // Seleccionamos, recorremos cada producto y vemos cuanta cantidad piden del producto
-    $cantidad = $woocommerce->get('orders')[0]->line_items[0]->quantity;
+      // Si el producto no tiene el campo unidades por caja vacio entonces multiplico el total de cajas por las unidades que lleva dentro
+      if (!empty($woocommerce->get('orders')[0]->line_items[0]->unidades_por_caja)) {
+        $unidades_totales = $cantidad * ($woocommerce->get('orders')[0]->line_items[0]->unidades_por_caja);
+        dd($unidades_totales);
+      } else {
+        dd($cantidad);
+      }
 
-    // Si el producto no tiene el campo unidades por caja vacio entonces multiplico el total de cajas por las unidades que lleva dentro
-    if (!empty($woocommerce->get('orders')[0]->line_items[0]->unidades_por_caja)) {
-      $unidades_totales = $cantidad * ($woocommerce->get('orders')[0]->line_items[0]->unidades_por_caja);
-      dd($unidades_totales);
-    } else {
-      dd($cantidad);
+    } catch (\Exception $e)
+    {
+      return redirect('/');
     }
+
+
 
   }
 
