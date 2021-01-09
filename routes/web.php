@@ -22,6 +22,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/woocommerce', [App\Http\Controllers\WooCommerceController::class, 'wc']);
 
 
+<<<<<<< HEAD
 
 // User
 
@@ -32,3 +33,13 @@ Route::post('/adduser', [App\Http\Controllers\UserController::class, 'store'])->
 Route::get('/user/{id}', [App\Http\Controllers\UserController::class, 'show'])->middleware('auth');
 
 Route::put('/edituser/{id}', [App\Http\Controllers\UserController::class, 'update'])->middleware('auth');
+=======
+Route::post('/adduser', [App\Http\Controllers\UserController::class, 'store']);
+Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list'] );
+
+Route::get('/warehouse/create', function () { return view('createWarehouse'); } );
+Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::class, 'create']);
+
+
+Route::get('/newProducts', [App\Http\Controllers\ProductsController::class, 'newProducts'] );
+>>>>>>> 994cc5ec014d60ba355ac5778ed3d4ecf67deeda
