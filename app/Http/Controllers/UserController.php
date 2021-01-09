@@ -55,7 +55,7 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->back()
-        ->with('status', 'Usuario creado exitosamente');
+        ->with('success', 'Usuario creado exitosamente');
 
   }
 
@@ -92,8 +92,18 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->back()
-        ->with('status', 'Usuario editado exitosamente');
+        ->with('success', 'Usuario editado exitosamente');
 
+  }
+
+  public function destroy(int $id)
+  {
+
+    $user = User::find($id);
+    $user->delete();
+
+    return redirect('/users')
+                    ->with('success', 'Usuario eliminado exitosamente');
   }
 
 }

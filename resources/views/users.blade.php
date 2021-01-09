@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('titulo')
-ZLE - Control de Stock
+ZLE - Usuarios
 @endsection
 @section('main')
 
@@ -84,7 +84,11 @@ ZLE - Control de Stock
         </div>
         <div class="uk-card-footer uk-flex uk-flex-between">
             <a href="/user/{{$user->id}}" class="uk-button uk-button-text">Editar</a>
-            <a href="#" class="uk-button uk-button-text">Eliminar</a>
+            <form class="" action="/deleteuser/{{$user->id}}" method="post">
+              @method('delete')
+              @csrf
+              <button type="submit" class="uk-button uk-button-text">Eliminar</a>
+            </form>
         </div>
 
       </div>

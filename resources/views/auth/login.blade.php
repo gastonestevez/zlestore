@@ -1,7 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.layout')
+@section('titulo')
+ZLE - Usuarios
+@endsection
+@section('main')
 
-@section('content')
-<div class="container">
+<div class="uk-container primer-div">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">

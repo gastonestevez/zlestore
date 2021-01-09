@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('titulo')
-ZLE - Control de Stock
+ZLE - Editar Usuario
 @endsection
 @section('main')
 

@@ -10,20 +10,11 @@
             <div class="uk-navbar-left">
 
               <a class="uk-navbar-item uk-logo" href="/"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
+            @if (Auth::user())
 
                 <ul class="uk-navbar-nav">
                   <li>
-                      <a href="#">Pedidos</a>
-                      <div class="uk-navbar-dropdown">
-                          <ul class="uk-nav uk-navbar-dropdown-nav">
-                              <li><a href="#">Item</a></li>
-                              <li class="uk-nav-header">Header</li>
-                              <li><a href="#">Item</a></li>
-                              <li><a href="#">Item</a></li>
-                              <li class="uk-nav-divider"></li>
-                              <li><a href="#">Item</a></li>
-                          </ul>
-                      </div>
+                      <a href="/orders">Pedidos</a>                      
                   </li>
                     <li>
                         <a href="#">Stock</a>
@@ -34,7 +25,7 @@
                         </div>
                     </li>
                     <li>
-                        <a href="#">Depósitos</a>
+                        <a href="/warehouse/list">Depósitos</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
@@ -46,32 +37,36 @@
 
             <div class="uk-navbar-right">
 
-              <ul class="uk-navbar-nav">
-                  <li>
-                    <a href="#">
-                      <span class="uk-icon uk-margin-small-right" uk-icon="icon: user"></span>
-                      Administrador
-                    </a>
-                    <div class="uk-navbar-dropdown">
-                        <ul class="uk-nav uk-navbar-dropdown-nav">
-                          @if (Auth::user())
-                            <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
-                          @endif
-                            <li><a href="/users">Gestionar usuarios</a></li>
-                            {{-- <li class="uk-nav-header">Header</li> --}}
-                            <li class="uk-nav-divider"></li>
-                            <li>
-                              <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button style="background: none;border: none;color: #999;">Salir</button>
-                              </form>
-                            </li>
-                        </ul>
-                    </div>
-                  </li>
-              </ul>
+
+                <ul class="uk-navbar-nav">
+                    <li>
+                      <a href="#">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: user"></span>
+                        {{Auth::user()->name}}
+                        <span class="uk-label uk-margin-left"
+                        style="background: @if(Auth::user()->role == 'admin') purple @elseif(Auth::user()->role == 'employee')  green @endif; font-size: 10px;">{{Auth::user()->role}}</span>
+                      </a>
+                      <div class="uk-navbar-dropdown">
+                          <ul class="uk-nav uk-navbar-dropdown-nav">
+                            @if (Auth::user())
+                              <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
+                            @endif
+                              <li><a href="/users">Gestionar usuarios</a></li>
+                              {{-- <li class="uk-nav-header">Header</li> --}}
+                              <li class="uk-nav-divider"></li>
+                              <li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                  @csrf
+                                  <button style="background: none;border: none;color: #999;">Salir</button>
+                                </form>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                </ul>
 
             </div>
+          @endif
         </nav>
     </div>
 </div>

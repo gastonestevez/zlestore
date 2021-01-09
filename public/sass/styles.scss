@@ -11,6 +11,10 @@
   font-family: $font-primary;
 }
 
+.wow {
+  visibility: hidden;
+}
+
 .pl {
   padding-left: 15px;
 }
@@ -29,4 +33,19 @@
 
 .subtle-background {
   background-color: $subtle-background;
+}
+
+// Notificaciones
+.sticky-notification {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 1000;
+  background-color: #008F72;
+  color: white;
+  border: none;
+}
+
+.notification-error {
+  background-color: red;
 }

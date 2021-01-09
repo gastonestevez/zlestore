@@ -27,17 +27,17 @@
     <main id="main">
 
       {{-- Notificaciones --}}
-      {{-- @if (session('status'))
-        <div class="wow animated fadeInDown alert alert-success sticky-notification">
-          {{session('status')}}
+      @if (session('success'))
+        <div class="wow animated fadeInDown alert sticky-notification">
+          {{session('success')}}
         </div>
       @endif
 
       @if (session('error'))
-        <div class="wow animated fadeInDown alert alert-success sticky-notification notification-error">
+        <div class="wow animated fadeInDown alert sticky-notification notification-error">
           {{session('error')}}
         </div>
-      @endif --}}
+      @endif
 
 
       @yield('main')
