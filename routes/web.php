@@ -13,23 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/', function () {
-    return view('index');
-});
-
 Auth::routes([
         'register' => false
     ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 
 Route::get('/woocommerce', [App\Http\Controllers\WooCommerceController::class, 'wc']);
 
-// Gestionar usuarios (registrar, editar, eliminar)
-Route::get('/users', [App\Http\Controllers\UserController::class, 'directory']);
 
-Route::post('/adduser', [App\Http\Controllers\UserController::class, 'store']);
+
+// User
+
+Route::get('/users', [App\Http\Controllers\UserController::class, 'directory'])->middleware('admin');
+
+Route::post('/adduser', [App\Http\Controllers\UserController::class, 'store'])->middleware('admin');
+
+Route::get('/user/{id}', [App\Http\Controllers\UserController::class, 'show'])->middleware('auth');
+
+Route::put('/edituser/{id}', [App\Http\Controllers\UserController::class, 'update'])->middleware('auth');

@@ -18,20 +18,29 @@ class UserController extends Controller
     return view('/users', $vac);
   }
 
+  public function show(int $id)
+  {
+    $user = User::find($id);
+    $vac = compact('user');
+
+    return view('/user', $vac);
+  }
+
   public function store(Request $request)
   {
 
     $reglas = [
       'name' =>'required|string|min:2|max:40|',
-      'email' => 'required|string|email|max:255|unique:users,email,'.Auth::user()->id.',id', // https://laravel.com/docs/5.2/validation#rule-unique , https://laracasts.com/discuss/channels/laravel/how-to-update-unique-email
+      'email' => 'required|string|email|max:255|unique:users,email' ,
       'password' => 'min:6|confirmed',
     ];
 
     $mensajes = [
     "required" => "El campo es obligatorio",
     "string" => "El campo debe ser un texto",
-    "min" => "El minimo es de :min caracteres",
-    "max" => "El maximo es de :max caracteres",
+    "min" => "La clave debe contener al menos :min caracteres",
+    "max" => "El valor máximo es de :max caracteres",
+    "confirmed" => "Las claves no coinciden"
 
     ];
 
@@ -47,6 +56,43 @@ class UserController extends Controller
 
     return redirect()->back()
         ->with('status', 'Usuario creado exitosamente');
+
+  }
+
+  public function update(Request $request, int $id)
+  {
+
+    $reglas = [
+      'name' =>'required|string|min:2|max:40|',
+      'email' => 'string|email|max:255|unique:users,email,'.$id.',id', // https://laravel.com/docs/5.2/validation#rule-unique , https://laracasts.com/discuss/channels/laravel/how-to-update-unique-email
+      'password' => 'nullable|min:6|confirmed',
+    ];
+
+    $mensajes = [
+      "required" => "El campo es obligatorio",
+      "string" => "El campo debe ser un texto",
+      "min" => "La clave debe contener al menos :min caracteres",
+      "max" => "El valor máximo es de :max caracteres",
+      "confirmed" => "Las claves no coinciden"
+    ];
+
+    $this->validate($request, $reglas,$mensajes);
+
+    $user = User::find($id);
+    $user->name = $request->name;
+    $user->email = $request->email;
+
+    if ($request['password'])
+    {
+      $user->password = Hash::make($request['new_password']);
+    }
+
+    $user->role = $request->role;
+
+    $user->save();
+
+    return redirect()->back()
+        ->with('status', 'Usuario editado exitosamente');
 
   }
 

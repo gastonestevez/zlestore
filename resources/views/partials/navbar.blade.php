@@ -54,11 +54,18 @@
                     </a>
                     <div class="uk-navbar-dropdown">
                         <ul class="uk-nav uk-navbar-dropdown-nav">
-                            <li><a href="#">Mi perfil</a></li>
-                            <li><a href="#">Gestionar usuarios</a></li>
+                          @if (Auth::user())
+                            <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
+                          @endif
+                            <li><a href="/users">Gestionar usuarios</a></li>
                             {{-- <li class="uk-nav-header">Header</li> --}}
                             <li class="uk-nav-divider"></li>
-                            <li><a href="#">Salir</a></li>
+                            <li>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button style="background: none;border: none;color: #999;">Salir</button>
+                              </form>
+                            </li>
                         </ul>
                     </div>
                   </li>
