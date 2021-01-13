@@ -58,7 +58,19 @@ class ProductsController extends Controller
         return back();
     }
 
-    private function getWcConfig(){
+    public function prepareOrder(int $id)
+    {
+        $wc = $this->getWcConfig();
+        $order = $wc->get('orders/'.$id);
+        $warehouses = Warehouse::where('visibility','1')->get();
+        return view('prepareOrder', [
+            'order' => $order,
+            'warehouses' => $warehouses,
+        ]);
+    }
+
+    private function getWcConfig()
+    {
         return new Client(
             'https://zlestore.com',
             env('WC_KEY_CK'),

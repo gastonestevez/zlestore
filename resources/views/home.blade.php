@@ -45,93 +45,44 @@ ZLE - Control de Stock
               <th>Cajas</th>
               <th>Gestionar</th>
               <th>Total</th>
-              <th></th>
           </tr>
       </thead>
       <tbody>
+        @foreach ($orders as $order)
+        @if ($order->status != 'completed' && $order->status != 'canceled')
           <tr>
-              <td>#1</td>
-              <td>12/2/19</td>
-              <td>Pendiente</td>
-              <td>Gasalla</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
-              <td>$5.000</td>
-              <td><a href="" uk-icon="icon: close"></a></td>
+            <td>{{$order->number}}</td>
+            <td>{{$order->date_created}}</td>
+            <td>{{$order->status}}</td>
+            <td>{{$order->customerName}}</td>
+            <td /> <td /> <td /> <td />
+            
+            <form action="prepare/{{$order->id}}" method="post">
+            @csrf
+            <td><button class="uk-button uk-button-secondary" type="submit">Preparar</button></td>
+            </form>
+            
+            <td>{{$order->total}}</td>
           </tr>
-          <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>RT-1831</td>
-              <td>Manguera</td>
-              <td>50</td>
-              <td>N/D</td>
-              <td></td>
-              <td></td>
-              <td></td>
+          @foreach ($order->line_items as $item)
+          <tr class="item">
+            <td /> <td /> <td /> <td />
+            <td>{{$item->sku}}</td>
+            <td>{{$item->name}}</td>
+            <td>{{$item->quantity}}</td>
+            <td>{{$item->quantity / ($item->unidades_por_caja ?: 1)}}</td>
+            <td /> <td /> 
           </tr>
-          <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>R5-871</td>
-              <td>Bombucha</td>
-              <td>300</td>
-              <td>1</td>
-              <td></td>
-              <td></td>
-              <td></td>
-          </tr>
-          <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>ZX-12</td>
-              <td>Globos</td>
-              <td>1000</td>
-              <td>4</td>
-              <td></td>
-              <td></td>
-              <td></td>
-          </tr>
-          <tr>
-              <td>#2</td>
-              <td>4/12/19</td>
-              <td>Pendiente</td>
-              <td>Stallone</td>
-              <td>SHA-1114</td>
-              <td>Porta retratos</td>
-              <td>100</td>
-              <td>1</td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
-              <td>$10.000</td>
-              <td><a href="" uk-icon="icon: close"></a></td>
-          </tr>
-          <tr>
-              <td>#3</td>
-              <td>3/5/20</td>
-              <td>Pendiente</td>
-              <td>Franco de Vita</td>
-              <td>LRTA-3232</td>
-              <td>Candelabro</td>
-              <td>1500</td>
-              <td>3</td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
-              <td>$50.000</td>
-              <td><a href="" uk-icon="icon: close"></a></td>
-          </tr>
+          @endforeach
+        @endif
+        @endforeach
+        
       </tbody>
     </table>
 
   </div>
 
 </div>
+
 
 @endsection
