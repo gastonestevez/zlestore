@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Product;
 use App\Models\Warehouse;
+use App\Models\stocks;
 
 class ProductsController extends Controller
 {
@@ -30,6 +31,31 @@ class ProductsController extends Controller
             'warehousesCount' => $warehousesCount,
             'warehouses' => $warehouses,
             ]);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->except('_token');
+        $wc = $this->getWcConfig();
+        $wcProduct = $wc->get('products/'.$data['itemId']);
+        $sProduct = new Product;
+        $sProduct->price = $wcProduct->price;
+        $sProduct->sku = $wcProduct->sku;
+        $sProduct->woo_id = $wcProduct->id;
+        $sProduct->visibility = 1;
+        $sProduct->name = $wcProduct->name;
+        $sProduct->save();
+
+        foreach ($data['warehouse'] as $wh) {
+            if($wh['stock'] > 0){
+                $result = $sProduct->getWarehouses()->attach($sProduct->id, [
+                    'warehouse_id' => $wh['id'],
+                    'quantity' => $wh['stock'],
+                ]);
+            }
+        }
+        
+        return back();
     }
 
     private function getWcConfig(){

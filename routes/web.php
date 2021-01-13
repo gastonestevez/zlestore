@@ -45,3 +45,5 @@ Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::clas
 // Products
 
 Route::get('/newProducts', [App\Http\Controllers\ProductsController::class, 'newProducts']);
+
+Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::class, 'store']);

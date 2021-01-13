@@ -28,17 +28,18 @@ ZLE - Control de Stock
 
     @if ($warehousesCount)
     @foreach ($products as $item)
-    <form action="/newProducts/submit" class="boxform uk-grid-1-3@m" method="post">
+    <form action="/newProducts/store" class="boxform uk-grid-1-3@m" method="post">
         @csrf
         <legend class="uk-legend">{{$item->name}}</legend>
         <p class="uk-text">SKU: {{$item->sku}}</p>
         <p class="uk-text">Precio: ${{$item->price}}</p>
         <div class="uk-margin">
-            <input type="hidden" value="101">
+            <input type="hidden" name='itemId' value="{{$item->id}}">
             @foreach ($warehouses as $warehouse)
             <label for="stock" class="uk-form-label">Depósito: {{$warehouse->name}} @ {{$warehouse->address}}</label>
+            <input type="hidden" name="warehouse[{{$loop->index}}][id]" value='{{$warehouse->id}}'>
             <div class="uk-form-controls">
-                <input type="number" name="stock1" class="uk-input uk-form-width-small	" min="0">
+                <input type="number" name="warehouse[{{$loop->index}}][stock]" class="uk-input uk-form-width-small" value='0' min="0">
             </div>
             @endforeach
         </div>

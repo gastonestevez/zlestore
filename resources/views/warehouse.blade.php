@@ -13,8 +13,7 @@ ZLE - Control de Stock
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i>{{$warehouse->name}}</h3>
                 <p>Ubicado en: {{$warehouse->address}}.</p>
-                <a href="{{url('/warehouse/search/'.$warehouse->id)}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado</a>
-
+                <a href="{{url('/warehouse/search/'.$warehouse->id)}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado ({{count($warehouse->getProducts)}} variedad/es en total)</a>
             </div>
         </div>
         @endforeach
