@@ -47,7 +47,7 @@ a:hover,
 .uk-link:hover,
 .uk-link-toggle:hover .uk-link,
 .uk-link-toggle:focus .uk-link {
-  color: #0f6ecd;
+  /* color: #0f6ecd; */
   text-decoration: underline;
 }
 /* Text-level semantics

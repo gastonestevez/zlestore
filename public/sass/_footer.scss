@@ -1,0 +1,19 @@
+.footer {
+  height: 80px;
+  font-size: 12px;
+  background-color: $main-green;
+  color: white;
+}
+
+.footer img {
+  width: 25px;
+  height: 25px;
+}
+
+a {
+  color: white;
+  :hover {
+   color: white;
+   text-decoration: none;
+  }
+}

@@ -170,13 +170,13 @@ sup {
 }
 
 a {
-  color: #3490dc;
+  /* color: #3490dc; */
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #1d68a7;
+  /* color: #1d68a7; */
   text-decoration: underline;
 }
 
@@ -10919,4 +10919,3 @@ a.text-dark:focus {
   font-size: 18px;
   margin-right: 10px;
 }
-

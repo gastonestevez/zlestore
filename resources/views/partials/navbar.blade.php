@@ -14,7 +14,7 @@
 
                 <ul class="uk-navbar-nav">
                   <li>
-                      <a href="/orders">Pedidos</a>                      
+                      <a href="/orders">Pedidos</a>
                   </li>
                     <li>
                         <a href="#">Stock</a>
@@ -74,9 +74,27 @@
 
 {{-- Sticky nav mobile y tablet --}}
 <div class="uk-hidden@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-  <nav class="uk-navbar uk-navbar-container">
-      <div class="uk-navbar-left">
-          <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="#"></a>
+  <nav class="uk-navbar uk-navbar-container" uk-navbar>
+      <div class="uk-navbar-right">
+        <ul class="uk-hidden@m uk-navbar-nav uk-nav-parent-icon">
+          <li class="uk-visible-small"><a class="burger" href="#navbarMobile"  uk-navbar-toggle-icon uk-toggle uk-toggle="target: #offcanvas-slide"></a></li>
+        </ul>
       </div>
   </nav>
+</div>
+
+<div id="navbarMobile" uk-offcanvas="mode: slide; overlay: true">
+  <div class="uk-offcanvas-bar subtle-background">
+    <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+    <ul class="uk-nav uk-nav-offcanvas uk-nav-center uk-nav-parent-icon" style="transform: translateY(50%);" data-uk-nav>
+      {{-- Para que al clickear un link no se cierre el offcanvas hay que agregarle a la etiqueta A el atributo uk-scroll --}}
+      <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="#ourjob" uk-scroll></a>asd</li>
+      <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="#meetus" uk-scroll></a>sfef</li>
+      <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="#ourprojects" uk-scroll></a>sfesfe</li>
+      <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="#contactus" uk-scroll></a>sfefes</li>
+      <hr class="uk-divider-small">
+    </ul>
+
+  </div>
 </div>

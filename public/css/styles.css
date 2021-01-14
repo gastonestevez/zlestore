@@ -4,6 +4,22 @@ nav a {
 .logo-nav {
   width: 100px; }
 
+.footer {
+  height: 80px;
+  font-size: 12px;
+  background-color: #049f82;
+  color: white; }
+
+.footer img {
+  width: 25px;
+  height: 25px; }
+
+a {
+  color: white; }
+  a :hover {
+    color: white;
+    text-decoration: none; }
+
 * {
   box-sizing: border-box;
   padding: 0;

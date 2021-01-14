@@ -49,7 +49,7 @@
 
       {{-- Footer --}}
 
-      {{-- @include('partials.footer') --}}
+      @include('partials.footer')
 
     </footer>
 
