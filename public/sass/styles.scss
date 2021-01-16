@@ -12,6 +12,10 @@
   font-family: $font-primary;
 }
 
+a {
+  color: $main-green;
+}
+
 .wow {
   visibility: hidden;
 }
@@ -49,4 +53,8 @@
 
 .notification-error {
   background-color: red;
+}
+
+.login-form {
+  border: 1px solid grey;
 }

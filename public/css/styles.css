@@ -4,19 +4,19 @@ nav a {
 .logo-nav {
   width: 100px; }
 
-.footer {
+footer {
   height: 80px;
   font-size: 12px;
   background-color: #049f82;
   color: white; }
 
-.footer img {
+footer img {
   width: 25px;
   height: 25px; }
 
-a {
+footer a {
   color: white; }
-  a :hover {
+  footer a :hover {
     color: white;
     text-decoration: none; }
 
@@ -28,6 +28,9 @@ a {
   text-decoration: none;
   scroll-behavior: smooth;
   font-family: "Montserrat", sans-serif; }
+
+a {
+  color: #049f82; }
 
 .wow {
   visibility: hidden; }
@@ -58,5 +61,8 @@ a {
 
 .notification-error {
   background-color: red; }
+
+.login-form {
+  border: 1px solid grey; }
 
 /*# sourceMappingURL=styles.css.map */

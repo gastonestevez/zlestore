@@ -1,3 +1,3 @@
--Terminar navbar en mobile (ver navbar.blade.php)
 -Cambiar un poco la base de datos . Tabla notificaciones cambiar nombre a ORDERS. las ORDERS(Pedidos) estan relacionados con 1 o muchos PRODUCTOS
 -Chequear que las relaciones en los modelos esten bien
+-Finalizar CRUD Depositos

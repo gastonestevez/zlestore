@@ -21,14 +21,14 @@ ZLE - Usuarios
           <div class="uk-margin">
             <div class="uk-inline">
               <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
-              <input class="uk-input" type="text" placeholder="Usuario" name="name" id="name" required autofocus>
+              <input value="{{old('name')}}" class="uk-input" type="text" placeholder="Usuario" name="name" id="name" required autofocus>
             </div>
           </div>
 
           <div class="uk-margin">
             <div class="uk-inline">
               <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
-              <input class="uk-input" type="email" placeholder="Email" name="email" id="email" required>
+              <input value="{{old('email')}}" class="uk-input" type="email" placeholder="Email" name="email" id="email" required>
             </div>
           </div>
 
