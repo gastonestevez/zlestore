@@ -1,3 +1,10 @@
 -Cambiar un poco la base de datos . Tabla notificaciones cambiar nombre a ORDERS. las ORDERS(Pedidos) estan relacionados con 1 o muchos PRODUCTOS
 -Chequear que las relaciones en los modelos esten bien
 -Finalizar CRUD Depositos
+-Hacer Alerts para eliminar algun objeto
+-Crear una vista dentro de stock que tenga una tabla con los datos de un producto y filtro por SKU al menos,
+donde puedan seleccionar un producto en particular y nos lleve a /stock/sku/ y muestre el stock de ese producto
+en cada uno de los depositos
+
+
+Finalizar la distribucion de stock en los pedidos realizados y que el usuario maneje los estados "pendiente, cancelado, completado"
