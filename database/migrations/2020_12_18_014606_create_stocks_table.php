@@ -18,7 +18,7 @@ class CreateStocksTable extends Migration
             $table->timestamps();
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('warehouse_id')->references('id')->on('warehouse');
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
         });
     }
 

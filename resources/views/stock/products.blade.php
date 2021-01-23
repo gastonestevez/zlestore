@@ -16,7 +16,7 @@ ZLE - Control de Stock
       <div class="pr uk-margin-bottom">
         <form class="uk-search uk-search-default" method="get">
            <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-          <input class="uk-search-input" type="search" placeholder="SKU ..." name="sku" value="{{old('sku')}}">
+          <input class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
         </form>
       </div>
       <div class="pr uk-margin-bottom">
@@ -55,7 +55,7 @@ ZLE - Control de Stock
               <td>{{ $product->name }}</td>
               <td>{{ $product->price }}</td>
               <td>{{ $product->woo_id }}</td>
-              <td><button class="uk-button uk-button-default" type="button">Gestionar</button></td>
+              <td>  <a class="uk-button uk-button-default" href="/stock/products/{{$product->sku}}">Gestionar</a></td>
               <td><a href="" uk-icon="icon: close"></a></td>
           </tr>
         @endforeach

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Product;
 use App\Models\Warehouse;
-use App\Models\stocks;
+use App\Models\Stock;
 
 class ProductsController extends Controller
 {
@@ -22,6 +22,16 @@ class ProductsController extends Controller
       $vac = compact('products');
 
       return view('/stock/products', $vac);
+    }
+
+    public function show(String $sku)
+    {
+      $product = Product::where('sku', '=', $sku)->first();
+      $warehouses = Warehouse::all();
+
+      $vac = compact('product', 'warehouses');
+
+      return view('/stock/product', $vac);
     }
 
 

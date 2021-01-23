@@ -51,3 +51,5 @@ Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::clas
 // Stock
 
 Route::get('/stock/products', [App\Http\Controllers\ProductsController::class, 'list']);
+
+Route::get('/stock/products/{sku}', [App\Http\Controllers\ProductsController::class, 'show']);
