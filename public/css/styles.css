@@ -5,7 +5,7 @@ nav a {
   width: 100px; }
 
 footer {
-  height: 80px;
+  min-height: 80px;
   font-size: 12px;
   background-color: #049f82;
   color: white; }

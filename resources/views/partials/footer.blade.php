@@ -1,4 +1,4 @@
-<div class="uk-flex uk-flex-between uk-flex-middle uk-padding-small footer ">
+<div class="uk-flex uk-flex-wrap uk-flex-center uk-flex-between@m uk-flex-middle uk-padding-small footer">
   <div class="">
     <p class="uk-margin-remove">ZLE © @php echo date("Y")@endphp - Sistema de Gestión de Stock</p>
   </div>

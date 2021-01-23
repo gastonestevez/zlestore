@@ -10,6 +10,21 @@ use App\Models\stocks;
 
 class ProductsController extends Controller
 {
+
+    public function list(Request $request)
+    {
+      $sku = $request->get('sku');
+      $name = $request->get('name');
+      $price = $request->get('price');
+
+
+      $products = Product::sku($sku)->name($name)->price($price)->paginate(25);
+      $vac = compact('products');
+
+      return view('/stock/products', $vac);
+    }
+
+
     public function newProducts()
     {
         $wc = $this->getWcConfig();
@@ -54,7 +69,7 @@ class ProductsController extends Controller
                 ]);
             }
         }
-        
+
         return back();
     }
 

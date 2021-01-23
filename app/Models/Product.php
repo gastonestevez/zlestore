@@ -9,10 +9,33 @@ use App\Models\Warehouse;
 class Product extends Model
 {
     use HasFactory;
-    protected $table = 'products';
+
+    protected $fillable = [
+        'sku',
+        'name',
+        'price',
+    ];
 
     public function getWarehouses()
     {
         return $this->belongsToMany(Warehouse::class, 'stocks')->withPivot('quantity')->as('stock');
+    }
+
+    public function scopeSku($query, $sku)
+    {
+      if($sku)
+        return $query->where('sku', 'LIKE', "%$sku%");
+    }
+
+    public function scopePrice($query, $price)
+    {
+      if($price)
+        return $query->where('price', 'LIKE', "%$price%");
+    }
+
+    public function scopeName($query, $name)
+    {
+      if($name)
+        return $query->where('name', 'LIKE', "%$name%");
     }
 }
