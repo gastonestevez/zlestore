@@ -39,7 +39,7 @@ ZLE - Control de Stock
             <label for="stock" class="uk-form-label">Depósito: {{$warehouse->name}} @ {{$warehouse->address}}</label>
             <input type="hidden" name="warehouse[{{$loop->index}}][id]" value='{{$warehouse->id}}'>
             <div class="uk-form-controls">
-                <input type="number" name="warehouse[{{$loop->index}}][stock]" class="uk-input uk-form-width-small" value='0' min="0">
+                <input type="number" name="warehouse[{{$loop->index}}][stock]" class="uk-input uk-form-width-small" value='1' min="1">
             </div>
             @endforeach
         </div>

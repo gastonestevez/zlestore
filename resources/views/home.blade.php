@@ -70,7 +70,7 @@ ZLE - Control de Stock
             <td>{{$item->sku}}</td>
             <td>{{$item->name}}</td>
             <td>{{$item->quantity}}</td>
-            <td>{{$item->quantity / ($item->unidades_por_caja ?: 1)}}</td>
+            <td>{{$item->unidades_por_caja ? floor($item->quantity / $item->unidades_por_caja) : 0}}</td>
             <td /> <td /> 
           </tr>
           @endforeach

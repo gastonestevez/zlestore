@@ -13,14 +13,24 @@ class ProductsController extends Controller
     public function newProducts()
     {
         $wc = $this->getWcConfig();
-        $wcProducts = $wc->get('products');
+        $index = 1;
+        $products = [];
+        $wcProducts = $wc->get('products?page=' . $index);
+
+        while(count($wcProducts) > 0) {
+            $products = array_merge($products, $wcProducts);
+            $index += 1;
+            $url = 'products?page=' . $index;
+            $wcProducts = $wc->get($url);
+        }
+
         $newProducts = false;
         $productsToAdd = [];
         $warehousesCount = Warehouse::count() != 0;
         $warehouses = Warehouse::where('visibility','1')->get();
-        foreach ($wcProducts as $item) {
-            $search = Product::where('sku', $item->sku)->first();
-            if(!$search && $item->sku){
+        foreach ($products as $item) {
+            $search = Product::where('woo_id', $item->id)->first();
+            if(!$search && $item->id && $item->status != 'draft' && $item->price){
                 $productsToAdd[] = $item;
             }
         }

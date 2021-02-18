@@ -17,4 +17,14 @@ class WarehouseController extends Controller
             'warehouses' => Warehouse::all(),
             ]);
     }
+
+    public function index() {
+        $warehouses = Warehouse::all();
+        foreach ($warehouses as $warehouse) {
+            $warehouse->getProducts;
+        }
+        return response([
+            'warehouses' => $warehouses,
+        ], 200);
+    }
 }
