@@ -10903,6 +10903,8 @@ a.text-dark:focus {
   }
 }
 
+<<<<<<< HEAD
+=======
 * {
   margin: 0;
   padding: 0;
@@ -10919,3 +10921,4 @@ a.text-dark:focus {
   font-size: 18px;
   margin-right: 10px;
 }
+>>>>>>> cbe39f69a07118f24bdd88fd81707bae69f86a19

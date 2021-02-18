@@ -15,3 +15,11 @@ NO OBLIGATORIOS
 
 VERSION 2.0 Para eric a futuro
 -Hacer boton limpiar busqueda que limpie los filtros de busqueda aplicados
+-Newsletter
+-Imprimir facturas
+-Marketing - GTM, GA, Redes, SEO
+-Categorías autogestionables en el sitio
+-Favoritos
+-Hacer boton limpiar busqueda que limpie los filtros de busqueda aplicados en el gestor de stock
+-Impresion de pedidos
+-App para abrir pedidos desde el celu?

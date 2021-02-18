@@ -38,14 +38,24 @@ class ProductsController extends Controller
     public function newProducts()
     {
         $wc = $this->getWcConfig();
-        $wcProducts = $wc->get('products');
+        $index = 1;
+        $products = [];
+        $wcProducts = $wc->get('products?page=' . $index);
+
+        while(count($wcProducts) > 0) {
+            $products = array_merge($products, $wcProducts);
+            $index += 1;
+            $url = 'products?page=' . $index;
+            $wcProducts = $wc->get($url);
+        }
+
         $newProducts = false;
         $productsToAdd = [];
         $warehousesCount = Warehouse::count() != 0;
         $warehouses = Warehouse::where('visibility','1')->get();
-        foreach ($wcProducts as $item) {
-            $search = Product::where('sku', $item->sku)->first();
-            if(!$search && $item->sku){
+        foreach ($products as $item) {
+            $search = Product::where('woo_id', $item->id)->first();
+            if(!$search && $item->id && $item->status != 'draft' && $item->price){
                 $productsToAdd[] = $item;
             }
         }
@@ -83,7 +93,19 @@ class ProductsController extends Controller
         return back();
     }
 
-    private function getWcConfig(){
+    public function prepareOrder(int $id)
+    {
+        $wc = $this->getWcConfig();
+        $order = $wc->get('orders/'.$id);
+        $warehouses = Warehouse::where('visibility','1')->get();
+        return view('prepareOrder', [
+            'order' => $order,
+            'warehouses' => $warehouses,
+        ]);
+    }
+
+    private function getWcConfig()
+    {
         return new Client(
             'https://zlestore.com',
             env('WC_KEY_CK'),

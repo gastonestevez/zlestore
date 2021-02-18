@@ -6,21 +6,3 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.warehouse-card--add {
-        cursor: pointer;
-}
-
-.icon {
-    display: inline-block;
-    color: #333;
-    font-size: 18px;
-    margin-right: 10px;
-}
