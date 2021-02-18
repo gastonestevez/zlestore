@@ -38,9 +38,11 @@ Route::delete('/deleteuser/{id}', [App\Http\Controllers\UserController::class, '
 
 Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list']);
 
-Route::get('/warehouse/create', function () { return view('createWarehouse'); });
+Route::get('/warehouse/new', function () { return view('createWarehouse'); });
 
-Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::class, 'create']);
+Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::class, 'store']);
+
+Route::post('/warehouse/delete/{id}', [App\Http\Controllers\WarehouseController::class, 'destroy']);
 
 // Products
 

@@ -42,6 +42,7 @@ a {
   padding-right: 15px; }
 
 .primer-div {
+  min-height: 100vh;
   margin-top: 80px; }
 
 .bg-main-green {
