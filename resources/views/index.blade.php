@@ -15,7 +15,7 @@ ZLE - Control de Stock
 
       <div class="uk-margin pr">
         <form class="uk-search uk-search-default">
-          <span class="uk-search-icon-flip" uk-search-icon></span>
+          <a href="" class="uk-search-icon-flip" uk-search-icon></a>
           <input class="uk-search-input" type="search" placeholder="SKU ...">
         </form>
       </div>

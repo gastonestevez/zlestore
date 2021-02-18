@@ -51,3 +51,8 @@ Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::clas
 Route::post('prepare/{id}', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
 
 Route::post('prepare/{id}/changeStatus', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
+// Stock
+
+Route::get('/stock/products', [App\Http\Controllers\ProductsController::class, 'list']);
+
+Route::get('/stock/products/{sku}', [App\Http\Controllers\ProductsController::class, 'show']);

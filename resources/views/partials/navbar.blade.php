@@ -14,7 +14,7 @@
 
                 <ul class="uk-navbar-nav">
                   <li>
-                      <a href="/orders">Pedidos</a>                      
+                      <a href="/orders">Pedidos</a>
                   </li>
                     <li>
                         <a href="#">Stock</a>
@@ -74,9 +74,70 @@
 
 {{-- Sticky nav mobile y tablet --}}
 <div class="uk-hidden@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-  <nav class="uk-navbar uk-navbar-container">
+  <nav class="uk-navbar uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
-          <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="#"></a>
+        <a class="uk-navbar-item uk-logo" href="/"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
+      </div>
+      <div class="uk-navbar-right">
+        <ul class="uk-hidden@m uk-navbar-nav uk-nav-parent-icon">
+          <li class="uk-visible-small">
+            <a class="burger" href="#navbarMobile"  uk-navbar-toggle-icon uk-toggle uk-toggle="target: #offcanvas-slide"></a>
+          </li>
+        </ul>
       </div>
   </nav>
+</div>
+
+<div id="navbarMobile" uk-offcanvas="mode: slide; overlay: true">
+  <div class="uk-offcanvas-bar">
+
+    <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+    <div class="uk-navbar-left">
+
+    @if (Auth::user())
+      <ul class="uk-nav uk-nav-offcanvas uk-nav-center uk-nav-parent-icon uk-text-left" style="transform: translateY(50%);" uk-nav="multiple: true">
+        {{-- Para que al clickear un link no se cierre el offcanvas hay que agregarle a la etiqueta A el atributo uk-scroll --}}
+        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/orders" uk-scroll>Pedidos</a></li>
+        <li class="uk-parent">
+          <a href="#">Stock</a>
+              <ul class="uk-nav-sub">
+                  <li><a href="{{url('/newProducts')}}">Gestionar Stock</a></li>
+              </ul>
+        </li>
+        <li class="uk-parent">
+          <a href="/warehouse/list">Depósitos</a>
+              <ul class="uk-nav-sub">
+                  <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
+              </ul>
+        </li>
+
+        <hr class="uk-divider-small">
+
+        <li class="uk-parent">
+          <a href="#">
+            <span class="uk-icon uk-margin-small-right" uk-icon="icon: user"></span>
+            {{Auth::user()->name}}
+          </a>
+
+          <ul class="uk-nav-sub">
+            @if (Auth::user())
+              <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
+            @endif
+              <li><a href="/users">Gestionar usuarios</a></li>
+              {{-- <li class="uk-nav-header">Header</li> --}}
+              <li class="uk-nav-divider"></li>
+              <li>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                  @csrf
+                  <button style="background: none;border: none;color: #999;">Salir</button>
+                </form>
+              </li>
+          </ul>
+        </li>
+
+      </ul>
+    @endif
+
+  </div>
 </div>

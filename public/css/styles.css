@@ -10911,6 +10911,22 @@ nav a {
   width: 100px;
 }
 
+footer {
+  min-height: 80px;
+  font-size: 12px;
+  background-color: #049f82;
+  color: white; }
+
+footer img {
+  width: 25px;
+  height: 25px; }
+
+footer a {
+  color: white; }
+  footer a :hover {
+    color: white;
+    text-decoration: none; }
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -10918,8 +10934,13 @@ nav a {
   list-style-type: none;
   text-decoration: none;
   scroll-behavior: smooth;
-  font-family: "Montserrat", sans-serif;
-}
+  font-family: "Montserrat", sans-serif; }
+
+a {
+  color: #049f82; }
+
+.wow {
+  visibility: hidden; }
 
 .pl {
   padding-left: 15px;
@@ -10952,3 +10973,7 @@ nav a {
   margin-bottom: 10px;
 }
 
+.login-form {
+  border: 1px solid grey; }
+
+/*# sourceMappingURL=styles.css.map */

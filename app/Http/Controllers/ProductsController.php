@@ -6,10 +6,35 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Product;
 use App\Models\Warehouse;
-use App\Models\stocks;
+use App\Models\Stock;
 
 class ProductsController extends Controller
 {
+
+    public function list(Request $request)
+    {
+      $sku = $request->get('sku');
+      $name = $request->get('name');
+      $price = $request->get('price');
+
+
+      $products = Product::sku($sku)->name($name)->price($price)->paginate(25);
+      $vac = compact('products');
+
+      return view('/stock/products', $vac);
+    }
+
+    public function show(String $sku)
+    {
+      $product = Product::where('sku', '=', $sku)->first();
+      $warehouses = Warehouse::all();
+
+      $vac = compact('product', 'warehouses');
+
+      return view('/stock/product', $vac);
+    }
+
+
     public function newProducts()
     {
         $wc = $this->getWcConfig();
@@ -64,7 +89,7 @@ class ProductsController extends Controller
                 ]);
             }
         }
-        
+
         return back();
     }
 

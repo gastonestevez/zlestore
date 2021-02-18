@@ -11,14 +11,14 @@ ZLE - Control de Stock
         <div class="uk-margin">
             <label class="uk-form-label" for="form-horizontal-text">Nombre</label>
             <div class="uk-form-controls">
-                <input class="uk-input" name='name' id="form-horizontal-text" type="text" placeholder="Nombre del depósito">
+                <input value="{{old('name')}}" class="uk-input" name='name' id="form-horizontal-text" type="text" placeholder="Nombre del depósito">
             </div>
         </div>
 
         <div class="uk-margin">
             <label class="uk-form-label" for="form-horizontal-text">Dirección</label>
             <div class="uk-form-controls">
-                <input class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito">
+                <input value="{{old('address')}}" class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito">
             </div>
         </div>
         <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
