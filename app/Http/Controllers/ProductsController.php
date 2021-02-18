@@ -11,6 +11,51 @@ use App\Models\Stock;
 class ProductsController extends Controller
 {
 
+    public function syncWoocommerce(Request $request)
+    {
+        $warehouses = Warehouse::all();
+        if (count($warehouses) == 0) {
+            return back()->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
+        }
+
+        $pr = Product::all()->pluck('woo_id')->toArray();
+        $queryString = '?';
+
+        foreach ($pr as $v) {
+            $queryString = $queryString . '&exclude[]='.$v;
+        }
+
+        $wc = $this->getWcConfig();
+        $index = 1;
+        $products = [];
+        $wcProducts = $wc->get('products' . $queryString . '&page=' . $index);
+
+        while(count($wcProducts) > 0) {
+            foreach ($wcProducts as $wcProduct) {
+                $sProduct = new Product;
+                $sProduct->price = $wcProduct->price ?: 0;
+                $sProduct->sku = $wcProduct->sku;
+                $sProduct->woo_id = $wcProduct->id;
+                $sProduct->visibility = 1;
+                $sProduct->name = $wcProduct->name;
+                $sProduct->save();
+
+                foreach ($warehouses as $warehouse) {
+                    $sProduct->getWarehouses()->attach($sProduct->id, [
+                        'warehouse_id' => $warehouse->id,
+                        'quantity' => -1,
+                    ]);
+                }
+            }
+            $index += 1;
+            $url = 'products' . $queryString . '&page=' . $index;
+            $wcProducts = $wc->get($url);
+        }
+
+        return back()->with('success', 'Sus depósitos han sido sincronizados a Woocommerce.');
+        
+    }
+
     public function list(Request $request)
     {
       $sku = $request->get('sku');
@@ -24,9 +69,9 @@ class ProductsController extends Controller
       return view('/stock/products', $vac);
     }
 
-    public function show(String $sku)
+    public function show(String $woo_id)
     {
-      $product = Product::where('sku', '=', $sku)->first();
+      $product = Product::where('woo_id', '=', $woo_id)->first();
       $warehouses = Warehouse::all();
 
       $vac = compact('product', 'warehouses');

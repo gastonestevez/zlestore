@@ -25,7 +25,7 @@ class ProductFactory extends Factory
           'sku' => $this->faker->unique()->swiftBicNumber,
           'name' => $this->faker->name,
           'price' => $this->faker->numberBetween($min = 1000, $max = 9000),
-          'woo_id' => $this->faker->numberBetween($min = 1, $max = 9000),
+          'woo_id' => 'FAKE'.$this->faker->numberBetween($min = 1, $max = 9000),
           'visibility' => true,
         ];
     }

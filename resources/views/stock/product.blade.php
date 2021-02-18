@@ -9,8 +9,6 @@ ZLE - Control de Stock
 
   <h1 class="uk-heading-divider">{{$product->first()->name}}</h1>
 
-    <button class="uk-button uk-button-secondary uk-margin">ACTUALIZAR LISTA</button>
-
     <div class="uk-child-width-1-2@s uk-grid-match uk-margin" uk-grid>
         @foreach ($warehouses as $warehouse)
         <div>

@@ -57,4 +57,7 @@ Route::post('prepare/{id}/changeStatus', [App\Http\Controllers\ProductsControlle
 
 Route::get('/stock/products', [App\Http\Controllers\ProductsController::class, 'list']);
 
-Route::get('/stock/products/{sku}', [App\Http\Controllers\ProductsController::class, 'show']);
+Route::get('/stock/products/{woo_id}', [App\Http\Controllers\ProductsController::class, 'show']);
+
+Route::get('/stock/syncWoocommerce', [App\Http\Controllers\ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce');
+
