@@ -20,20 +20,20 @@
                       <a href="/orders">Pedidos</a>
                   </li>
                     <li>
-                        <a href="#">Productos</a>
-                        <div class="uk-navbar-dropdown">
+                        <a href="{{url('/products/stock')}}">Productos</a>
+                        {{-- <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/products/stock')}}">Gestionar Stock</a></li>
                             </ul>
-                        </div>
+                        </div> --}}
                     </li>
                     <li>
-                        <a href="/warehouse/list">Depósitos</a>
-                        <div class="uk-navbar-dropdown">
+                        <a href="{{url('/warehouse/list')}}">Depósitos</a>
+                        {{-- <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
                             </ul>
-                        </div>
+                        </div> --}}
                     </li>
                 </ul>
             </div>

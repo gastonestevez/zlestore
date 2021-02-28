@@ -84,11 +84,13 @@ ZLE - Usuarios
         </div>
         <div class="uk-card-footer uk-flex uk-flex-between">
             <a href="/user/{{$user->id}}" class="uk-button uk-button-text">Editar</a>
-            <form class="" action="/deleteuser/{{$user->id}}" method="post">
+            <a href="#confirm{{$user->id}}" class="uk-button uk-button-text" uk-toggle>Eliminar</a>
+            @include('partials.confirms.confirm',['url'=>"/deleteuser/{$user->id}", 'message'=>"Seguro quiere eliminar el usuario {$user->name}?", 'name'=>'user_id', 'id'=>"{$user->id}"])
+            {{-- <form class="" action="/deleteuser/{{$user->id}}" method="post">
               @method('delete')
               @csrf
               <button type="submit" class="uk-button uk-button-text">Eliminar</a>
-            </form>
+            </form> --}}
         </div>
 
       </div>

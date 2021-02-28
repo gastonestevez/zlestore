@@ -40,36 +40,36 @@ Route::delete('/deleteuser/{id}', [App\Http\Controllers\UserController::class, '
 
 // Warehouses
 
-Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list']);
+Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list'])->middleware('auth');;
 
-Route::get('/warehouse/{id}/products', [App\Http\Controllers\WarehouseController::class, 'products']);
+Route::get('/warehouse/{id}/products', [App\Http\Controllers\WarehouseController::class, 'products'])->middleware('auth');;
 
-Route::get('/warehouse/new', [App\Http\Controllers\WarehouseController::class, 'new']);
+Route::get('/warehouse/new', [App\Http\Controllers\WarehouseController::class, 'new'])->middleware('auth');;
 
-Route::post('/warehouse/store', [App\Http\Controllers\WarehouseController::class, 'store']);
+Route::post('/warehouse/store', [App\Http\Controllers\WarehouseController::class, 'store'])->middleware('auth');;
 
-Route::put('/warehouse/update/{id}', [App\Http\Controllers\WarehouseController::class, 'update']);
+Route::put('/warehouse/update/{id}', [App\Http\Controllers\WarehouseController::class, 'update'])->middleware('auth');;
 
-Route::delete('/warehouse/delete/{id}', [App\Http\Controllers\WarehouseController::class, 'destroy']);
+Route::delete('/warehouse/delete/{id}', [App\Http\Controllers\WarehouseController::class, 'destroy'])->middleware('auth');;
 
 // Products
 
-Route::get('/newProducts', [App\Http\Controllers\ProductsController::class, 'newProducts']);
+Route::get('/newProducts', [App\Http\Controllers\ProductsController::class, 'newProducts'])->middleware('auth');;
 
-Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::class, 'store']);
+Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::class, 'store'])->middleware('auth');;
 
-Route::post('prepare/{id}', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
+Route::post('prepare/{id}', [App\Http\Controllers\ProductsController::class, 'prepareOrder'])->middleware('auth');;
 
-Route::post('prepare/{id}/changeStatus', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
+Route::post('prepare/{id}/changeStatus', [App\Http\Controllers\ProductsController::class, 'prepareOrder'])->middleware('auth');;
 
-Route::put('/updatingStock/{id}', [App\Http\Controllers\ProductsController::class, 'updatingStock']);
+Route::put('/updatingStock/{id}', [App\Http\Controllers\ProductsController::class, 'updatingStock'])->middleware('auth');;
 
 
 // Stock
 
-Route::get('/products/stock', [App\Http\Controllers\ProductsController::class, 'list']);
+Route::get('/products/stock', [App\Http\Controllers\ProductsController::class, 'list'])->middleware('auth');;
 
-Route::get('/product/{woo_id}/stock', [App\Http\Controllers\ProductsController::class, 'show']);
+Route::get('/product/{woo_id}/stock', [App\Http\Controllers\ProductsController::class, 'show'])->middleware('auth');;
 
-Route::get('/products/syncWoocommerce', [App\Http\Controllers\ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce');
+Route::get('/products/syncWoocommerce', [App\Http\Controllers\ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');;
 

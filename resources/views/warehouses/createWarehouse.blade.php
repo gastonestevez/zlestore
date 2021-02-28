@@ -75,14 +75,18 @@ ZLE - Crear depósito
                 <label><input class="uk-checkbox" name='visibility' value='1' type="checkbox" checked> ¿Es visible?</label>
             </div> --}}
             <button type="submit" class="uk-button uk-button-info">Editar</button>
-            <label for="eliminar{{$warehouse->id}}" type="submit" class="uk-button uk-button-danger">Eliminar</label>
+            <a class="uk-button uk-button-danger"  href="#confirm{{$warehouse->id}}" uk-toggle>Eliminar</a>
+            {{-- <label for="eliminar{{$warehouse->id}}" type="submit" class="uk-button uk-button-danger">Eliminar</label> --}}
         </form>
 
-        <form action="/warehouse/delete/{{$warehouse->id}}" method="POST">
+        @include('partials.confirms.confirm',['url'=>"/warehouse/delete/{$warehouse->id}", 'message'=>"Seguro quiere eliminar el depósito {$warehouse->name}?", 'name'=>'warehouse_id', 'id'=>"{$warehouse->id}"])
+
+
+        {{-- <form action="/warehouse/delete/{{$warehouse->id}}" method="POST">
             @method('delete')
             @csrf
             <button hidden id="eliminar{{$warehouse->id}}" type="submit" class="uk-button uk-button-danger">Eliminar</button>
-        </form>
+        </form> --}}
         
     @endforeach
 </div>
