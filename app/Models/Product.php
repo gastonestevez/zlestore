@@ -33,7 +33,7 @@ class Product extends Model
         return $query->where('sku', 'LIKE', "%$sku%");
     }
 
-    public function scopeWooId($query, $woo_id)
+    public function scopeWoo_id($query, $woo_id)
     {
       if($woo_id)
         return $query->where('woo_id', 'LIKE', "%$woo_id%");

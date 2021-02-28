@@ -80,13 +80,6 @@ ZLE - Crear depósito
         </form>
 
         @include('partials.confirms.confirm',['url'=>"/warehouse/delete/{$warehouse->id}", 'message'=>"Seguro quiere eliminar el depósito {$warehouse->name}?", 'name'=>'warehouse_id', 'id'=>"{$warehouse->id}"])
-
-
-        {{-- <form action="/warehouse/delete/{{$warehouse->id}}" method="POST">
-            @method('delete')
-            @csrf
-            <button hidden id="eliminar{{$warehouse->id}}" type="submit" class="uk-button uk-button-danger">Eliminar</button>
-        </form> --}}
         
     @endforeach
 </div>

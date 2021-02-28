@@ -7,7 +7,10 @@ OBLIGATORIOS PARA TERMINAR
 NO OBLIGATORIOS
 -Arreglar las cards de usuarios de forma horizontal en /users
 -Cuando usamos filtro de busqueda que quede la busqueda persistida en el input
--Cambiar un poco la base de datos . Tabla notificaciones cambiar nombre a ORDERS. las ORDERS(Pedidos) estan relacionados con 1 o muchos PRODUCTOS
+-Cambiar un poco la base de datos . 
+    Tabla notificaciones cambiar nombre a orders. las ORDERS(Pedidos) estan relacionados con 1 o muchos PRODUCTOS
+    Tabla warehouse cambiar nombre a warehouses
+    Terminar DER
 -Chequear que las relaciones en los modelos esten bien
 
 
