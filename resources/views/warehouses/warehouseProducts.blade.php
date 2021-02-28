@@ -6,7 +6,7 @@ ZLE - Control de Stock
 
 <div class="uk-container primer-div">
 
-  <h1 class="uk-heading-divider">Productos</h1>
+  <h1 class="uk-heading-divider">Productos en {{$warehouse->name}}</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
@@ -34,6 +34,12 @@ ZLE - Control de Stock
       <div class="pr uk-margin-bottom">
         <form class="uk-search uk-search-default" method="get">
            <a href="" class="uk-search-icon-flip" uk-search-icon></a>
+          <input class="uk-search-input" type="search" placeholder="Woo ID ..." name="woo_id">
+        </form>
+      </div>
+      <div class="pr uk-margin-bottom">
+        <form class="uk-search uk-search-default" method="get">
+           <a href="" class="uk-search-icon-flip" uk-search-icon></a>
           <input class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
         </form>
       </div>
@@ -41,6 +47,11 @@ ZLE - Control de Stock
         <form class="uk-search uk-search-default" method="get">
            <a href="" class="uk-search-icon-flip" uk-search-icon></a>
           <input class="uk-search-input" type="search" placeholder="Precio ..." name="price">
+        </form>
+      </div>
+      <div class="pr uk-margin-bottom">
+        <form class="uk-search uk-search-default" method="get">
+          <button class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
         </form>
       </div>
 
@@ -56,7 +67,7 @@ ZLE - Control de Stock
               <th>Nombre</th>
               <th>Precio</th>
               <th>Woo_id</th>
-              <th>Acción</th>
+              <th class="uk-table-shrink">Stock</th>
           </tr>
       </thead>
       <tbody>
@@ -67,8 +78,13 @@ ZLE - Control de Stock
               <td>{{ $product->name }}</td>
               <td>{{ (int)$product->price }}</td>
               <td>{{ $product->woo_id }}</td>
-              <td>  <a class="uk-button uk-button-default" href="/stock/products/{{$product->woo_id}}">Gestionar</a></td>
-              <td><a href="" uk-icon="icon: close"></a></td>
+              <form action="/updatingStock/{{$product->id}}" method="POST">
+                @method('put')
+                @csrf
+                <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
+                <td><input required min="0" name="quantity" value="{{old('quantity', $warehouse->getProductStock($warehouse->id, $product->id))}}" class="uk-input" placeholder="Stock del producto"></td>                
+                <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
+              </form>
           </tr>
         @endforeach
 

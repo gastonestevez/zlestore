@@ -18,21 +18,27 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function index()
+    {
+        return view('index');
+    }
+
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function orders()
     {
-        $wc = $this->getWcConfig();
-        $wcOrders = $wc->get('orders');
-        foreach ($wcOrders as $order) {
-            $order->customerName = $this->getCustomerFullname($wc, $order);
-        }
-        return view('home', [
-            'orders' => $wcOrders,
-        ]);
+        return view('orders');
+        // $wc = $this->getWcConfig();
+        // $wcOrders = $wc->get('orders');
+        // foreach ($wcOrders as $order) {
+        //     $order->customerName = $this->getCustomerFullname($wc, $order);
+        // }
+        // return view('orders', [
+        //     'orders' => $wcOrders,
+        // ]);
     }
 
     private function getCustomerFullname(Client $wc, $order)

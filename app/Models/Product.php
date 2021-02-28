@@ -14,6 +14,7 @@ class Product extends Model
         'sku',
         'name',
         'price',
+        'woo_id'
     ];
 
     public function getWarehouses()
@@ -21,10 +22,21 @@ class Product extends Model
         return $this->belongsToMany(Warehouse::class, 'stocks')->withPivot('quantity')->as('stock');
     }
 
+    // public function getStockByWarehouse(int $warehousId, int $productId)
+    // {
+    //     return stocks::where('product_id', '=', $productId)->where('warehouse_id', '=', $warehouseId);
+    // }
+
     public function scopeSku($query, $sku)
     {
       if($sku)
         return $query->where('sku', 'LIKE', "%$sku%");
+    }
+
+    public function scopeWooId($query, $woo_id)
+    {
+      if($woo_id)
+        return $query->where('woo_id', 'LIKE', "%$woo_id%");
     }
 
     public function scopePrice($query, $price)

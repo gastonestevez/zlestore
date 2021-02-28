@@ -28,8 +28,8 @@
 
       {{-- Notificaciones --}}
       @if (session('success'))
-        <div class="wow animated fadeInDown alert sticky-notification">
-          {{session('success')}}
+        <div class="wow animated fadeInDown alert sticky-notification notification-success">
+         {{session('success')}}
         </div>
       @endif
 

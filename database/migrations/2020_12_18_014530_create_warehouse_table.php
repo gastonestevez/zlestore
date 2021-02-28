@@ -18,7 +18,7 @@ class CreateWarehouseTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('address');
-            $table->boolean('visibility');
+            $table->boolean('visibility')->nullable();
         });
     }
 

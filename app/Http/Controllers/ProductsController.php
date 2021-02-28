@@ -66,7 +66,7 @@ class ProductsController extends Controller
       $products = Product::sku($sku)->name($name)->price($price)->paginate(25);
       $vac = compact('products');
 
-      return view('/stock/products', $vac);
+      return view('/products/products', $vac);
     }
 
     public function show(String $woo_id)
@@ -76,7 +76,7 @@ class ProductsController extends Controller
 
       $vac = compact('product', 'warehouses');
 
-      return view('/stock/product', $vac);
+      return view('/products/product', $vac);
     }
 
 
@@ -147,6 +147,19 @@ class ProductsController extends Controller
             'order' => $order,
             'warehouses' => $warehouses,
         ]);
+    }
+
+    public function updatingStock(Request $request, int $id)
+    {
+       // variables de ayuda
+        $warehouseId = $request->warehouse_id;
+        $quantity = $request->quantity;
+        $product = Product::find($id);
+
+        // aca indicamos que producto va updatear su stock, la cantidad nueva de stock y en que deposito se esta realizando
+        $product->getWarehouses()->updateExistingPivot($warehouseId, ['quantity' => $quantity]); // https://laravel.com/docs/8.x/eloquent-relationships Updating A Record On A Pivot Table
+
+        return back()->with('success', 'Stock actualizado correctamente');
     }
 
     private function getWcConfig()

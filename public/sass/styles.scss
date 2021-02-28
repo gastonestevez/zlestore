@@ -31,6 +31,7 @@ a {
 .primer-div{
   min-height: 100vh;
   margin-top: 80px;
+  margin-bottom:40px;
 }
 
 .bg-main-green {
@@ -47,9 +48,12 @@ a {
   bottom: 15px;
   right: 15px;
   z-index: 1000;
-  background-color: #008F72;
   color: white;
   border: none;
+}
+
+.notification-success {
+  background-color: #008F72;
 }
 
 .notification-error {
@@ -58,4 +62,8 @@ a {
 
 .login-form {
   border: 1px solid grey;
+}
+
+.limpiar-busqueda {
+  font-size: 10px;
 }

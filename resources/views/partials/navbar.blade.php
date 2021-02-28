@@ -4,7 +4,7 @@
 
 {{-- Sticky nav, desktop --}}
 <div class="uk-visible@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
-    <img src="images/light.jpg" alt="">
+    <img src="" alt="">
     <div class="uk-position-top">
         <nav class="uk-navbar-container uk-navbar-transparent subtle-background pl pr" uk-navbar>
             <div class="uk-navbar-left">
@@ -14,13 +14,16 @@
 
                 <ul class="uk-navbar-nav">
                   <li>
+                      <a href="/">Inicio</a>
+                  </li>
+                  <li>
                       <a href="/orders">Pedidos</a>
                   </li>
                     <li>
-                        <a href="#">Stock</a>
+                        <a href="#">Productos</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="{{url('/stock/products')}}">Gestionar Stock</a></li>
+                                <li><a href="{{url('/products/stock')}}">Gestionar Stock</a></li>
                             </ul>
                         </div>
                     </li>
@@ -98,6 +101,7 @@
     @if (Auth::user())
       <ul class="uk-nav uk-nav-offcanvas uk-nav-center uk-nav-parent-icon uk-text-left" style="transform: translateY(50%);" uk-nav="multiple: true">
         {{-- Para que al clickear un link no se cierre el offcanvas hay que agregarle a la etiqueta A el atributo uk-scroll --}}
+        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/" uk-scroll>Inicio</a></li>
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/orders" uk-scroll>Pedidos</a></li>
         <li class="uk-parent">
           <a href="#">Stock</a>

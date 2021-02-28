@@ -17,7 +17,11 @@ Auth::routes([
         'register' => false
     ]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+
+// Orders
+
+Route::get('/orders', [App\Http\Controllers\HomeController::class, 'orders'])->name('home')->middleware('auth');
 
 Route::get('/woocommerce', [App\Http\Controllers\WooCommerceController::class, 'wc']);
 
@@ -38,11 +42,15 @@ Route::delete('/deleteuser/{id}', [App\Http\Controllers\UserController::class, '
 
 Route::get('/warehouse/list', [App\Http\Controllers\WarehouseController::class, 'list']);
 
-Route::get('/warehouse/create', function () { return view('createWarehouse'); });
+Route::get('/warehouse/{id}/products', [App\Http\Controllers\WarehouseController::class, 'products']);
 
-Route::post('/warehouse/create', [App\Http\Controllers\WarehouseController::class, 'store']);
+Route::get('/warehouse/new', [App\Http\Controllers\WarehouseController::class, 'new']);
 
-Route::post('/warehouse/delete/{id}', [App\Http\Controllers\WarehouseController::class, 'destroy']);
+Route::post('/warehouse/store', [App\Http\Controllers\WarehouseController::class, 'store']);
+
+Route::put('/warehouse/update/{id}', [App\Http\Controllers\WarehouseController::class, 'update']);
+
+Route::delete('/warehouse/delete/{id}', [App\Http\Controllers\WarehouseController::class, 'destroy']);
 
 // Products
 
@@ -53,11 +61,15 @@ Route::post('/newProducts/store', [App\Http\Controllers\ProductsController::clas
 Route::post('prepare/{id}', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
 
 Route::post('prepare/{id}/changeStatus', [App\Http\Controllers\ProductsController::class, 'prepareOrder']);
+
+Route::put('/updatingStock/{id}', [App\Http\Controllers\ProductsController::class, 'updatingStock']);
+
+
 // Stock
 
-Route::get('/stock/products', [App\Http\Controllers\ProductsController::class, 'list']);
+Route::get('/products/stock', [App\Http\Controllers\ProductsController::class, 'list']);
 
-Route::get('/stock/products/{woo_id}', [App\Http\Controllers\ProductsController::class, 'show']);
+Route::get('/product/{woo_id}/stock', [App\Http\Controllers\ProductsController::class, 'show']);
 
-Route::get('/stock/syncWoocommerce', [App\Http\Controllers\ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce');
+Route::get('/products/syncWoocommerce', [App\Http\Controllers\ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce');
 
