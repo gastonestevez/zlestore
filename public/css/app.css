@@ -170,13 +170,13 @@ sup {
 }
 
 a {
-  /* color: #3490dc; */
+  color: #3490dc;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  /* color: #1d68a7; */
+  color: #1d68a7;
   text-decoration: underline;
 }
 
@@ -10903,22 +10903,3 @@ a.text-dark:focus {
   }
 }
 
-<<<<<<< HEAD
-=======
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.warehouse-card--add {
-  cursor: pointer;
-}
-
-.icon {
-  display: inline-block;
-  color: #333;
-  font-size: 18px;
-  margin-right: 10px;
-}
->>>>>>> cbe39f69a07118f24bdd88fd81707bae69f86a19

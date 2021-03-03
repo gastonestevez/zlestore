@@ -1,18 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 
 export const Warehouse = ({warehouse, product, search}) => {
     const [stock, setStock] = useState(0)
 
-    const searchStock = () => (search(
+    
+    const searchProductStock = useCallback( (whProducts, productId) => {
+        const search = whProducts.find( whp => {
+            return productId == whp.woo_id
+        })
+        return search.stock.quantity
+    }, [product])
+    
+    const searchStock = () => (searchProductStock(
         warehouse.get_products,
         product.product_id
     ))
-
+    
     const handleOnChange = (e) => {
         const { value } = e.currentTarget
-        if(value && searchStock() - value >= 0) {
-            setStock(value)
-        }
+        setStock(search(value))
     }
 
     return (
