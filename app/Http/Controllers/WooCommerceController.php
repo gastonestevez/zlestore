@@ -22,6 +22,8 @@ class WooCommerceController extends Controller
 
     try {
 
+      dd($woocommerce->get('orders')[0]);
+
       // Seleccionamos, recorremos cada producto y vemos cuanta cantidad piden del producto
       $cantidad = $woocommerce->get('orders')[0]->line_items[0]->quantity;
 

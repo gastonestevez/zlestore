@@ -10,7 +10,7 @@ ZLE - Control de Stock
     <div class="uk-child-width-1-2@s uk-grid-match uk-margin" uk-grid>
         @foreach ($warehouses as $warehouse)
         <div>
-          <a href="/">
+          <a href="/warehouse/{{$warehouse->id}}/products">
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i>{{$warehouse->name}}</h3>
                 <p>Ubicado en: {{$warehouse->address}}.</p>
@@ -22,7 +22,7 @@ ZLE - Control de Stock
 
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark warehouse-card--add" onclick="sendToCreateWarehouse()">
-                <h3 class="uk-card-title"><i class="fas fa-plus-circle"></i> Agregar depósito</h3>
+                <h3 class="uk-card-title"><i class="fas fa-plus-circle"></i> Agregar/editar depósito</h3>
                 <p>Haga click en el panel para agregar un depósito nuevo.</p>
             </div>
         </div>
@@ -33,7 +33,7 @@ ZLE - Control de Stock
 
 <script>
     const sendToCreateWarehouse = () => {
-        window.location.pathname = '/warehouse/create'
+        window.location.pathname = '/warehouse/new'
     }
 </script>
 @endsection
