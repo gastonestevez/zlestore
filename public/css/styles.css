@@ -72,4 +72,11 @@ a {
 .limpiar-busqueda {
   font-size: 10px; }
 
+.searchForm {
+  display: -webkit-inline-box; }
+
+@media (max-width: 992px) {
+  .searchForm {
+    display: block; } }
+
 /*# sourceMappingURL=styles.css.map */

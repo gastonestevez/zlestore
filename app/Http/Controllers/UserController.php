@@ -15,7 +15,7 @@ class UserController extends Controller
     $users = User::all();
     $vac = compact('users');
 
-    return view('/users', $vac);
+    return view('users/users', $vac);
   }
 
   public function show(int $id)
@@ -23,7 +23,7 @@ class UserController extends Controller
     $user = User::find($id);
     $vac = compact('user');
 
-    return view('/user', $vac);
+    return view('users/user', $vac);
   }
 
   public function store(Request $request)

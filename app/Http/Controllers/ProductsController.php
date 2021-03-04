@@ -61,10 +61,11 @@ class ProductsController extends Controller
       $sku = $request->get('sku');
       $name = $request->get('name');
       $price = $request->get('price');
+      $woo_id = $request->get('woo_id');
 
 
-      $products = Product::sku($sku)->name($name)->price($price)->paginate(25);
-      $vac = compact('products');
+      $products = Product::sku($sku)->name($name)->price($price)->woo_id($woo_id)->paginate(25);
+      $vac = compact('products', 'request');
 
       return view('/products/products', $vac);
     }
@@ -105,7 +106,7 @@ class ProductsController extends Controller
             }
         }
 
-        return view('newProducts', [
+        return view('products/newProducts', [
             'products' => $productsToAdd,
             'newProducts' => $newProducts,
             'warehousesCount' => $warehousesCount,
@@ -143,7 +144,7 @@ class ProductsController extends Controller
         $wc = $this->getWcConfig();
         $order = $wc->get('orders/'.$id);
         $warehouses = Warehouse::where('visibility','1')->get();
-        return view('prepareOrder', [
+        return view('orders/prepareOrder', [
             'order' => $order,
             'warehouses' => $warehouses,
         ]);
