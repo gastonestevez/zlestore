@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('woo_id')->nullable();
             $table->decimal('price',8,2)->nullable();
             $table->boolean('visibility')->default(true);
+            $table->string('woo_created')->default('2020-01-01T12:00:00');
         });
     }
 

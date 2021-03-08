@@ -18,18 +18,12 @@ class ProductsController extends Controller
             return back()->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
         }
 
-        $pr = Product::all()->pluck('woo_id')->toArray();
-        $queryString = '?';
-
-        foreach ($pr as $v) {
-            $queryString = $queryString . '&exclude[]='.$v;
-        }
-
+        $pr = Product::where('woo_id','not like','%FAKE%')->orderBy('woo_id', 'DESC')->get()->first();
         $wc = $this->getWcConfig();
         $index = 1;
         $products = [];
-        $wcProducts = $wc->get('products' . $queryString . '&page=' . $index);
-
+        $queryString = 'products' . '/?after=' . ($pr ? $pr->woo_created : '2020-01-01T12:00:00' . '&order=asc&orderby=id');
+        $wcProducts = $wc->get($queryString . '&page='. $index);
         while(count($wcProducts) > 0) {
             foreach ($wcProducts as $wcProduct) {
                 $sProduct = new Product;
@@ -38,6 +32,7 @@ class ProductsController extends Controller
                 $sProduct->woo_id = $wcProduct->id;
                 $sProduct->visibility = 1;
                 $sProduct->name = $wcProduct->name;
+                $sProduct->woo_created = $wcProduct->date_created;
                 $sProduct->save();
 
                 foreach ($warehouses as $warehouse) {
@@ -48,7 +43,7 @@ class ProductsController extends Controller
                 }
             }
             $index += 1;
-            $url = 'products' . $queryString . '&page=' . $index;
+            $url = $queryString . '&page=' . $index;
             $wcProducts = $wc->get($url);
         }
 
