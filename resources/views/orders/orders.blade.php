@@ -9,7 +9,7 @@ ZLE - Control de Stock
   <h1 class="uk-heading-divider">Lista de Pedidos</h1>
 
 
-    <button class="uk-button uk-button-secondary uk-margin">ACTUALIZAR LISTA</button>
+    <button class="uk-button uk-button-secondary uk-margin">ACTUALIZAR PEDIDOS</button>
 
     <div class="uk-flex">
 
@@ -43,8 +43,8 @@ ZLE - Control de Stock
               <th>Producto</th>
               <th>Unidades</th>
               <th>Cajas</th>
-              <th>Gestionar</th>
               <th>Total</th>
+              {{-- <th>Gestionar</th> --}}
               <th></th>
           </tr>
       </thead>
@@ -58,8 +58,8 @@ ZLE - Control de Stock
               <td></td>
               <td></td>
               <td></td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td>$5.000</td>
+              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td><a href="" uk-icon="icon: close"></a></td>
           </tr>
           <tr>
@@ -110,8 +110,8 @@ ZLE - Control de Stock
               <td>Porta retratos</td>
               <td>100</td>
               <td>1</td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td>$10.000</td>
+              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td><a href="" uk-icon="icon: close"></a></td>
           </tr>
           <tr>
@@ -123,8 +123,8 @@ ZLE - Control de Stock
               <td>Candelabro</td>
               <td>1500</td>
               <td>3</td>
-              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td>$50.000</td>
+              <td><button class="uk-button uk-button-default" type="button">Preparar</button></td>
               <td><a href="" uk-icon="icon: close"></a></td>
           </tr>
       </tbody>

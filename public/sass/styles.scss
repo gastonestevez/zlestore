@@ -67,3 +67,16 @@ a {
 .limpiar-busqueda {
   font-size: 10px;
 }
+
+.searchForm {
+  display: -webkit-inline-box;
+}
+
+// M Medium devices (tablets, less than 992px)
+@media (max-width: 992px) {
+
+  .searchForm {
+    display: block;
+  }
+
+}

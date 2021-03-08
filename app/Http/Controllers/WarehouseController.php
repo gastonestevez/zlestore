@@ -33,11 +33,11 @@ class WarehouseController extends Controller
     return view('warehouses.warehouse', $vac);
   }
 
-  public function products(int $id)
+  public function products(Request $request, int $id)
   {
     $warehouse = Warehouse::find($id);
     $products = $warehouse->getProducts()->orderBy('name')->paginate(25);
-    $vac = compact('warehouse', 'products');
+    $vac = compact('warehouse', 'products', 'request');
 
     return view('warehouses.warehouseProducts', $vac);
   }

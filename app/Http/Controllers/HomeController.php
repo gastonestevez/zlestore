@@ -30,7 +30,7 @@ class HomeController extends Controller
      */
     public function orders()
     {
-        return view('orders');
+        return view('orders/orders');
         // $wc = $this->getWcConfig();
         // $wcOrders = $wc->get('orders');
         // foreach ($wcOrders as $order) {

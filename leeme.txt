@@ -1,7 +1,6 @@
 OBLIGATORIOS PARA TERMINAR
--El filtro de busqueda de productos no funciona al cambiar a la pagina 2. Usar append
+-Agregar filtros en /orders
 -Probar botones Sincronizar lista en /warehouse/id/products y /orders
--Agregar filtros en /orders Y el filtro Woo id en /products/stock
 -Finalizar la distribucion de stock en los pedidos realizados y que el usuario maneje los estados "pendiente, cancelado, completado"
 
 NO OBLIGATORIOS
