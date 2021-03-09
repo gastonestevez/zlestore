@@ -33,7 +33,7 @@ ZLE - Control de Stock
     <div>
       <a href="/warehouse/list">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-            <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i>Depósitos</h3>
+            <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Depósitos</h3>
             <p>Lista de los depósitos existentes</p>
             <a href="/warehouse/list" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen X depósitos</a>
         </div>

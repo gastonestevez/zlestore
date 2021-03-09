@@ -72,6 +72,10 @@ a {
   display: -webkit-inline-box;
 }
 
+.warehouse-card {
+  cursor: pointer;
+}
+
 // M Medium devices (tablets, less than 992px)
 @media (max-width: 992px) {
 
