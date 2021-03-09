@@ -40,12 +40,22 @@ class OrderController extends Controller
         $wc = $this->getWcConfig();
         $wcOrder = $wc->get('orders' . '/' . $id);
         $warehouses = Warehouse::all();
+
         if(count($warehouses) == 0) {
             return redirect()->route('newWarehouse')->with('error', 'No hay depósitos para distribuir la orden.');
         }
 
+
+        
+
         foreach ($wcOrder->line_items as $item) {
-            $item->localId = Product::where('woo_id','=',$item->product_id)->first()->id;
+            $localProduct = Product::where('woo_id','=',$item->product_id)->first();
+            if(!$localProduct) {
+                return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
+            } else {
+                $item->localId = $localProduct->id;
+            }
+
         }
 
         return view('orders/prepareOrder', [

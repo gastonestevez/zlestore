@@ -76,7 +76,7 @@ Route::put('/updatingStock/{id}', [ProductsController::class, 'updatingStock'])-
 
 // Stock
 
-Route::get('/products/stock', [ProductsController::class, 'list'])->middleware('auth');
+Route::get('/products/stock', [ProductsController::class, 'list'])->name('stockList')->middleware('auth');
 
 Route::get('/product/{woo_id}/stock', [ProductsController::class, 'show'])->middleware('auth');
 
