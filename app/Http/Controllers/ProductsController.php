@@ -38,7 +38,7 @@ class ProductsController extends Controller
                 foreach ($warehouses as $warehouse) {
                     $sProduct->getWarehouses()->attach($sProduct->id, [
                         'warehouse_id' => $warehouse->id,
-                        'quantity' => -1,
+                        'quantity' => 0,
                     ]);
                 }
             }

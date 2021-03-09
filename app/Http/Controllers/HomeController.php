@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
-
+use App\Models\Product;
+use App\Models\Warehouse;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,15 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('index');
+        $wc = $this->getWcConfig();
+        $orders = count($wc->get('orders'. '?&status=pending'));
+        $warehouses = Warehouse::all()->count();
+        $products = Product::all()->count();
+        return view('index', [
+            'orders' => $orders,
+            'warehouses' => $warehouses,
+            'products' => $products,
+        ]);
     }
 
 
