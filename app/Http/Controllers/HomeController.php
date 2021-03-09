@@ -23,29 +23,6 @@ class HomeController extends Controller
         return view('index');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function orders()
-    {
-        return view('orders/orders');
-        // $wc = $this->getWcConfig();
-        // $wcOrders = $wc->get('orders');
-        // foreach ($wcOrders as $order) {
-        //     $order->customerName = $this->getCustomerFullname($wc, $order);
-        // }
-        // return view('orders', [
-        //     'orders' => $wcOrders,
-        // ]);
-    }
-
-    private function getCustomerFullname(Client $wc, $order)
-    {
-        $customer = $wc->get('customers/'.$order->customer_id);
-        return $customer->first_name . ' ' . $customer->last_name;
-    }
 
     private function getWcConfig(){
         return new Client(

@@ -10,7 +10,7 @@ ZLE - Control de Stock
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
-      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/create')}}">aquí</a>.</p>
+      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/new')}}">aquí</a>.</p>
     </div>
   @endif
   @if(\Session::has('success'))
@@ -35,9 +35,6 @@ ZLE - Control de Stock
         <div class="pr uk-margin-bottom">
             <input value="{{old('sku', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
         </div>
-        <div class="pr uk-margin-bottom">
-            <input value="{{old('sku', $request->price)}}" class="uk-search-input" type="search" placeholder="Precio ..." name="price">
-        </div>
         <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
         <div class="pr uk-margin-bottom">
           <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
@@ -58,7 +55,6 @@ ZLE - Control de Stock
               <th></th>
               <th>SKU</th>
               <th>Nombre</th>
-              <th>Precio</th>
               <th>Woo_id</th>
               {{-- <th>Acción</th> --}}
           </tr>
@@ -69,7 +65,6 @@ ZLE - Control de Stock
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
               <td>{{ $product->name }}</td>
-              <td>{{ (int)$product->price }}</td>
               <td>{{ $product->woo_id }}</td>
               <td>  <a class="uk-button uk-button-default" href="/product/{{$product->woo_id}}/stock">Ver Stock</a></td>
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}

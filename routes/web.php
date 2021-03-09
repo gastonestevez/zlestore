@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WooCommerceController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,11 @@ Route::get('/', [HomeController::class, 'index']);
 
 // Orders
 
-Route::get('/orders', [HomeController::class, 'orders'])->name('home')->middleware('auth');
+Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');
 
 Route::get('/woocommerce', [WooCommerceController::class, 'wc']);
+
+Route::get('/prepare/{id}', [OrderController::class, 'prepare'])->middleware('auth');
 
 // Users
 
