@@ -13,7 +13,7 @@ ZLE - Control de Stock
         @foreach ($warehouses as $warehouse)
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-                <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i>Stock en {{$warehouse->name}}</h3>
+                <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Stock en {{$warehouse->name}}</h3>
                 <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->woo_id}} <br> SKU: {{$product->sku}}<p>
 
               <form method="post" action="/updatingStock/{{$product->id}}">

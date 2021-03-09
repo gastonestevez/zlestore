@@ -30,10 +30,10 @@ ZLE - Control de Stock
             <input value="{{old('sku', $request->sku)}}" class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
         </div>
         <div class="pr uk-margin-bottom">
-            <input value="{{old('sku', $request->woo_id)}}" class="uk-search-input" type="search" placeholder="Woo ID ..." name="woo_id">
+            <input value="{{old('woo_id', $request->woo_id)}}" class="uk-search-input" type="search" placeholder="Woo ID ..." name="woo_id">
         </div>
         <div class="pr uk-margin-bottom">
-            <input value="{{old('sku', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
+            <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
         </div>
         <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
         <div class="pr uk-margin-bottom">
@@ -41,7 +41,7 @@ ZLE - Control de Stock
         </div>
      </form>
 
-      <form class="uk-search uk-search-default" method="get">
+      <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
         <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
       </form>
 

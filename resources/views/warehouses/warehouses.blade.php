@@ -21,7 +21,7 @@ ZLE - Control de Stock
         @endforeach
 
         <div>
-            <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark warehouse-card--add" onclick="sendToCreateWarehouse()">
+            <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark warehouse-card--add" style="cursor:pointer;" onclick="sendToCreateWarehouse()">
                 <h3 class="uk-card-title"><i class="fas fa-plus-circle"></i> Agregar/editar depósito</h3>
                 <p>Haga click en el panel para agregar un depósito nuevo.</p>
             </div>

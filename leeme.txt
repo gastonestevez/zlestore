@@ -1,6 +1,5 @@
 OBLIGATORIOS PARA TERMINAR
--Agregar filtros en /orders
--Probar botones Sincronizar lista en /warehouse/id/products y /orders
+-Remover "gestionar usuarios cuando sos rol employee"
 -Finalizar la distribucion de stock en los pedidos realizados y que el usuario maneje los estados "pendiente, cancelado, completado"
 
 NO OBLIGATORIOS
