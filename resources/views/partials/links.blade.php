@@ -1,3 +1,4 @@
+<!-- Icono del logo en pestana --><link rel="icon" type="image/png" href="/img/faviconzle_round.png">
 <!-- Mi css UIkit --><link rel="stylesheet" href="/css/uikit.css">
 <!-- warehouse css --><link rel="stylesheet" href="/css/app.css">
 <!-- Mi css personalizado --><link rel="stylesheet" href="/css/styles.css">
