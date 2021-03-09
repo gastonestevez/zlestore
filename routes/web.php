@@ -31,6 +31,9 @@ Route::get('/woocommerce', [WooCommerceController::class, 'wc']);
 
 Route::get('/prepare/{id}', [OrderController::class, 'prepare'])->middleware('auth');
 
+Route::post('/storeOrder/{id}', [OrderController::class, 'storeOrder'])->middleware('auth');
+
+
 // Users
 
 Route::get('/users', [UserController::class, 'directory'])->middleware('admin');
@@ -50,7 +53,7 @@ Route::get('/warehouse/list', [WarehouseController::class, 'list'])->middleware(
 
 Route::get('/warehouse/{id}/products', [WarehouseController::class, 'products'])->middleware('auth');
 
-Route::get('/warehouse/new', [WarehouseController::class, 'new'])->middleware('auth');
+Route::get('/warehouse/new', [WarehouseController::class, 'new'])->name('newWarehouse')->middleware('auth');
 
 Route::post('/warehouse/store', [WarehouseController::class, 'store'])->middleware('auth');
 

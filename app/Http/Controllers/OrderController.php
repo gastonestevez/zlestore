@@ -19,7 +19,7 @@ class OrderController extends Controller
     {
         //return view('orders/orders');
         $wc = $this->getWcConfig();
-        $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=processing');
+        $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
         foreach ($wcOrders as $order) {
             $order->customerName = $this->getCustomerFullname($wc, $order);
         }
@@ -40,16 +40,51 @@ class OrderController extends Controller
         $wc = $this->getWcConfig();
         $wcOrder = $wc->get('orders' . '/' . $id);
         $warehouses = Warehouse::all();
-
+        if(count($warehouses) == 0) {
+            return redirect()->route('newWarehouse')->with('error', 'No hay depósitos para distribuir la orden.');
+        }
 
         foreach ($wcOrder->line_items as $item) {
             $item->localId = Product::where('woo_id','=',$item->product_id)->first()->id;
         }
-        
+
         return view('orders/prepareOrder', [
             'order' => $wcOrder,
             'warehouses' => $warehouses,
         ]);
+    }
+
+    public function storeOrder($id, Request $r)
+    {
+        $rProducts = $r->product;
+        $transition = $r->transition;
+
+        foreach ($rProducts as $idProduct => $stocks) {
+            $productDB = Product::find($idProduct);
+            foreach ($stocks as $idWarehouse => $stock) {
+                $warehouseDB = Warehouse::find($idWarehouse);
+                $newStock = $warehouseDB->getProductStock($idWarehouse, $idProduct) - $stock;
+                $productDB
+                    ->getWarehouses()
+                    ->updateExistingPivot(
+                        $idWarehouse, 
+                        ['quantity' => $newStock]
+                    );
+            }
+        }
+        
+        $wc = $this->getWcConfig();
+        $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
+
+        // Liberar cuando esté en producción.
+        if($transition)
+        {
+            $data = [ 'status' => $transition ];
+            //$wc->put('orders/' . $id, $data);
+        }
+
+        return redirect()->route('home')->with('success', 'Orden #' . $id . ' actualizada correctamente.');
+
     }
 
     private function getWcConfig(){
