@@ -52,7 +52,7 @@
                       <div class="uk-navbar-dropdown">
                           <ul class="uk-nav uk-navbar-dropdown-nav">
                             @if (Auth::user())
-                              <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
+                              <li><a href="/user">Mi perfil</a></li>
                             @endif
                             @if (Auth::user()->role == 'admin')
                               <li><a href="/users">Gestionar usuarios</a></li>
