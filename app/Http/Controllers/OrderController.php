@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use App\Models\Product;
+use Carbon\Carbon;
 
 
 class OrderController extends Controller
@@ -17,11 +18,11 @@ class OrderController extends Controller
      */
     public function orders()
     {
-        //return view('orders/orders');
         $wc = $this->getWcConfig();
         $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
         foreach ($wcOrders as $order) {
             $order->customerName = $this->getCustomerFullname($wc, $order);
+            $order->date_created = (new Carbon($order->date_created))->format('Y-m-d H:i:s');          
         }
         return view('orders/orders', [
             'orders' => $wcOrders,
@@ -40,6 +41,7 @@ class OrderController extends Controller
         $wc = $this->getWcConfig();
         $wcOrder = $wc->get('orders' . '/' . $id);
         $warehouses = Warehouse::all();
+        $wcOrder->date_created = (new Carbon($wcOrder->date_created))->format('Y-m-d H:i:s');
 
         if(count($warehouses) == 0) {
             return redirect()->route('newWarehouse')->with('error', 'No hay depósitos para distribuir la orden.');
@@ -90,7 +92,7 @@ class OrderController extends Controller
         if($transition)
         {
             $data = [ 'status' => $transition ];
-            //$wc->put('orders/' . $id, $data);
+            $wc->put('orders/' . $id, $data);
         }
 
         return redirect()->route('home')->with('success', 'Orden #' . $id . ' actualizada correctamente.');

@@ -13,41 +13,48 @@ class ProductsController extends Controller
 
     public function syncWoocommerce(Request $request)
     {
-        $warehouses = Warehouse::all();
-        if (count($warehouses) == 0) {
-            return back()->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
-        }
 
-        $pr = Product::where('woo_id','not like','%FAKE%')->orderBy('woo_id', 'DESC')->get()->first();
-        $wc = $this->getWcConfig();
-        $index = 1;
-        $products = [];
-        $queryString = 'products' . '/?after=' . ($pr ? $pr->woo_created : '2020-01-01T12:00:00' . '&order=asc&orderby=id');
-        $wcProducts = $wc->get($queryString . '&page='. $index);
-        while(count($wcProducts) > 0) {
-            foreach ($wcProducts as $wcProduct) {
-                $sProduct = new Product;
-                $sProduct->price = $wcProduct->price ?: 0;
-                $sProduct->sku = $wcProduct->sku;
-                $sProduct->woo_id = $wcProduct->id;
-                $sProduct->visibility = 1;
-                $sProduct->name = $wcProduct->name;
-                $sProduct->woo_created = $wcProduct->date_created;
-                $sProduct->save();
-
-                foreach ($warehouses as $warehouse) {
-                    $sProduct->getWarehouses()->attach($sProduct->id, [
-                        'warehouse_id' => $warehouse->id,
-                        'quantity' => 0,
-                    ]);
-                }
+        try {
+            
+            $warehouses = Warehouse::all();
+            if (count($warehouses) == 0) {
+                return back()->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
             }
-            $index += 1;
-            $url = $queryString . '&page=' . $index;
-            $wcProducts = $wc->get($url);
-        }
 
-        return back()->with('success', 'Sus depósitos han sido sincronizados a Woocommerce.');
+            $pr = Product::where('woo_id','not like','%FAKE%')->orderBy('woo_id', 'DESC')->get()->first();
+            $wc = $this->getWcConfig();
+            $index = 1;
+            $products = [];
+            $queryString = 'products' . '/?after=' . ($pr ? $pr->woo_created : '2020-01-01T12:00:00' . '&order=asc&orderby=id');
+            $wcProducts = $wc->get($queryString . '&page='. $index);
+            while(count($wcProducts) > 0) {
+                foreach ($wcProducts as $wcProduct) {
+                    $sProduct = new Product;
+                    $sProduct->price = $wcProduct->price ?: 0;
+                    $sProduct->sku = $wcProduct->sku;
+                    $sProduct->woo_id = $wcProduct->id;
+                    $sProduct->visibility = 1;
+                    $sProduct->name = $wcProduct->name;
+                    $sProduct->woo_created = $wcProduct->date_created;
+                    $sProduct->save();
+
+                    foreach ($warehouses as $warehouse) {
+                        $sProduct->getWarehouses()->attach($sProduct->id, [
+                            'warehouse_id' => $warehouse->id,
+                            'quantity' => 0,
+                        ]);
+                    }
+                }
+                $index += 1;
+                $url = $queryString . '&page=' . $index;
+                $wcProducts = $wc->get($url);
+            }
+
+            return back()->with('success', 'Sus depósitos han sido sincronizados a Woocommerce.');
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Aun faltan productos por sincronizar.');
+        }
         
     }
 

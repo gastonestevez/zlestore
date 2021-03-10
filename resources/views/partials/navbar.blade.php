@@ -54,7 +54,9 @@
                             @if (Auth::user())
                               <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
                             @endif
+                            @if (Auth::user()->role == 'admin')
                               <li><a href="/users">Gestionar usuarios</a></li>
+                            @endif
                               {{-- <li class="uk-nav-header">Header</li> --}}
                               <li class="uk-nav-divider"></li>
                               <li>

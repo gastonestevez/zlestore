@@ -40,7 +40,7 @@ Route::get('/users', [UserController::class, 'directory'])->middleware('admin');
 
 Route::post('/adduser', [UserController::class, 'store'])->middleware('admin');
 
-Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
+Route::get('/user', [UserController::class, 'show'])->middleware('auth');
 
 Route::put('/edituser/{id}', [UserController::class, 'update'])->middleware('auth');
 

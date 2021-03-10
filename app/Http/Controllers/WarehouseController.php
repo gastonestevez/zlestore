@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Product;
 
 class WarehouseController extends Controller
 {
@@ -51,6 +52,15 @@ class WarehouseController extends Controller
 
   public function store(Request $req) {
       Warehouse::create($req->all());
+      $products = Product::all();
+
+      $lastWarehouseId = Warehouse::all()->last()->id;
+      
+      foreach ($products as $product) {
+        // aca indicamos que producto va updatear su stock, la cantidad nueva de stock y en que deposito se esta realizando
+        $product->getWarehouses()->attach($lastWarehouseId, ['quantity' => 0]); // https://laravel.com/docs/8.x/eloquent-relationships Updating A Record On A Pivot Table
+      }
+
 
     return redirect('/warehouse/list')
         ->with('success', 'Depósito creado exitosamente');

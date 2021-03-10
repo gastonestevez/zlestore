@@ -29,7 +29,7 @@ ZLE - Crear depósito
             <div class="uk-margin">
                 <div class="uk-inline">
                  <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: home"></span>
-                 <input value="{{old('address')}}" class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito">
+                 <input value="{{old('address')}}" class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito" required>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@ ZLE - Crear depósito
                 <div class="uk-margin">
                     <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: home"></span>
-                    <input value="{{old('address', $warehouse->address)}}" class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito">
+                    <input value="{{old('address', $warehouse->address)}}" class="uk-input" name='address' id="form-horizontal-text" type="text" placeholder="Dirección del depósito" required>
                     </div>
                 </div>
 
