@@ -10,7 +10,7 @@ use App\Models\stocks;
 class Warehouse extends Model
 {
     use HasFactory;
-    protected $table = 'Warehouse';
+    protected $table = 'warehouse';
     protected $fillable = ['name', 'address', 'visibility'];
 
     public function getProducts()
