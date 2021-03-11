@@ -25,7 +25,7 @@ ZLE - Control de Stock
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-cubes"></i> Stock de Productos</h3>
             <p>Lista de todos los productos existentes</p>
-            <a href="#" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$products}} productos</a>
+            <a href="/products/stock" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$products}} productos</a>
         </div>
       </a>
     </div>

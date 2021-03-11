@@ -107,9 +107,11 @@
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/orders" uk-scroll>Pedidos</a></li>
         <li class="uk-parent">
           <a href="#">Stock</a>
+          @if (Auth::user()->role == 'admin')
               <ul class="uk-nav-sub">
                   <li><a href="{{url('/newProducts')}}">Gestionar Stock</a></li>
               </ul>
+          @endif
         </li>
         <li class="uk-parent">
           <a href="/warehouse/list">Depósitos</a>
