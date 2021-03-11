@@ -12,7 +12,6 @@ ZLE - Preparar pedido
                 <th>N° Orden</th>
                 <th>Fecha</th>
                 <th>Estado</th> 
-                <th>Total</th>
             </tr>
         </thead>
         <tbody>
@@ -20,7 +19,6 @@ ZLE - Preparar pedido
                 <td>{{$order->id}}</td>
                 <td>{{$order->date_created}}</td>
                 <td>{{$order->status}}</td>
-                <td>$ {{$order->total}}</td>
             </tr>
         </tbody>
     </table>
@@ -33,7 +31,6 @@ ZLE - Preparar pedido
                     <th>SKU</th>
                     <th>Producto</th>
                     <th>Unidades</th>
-                    <th>Total</th>
                     @foreach ($warehouses as $w)
                         <th>{{$w->name}}</th>
                     @endforeach
@@ -47,7 +44,6 @@ ZLE - Preparar pedido
                         <td>{{$item->sku}}</td>
                         <td>{{$item->name}}</td>
                         <td class='item-column-quantity'>{{$item->quantity}}</td>
-                        <td>$ {{$item->total}}</td>
                             @foreach ($warehouses as $w)
                             <td>
                                 <input 

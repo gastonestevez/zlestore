@@ -40,7 +40,7 @@ ZLE - Control de Stock
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>$ {{$order->total}}</td>
+                <td>${{$order->total}}</td>
                 <td><form action="{{'prepare/'.$order->id}}" method="get"><button class="uk-button uk-button-default" type="submit">Preparar</button></form></td>
                 <td><a href="" uk-icon="icon: close"></a></td>
             </tr>
@@ -54,7 +54,7 @@ ZLE - Control de Stock
               <td>{{$item->name}}</td>
               <td>{{$item->quantity}}</td>
               <td>{{$item->unidades_por_caja}}</td>
-              <td>{{$item->total}}</td>
+              <td>${{$item->total}}</td>
               <td></td>
             </tr>
             @endforeach
