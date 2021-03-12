@@ -26,6 +26,14 @@ class UserController extends Controller
     return view('users/user', $vac);
   }
 
+  public function showAdmin(int $id)
+  {
+    $user = User::find($id);
+    $vac = compact('user');
+
+    return view('users/user', $vac);
+  }
+
   public function store(Request $request)
   {
 

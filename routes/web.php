@@ -42,6 +42,8 @@ Route::post('/adduser', [UserController::class, 'store'])->middleware('admin');
 
 Route::get('/user', [UserController::class, 'show'])->middleware('auth');
 
+Route::get('/user/{id}', [UserController::class, 'showAdmin'])->middleware('admin');
+
 Route::put('/edituser/{id}', [UserController::class, 'update'])->middleware('auth');
 
 Route::delete('/deleteuser/{id}', [UserController::class, 'destroy'])->middleware('admin');

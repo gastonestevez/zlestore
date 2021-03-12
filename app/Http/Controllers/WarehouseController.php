@@ -36,8 +36,14 @@ class WarehouseController extends Controller
 
   public function products(Request $request, int $id)
   {
+
+    $sku = $request->get('sku');
+      $name = $request->get('name');
+      $price = $request->get('price');
+      $woo_id = $request->get('woo_id');
+
     $warehouse = Warehouse::find($id);
-    $products = $warehouse->getProducts()->orderBy('name')->paginate(25);
+    $products = $warehouse->getProducts()->orderBy('name')->sku($sku)->name($name)->price($price)->woo_id($woo_id)->paginate(25);
     $vac = compact('warehouse', 'products', 'request');
 
     return view('warehouses.warehouseProducts', $vac);
