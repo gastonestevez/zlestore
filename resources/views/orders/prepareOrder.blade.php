@@ -65,6 +65,9 @@ ZLE - Preparar pedido
         </form>
     </div>
     <div class="uk-margin">
+        <p id='errorMessage'></p>
+    </div>
+    <div class="uk-margin">
         <div uk-form-custom="target: > * > span:first-child">
             <select id='transitionSelect' name='transition' required>
                 <option value=''>Transferir estado a...</option>
@@ -147,6 +150,9 @@ const storeOrder = (e) => {
         form.appendChild(transitionSelect)
         form.submit()
     } else {
+        const errorMessage = document.getElementById('errorMessage')
+        errorMessage.innerHTML = 'Hay uno o mas productos sin distribuir el total de su stock.'
+        errorMessage.style.color = 'red'
         document.getElementById('messages').innerHTML = displayErrorMessage()
     }
 

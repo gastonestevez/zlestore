@@ -51,7 +51,7 @@ class OrderController extends Controller
         
 
         foreach ($wcOrder->line_items as $item) {
-            $localProduct = Product::where('woo_id','=',$item->product_id)->first();
+            $localProduct = Product::where('woo_id','=',$item->variation_id ?: $item->product_id)->first();
             if(!$localProduct) {
                 return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
             } else {
