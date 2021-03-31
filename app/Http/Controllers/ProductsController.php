@@ -27,6 +27,7 @@ class ProductsController extends Controller
             $products = [];
             $queryString = 'products' . '/?after=' . ($pr ? $pr->woo_created : '2020-01-01T12:00:00' . '&order=asc&orderby=id');
             $wcProducts = $wc->get($queryString . '&page='. $index);
+            
             while(count($wcProducts) > 0) {
                 foreach ($wcProducts as $wcProduct) {
                     $sProduct = new Product;
@@ -36,13 +37,36 @@ class ProductsController extends Controller
                     $sProduct->visibility = 1;
                     $sProduct->name = $wcProduct->name;
                     $sProduct->woo_created = $wcProduct->date_created;
-                    $sProduct->save();
+                    
+                    if($wcProduct->type == 'simple') {
+                        $sProduct->save();
+    
+                        foreach ($warehouses as $warehouse) {
+                            $sProduct->getWarehouses()->attach($sProduct->id, [
+                                'warehouse_id' => $warehouse->id,
+                                'quantity' => 0,
+                            ]);
+                        }
+                    }
 
-                    foreach ($warehouses as $warehouse) {
-                        $sProduct->getWarehouses()->attach($sProduct->id, [
-                            'warehouse_id' => $warehouse->id,
-                            'quantity' => 0,
-                        ]);
+                    if($wcProduct->type == 'variable') {
+                        foreach ($wcProduct->variations as $variationId) {
+                            $wcVariation = $wc->get('products/'.$variationId);
+                            $vProduct = new Product;
+                            $vProduct->price = $wcVariation->price ?: 0;
+                            $vProduct->sku = $wcVariation->sku;
+                            $vProduct->woo_id = $wcVariation->id;
+                            $vProduct->visibility = 1;
+                            $vProduct->name = $wcVariation->name ?: 'NO_NAME';
+                            $vProduct->woo_created = $wcVariation->date_created ?: '';
+                            $vProduct->save();
+                            foreach ($warehouses as $warehouse) {
+                                $vProduct->getWarehouses()->attach($vProduct->id, [
+                                    'warehouse_id' => $warehouse->id,
+                                    'quantity' => 0,
+                                ]);
+                            }
+                        }
                     }
                 }
                 $index += 1;
@@ -53,6 +77,7 @@ class ProductsController extends Controller
             return back()->with('success', 'Sus depósitos han sido sincronizados a Woocommerce.');
 
         } catch (\Throwable $th) {
+            dd($th);
             return back()->with('error', 'Aun faltan productos por sincronizar.');
         }
         
@@ -149,6 +174,7 @@ class ProductsController extends Controller
         return view('orders/prepareOrder', [
             'order' => $order,
             'warehouses' => $warehouses,
+            'timeout' => 900
         ]);
     }
 
@@ -174,6 +200,7 @@ class ProductsController extends Controller
             [
               'wp_api' => true,
               'version' => 'wc/v3',
+              'timeout' => 900
             ]
           );
     }
