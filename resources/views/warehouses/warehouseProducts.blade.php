@@ -59,6 +59,7 @@ ZLE - Control de Stock
               <th>Precio</th>
               <th>Woo_id</th>
               <th class="uk-table-shrink">Stock</th>
+              <th class="uk-table-shrink">Cajas</th>
           </tr>
       </thead>
       <tbody>
@@ -74,6 +75,7 @@ ZLE - Control de Stock
                 @csrf
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
                 <td><input required min="0" name="quantity" value="{{old('quantity', $warehouse->getProductStock($warehouse->id, $product->id))}}" class="uk-input" placeholder="Stock del producto"></td>                
+                <td><input required min="0" name="boxes" value="{{old('boxes', $boxes)}}" class="uk-input" placeholder="Stock del producto"></td>                
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
               </form>
           </tr>

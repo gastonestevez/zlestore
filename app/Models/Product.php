@@ -14,7 +14,8 @@ class Product extends Model
         'sku',
         'name',
         'price',
-        'woo_id'
+        'woo_id',
+        'units_in_box'
     ];
 
     public function getWarehouses()

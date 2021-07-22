@@ -38,13 +38,23 @@ class WarehouseController extends Controller
   {
 
     $sku = $request->get('sku');
-      $name = $request->get('name');
-      $price = $request->get('price');
-      $woo_id = $request->get('woo_id');
+    $name = $request->get('name');
+    $price = $request->get('price');
+    $woo_id = $request->get('woo_id');
 
     $warehouse = Warehouse::find($id);
     $products = $warehouse->getProducts()->orderBy('name')->sku($sku)->name($name)->price($price)->woo_id($woo_id)->paginate(25);
-    $vac = compact('warehouse', 'products', 'request');
+    
+    foreach ($products as $product) {
+      $stock = $warehouse->getProductStock($warehouse->id, $product->id);
+      if ($stock > 0 && $product->units_in_box > 0) {
+        $boxes = intval($stock / $product->units_in_box);
+      } else {
+        $boxes = 0;
+      }
+    }
+    
+    $vac = compact('warehouse', 'products', 'request', 'boxes');
 
     return view('warehouses.warehouseProducts', $vac);
   }

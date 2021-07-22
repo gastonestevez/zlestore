@@ -20,13 +20,24 @@ ZLE - Control de Stock
                 @csrf
                 @method('put')
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
-                <div class="uk-margin" uk-margin>
-                  <div uk-form-custom="target: true">
-                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
-                    <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Stock disponible" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}">
+                <div class="uk-margin uk-flex uk-flex-wrap uk-flex-between" uk-margin>
+                  <div>
+                    <span>Unidades:</span><br>
+                    <div uk-form-custom="target: true">
+                      <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
+                      <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}">                    
+                    </div>
                   </div>
-                  <button uk-tooltip="Editar Stock" class="uk-button uk-button-default">Actualizar</button>
+                  <div>
+                    <span>Cajas:</span><br>
+                    <div uk-form-custom="target: true">
+                      <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
+                      <input required min="0" name="units_in_box" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas disponibles" value="{{old('stock', intval($warehouse->getProductStock($warehouse->id, $product->id)/$product->units_in_box))}}">
+                    </div>
+                  </div>
+                  <br><br>
                 </div>
+                <button uk-tooltip="Editar Stock" class="uk-button uk-button-default">Actualizar</button>
               </form>
 
             </div>

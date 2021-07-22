@@ -22,5 +22,5 @@ class Warehouse extends Model
     {
       return stocks::where('product_id', '=', $productId)->where('warehouse_id', '=', $warehouseId)->first()->quantity;
     }
-
+    
 }
