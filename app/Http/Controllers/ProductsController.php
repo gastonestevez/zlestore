@@ -178,17 +178,49 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function updatingStock(Request $request, int $id)
+    public function updatingUnits(Request $request, int $id)
     {
        // variables de ayuda
         $warehouseId = $request->warehouse_id;
-        $quantity = $request->quantity;
         $product = Product::find($id);
+        $quantity = $request->quantity;
 
         // aca indicamos que producto va updatear su stock, la cantidad nueva de stock y en que deposito se esta realizando
         $product->getWarehouses()->updateExistingPivot($warehouseId, ['quantity' => $quantity]); // https://laravel.com/docs/8.x/eloquent-relationships Updating A Record On A Pivot Table
 
         return back()->with('success', 'Stock actualizado correctamente');
+    }
+
+
+    public function updatingBoxes(Request $request, int $id)
+    {
+       
+       // variables de ayuda
+        $warehouseId = $request->warehouse_id;
+        $product = Product::find($id);
+
+        // Unidades actuales
+        $stock = Warehouse::getProductStock($warehouseId, $id);    
+        // cajas actuales
+        if ($product->units_in_box > 0) {        
+        $boxes = $stock / $product->units_in_box;
+
+        // averiguo el resto de unidades en caso de que tenga cajas abiertas
+        $sobra = $stock % $product->units_in_box;
+        // nueva cantidad en stock
+        $quantity = $sobra + ($product->units_in_box * $request->boxes);
+        
+        
+        // aca indicamos que producto va updatear su stock, la cantidad nueva de stock y en que deposito se esta realizando
+        $product->getWarehouses()->updateExistingPivot($warehouseId, ['quantity' => $quantity]); // https://laravel.com/docs/8.x/eloquent-relationships Updating A Record On A Pivot Table
+        
+        return back()->with('success', 'Stock actualizado correctamente');
+        
+        } else {
+            $boxes = 0;
+        return back()->with('success', 'Stock actualizado correctamente');
+        }
+
     }
 
     private function getWcConfig()
@@ -197,7 +229,7 @@ class ProductsController extends Controller
             'https://zlestore.com',
             env('WC_KEY_CK'),
             env('WC_KEY_CS'),
-            [
+            [ 
               'wp_api' => true,
               'version' => 'wc/v3',
               'timeout' => 900

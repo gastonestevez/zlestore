@@ -58,7 +58,7 @@ ZLE - Control de Stock
               <th>Nombre</th>
               <th>Precio</th>
               <th>Woo_id</th>
-              <th class="uk-table-shrink">Stock</th>
+              <th class="uk-table-shrink">Unidades</th>
               <th class="uk-table-shrink">Cajas</th>
           </tr>
       </thead>
@@ -67,16 +67,17 @@ ZLE - Control de Stock
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td>{{ $product->name }}</td>
+              <td><a href="/product/{{ $product->woo_id }}/stock"> {{ $product->name }} </a></td>
               <td>{{ (int)$product->price }}</td>
               <td>{{ $product->woo_id }}</td>
-              <form action="/updatingStock/{{$product->id}}" method="POST">
+              <form action="/updatingBoxes/{{$product->id}}" method="POST">
                 @method('put')
                 @csrf
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
-                <td><input required min="0" name="quantity" value="{{old('quantity', $warehouse->getProductStock($warehouse->id, $product->id))}}" class="uk-input" placeholder="Stock del producto"></td>                
+                <td><input required min="0" name="quantity" value="{{old('quantity', $warehouse->getProductStock($warehouse->id, $product->id))}}" class="uk-input" placeholder="Stock del producto" readonly disabled></td>                
                 <td><input required min="0" name="boxes" value="{{old('boxes', $boxes)}}" class="uk-input" placeholder="Stock del producto"></td>                
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
+                <td><a href="/product/{{$product->woo_id}}/stock" uk-tooltip="Transferir Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
         @endforeach

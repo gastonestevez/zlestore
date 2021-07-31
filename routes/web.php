@@ -73,7 +73,9 @@ Route::post('prepare/{id}', [ProductsController::class, 'prepareOrder'])->middle
 
 Route::post('prepare/{id}/changeStatus', [ProductsController::class, 'prepareOrder'])->middleware('auth');
 
-Route::put('/updatingStock/{id}', [ProductsController::class, 'updatingStock'])->middleware('auth');
+Route::put('/updatingBoxes/{id}', [ProductsController::class, 'updatingBoxes'])->middleware('auth');
+
+Route::put('/updatingUnits/{id}', [ProductsController::class, 'updatingUnits'])->middleware('auth');
 
 
 // Stock
@@ -83,4 +85,9 @@ Route::get('/products/stock', [ProductsController::class, 'list'])->name('stockL
 Route::get('/product/{woo_id}/stock', [ProductsController::class, 'show'])->middleware('auth');
 
 Route::get('/products/syncWoocommerce', [ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
+
+Route::put('/transferingUnits/{woo_id}', [WarehouseController::class, 'transferingUnits'])->middleware('auth');
+
+Route::put('/transferingBoxes/{woo_id}', [WarehouseController::class, 'transferingBoxes'])->middleware('auth');
+
 

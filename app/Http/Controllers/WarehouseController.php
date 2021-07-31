@@ -103,4 +103,47 @@ class WarehouseController extends Controller
           ->with('success', 'Depósito eliminado exitosamente');
   }
 
+  public function transferingUnits(Request $request, int $id) 
+  {
+    
+    $product = Product::where('id', '=', $id)->first();
+    $quantity = $request->quantity;
+    $warehouseOrigin = $request->warehouseOrigin;
+    $warehouseDestiny = $request->warehouseDestiny;
+    $stockInDestiny = Warehouse::getProductStock($warehouseDestiny, $id);
+
+    $stockInOrigin = Warehouse::getProductStock($warehouseOrigin, $id);
+    if ($request->quantity > $stockInOrigin) {
+      return redirect()->back()
+          ->with('error', 'No hay tanta cantidad de stock');
+    } else {
+      $product->getWarehouses()->updateExistingPivot($warehouseOrigin, ['quantity' => ($stockInOrigin-$quantity)]);
+      $product->getWarehouses()->updateExistingPivot($warehouseDestiny, ['quantity' => ($stockInDestiny +$quantity)]);
+      return redirect()->back()
+          ->with('success', 'Stock actualizado exitosamente');
+    }
+  }
+
+  public function transferingBoxes(Request $request, int $id) 
+  {
+    
+    $product = Product::where('id', '=', $id)->first();
+    $quantity = $request->quantity * $product->units_in_box;
+    $warehouseOrigin = $request->warehouseOrigin;
+    $warehouseDestiny = $request->warehouseDestiny;
+    $stockInDestiny = Warehouse::getProductStock($warehouseDestiny, $id);
+    $stockInOrigin = Warehouse::getProductStock($warehouseOrigin, $id);
+
+    $boxesInOrigin = intval(Warehouse::getProductStock($warehouseOrigin, $id) / $product->units_in_box);
+    if ($request->quantity > $boxesInOrigin) {
+      return redirect()->back()
+          ->with('error', 'No hay tanta cantidad de stock');
+    } else {
+      $product->getWarehouses()->updateExistingPivot($warehouseOrigin, ['quantity' => ($stockInOrigin - $quantity)]);
+      $product->getWarehouses()->updateExistingPivot($warehouseDestiny, ['quantity' => ($stockInDestiny + $quantity)]);
+      return redirect()->back()
+          ->with('success', 'Stock actualizado exitosamente');
+    }
+  }
+
 }

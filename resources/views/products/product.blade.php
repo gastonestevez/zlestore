@@ -14,37 +14,84 @@ ZLE - Control de Stock
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Stock en {{$warehouse->name}}</h3>
-                <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->woo_id}} <br> SKU: {{$product->sku}}<p>
+                <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->woo_id}} <br> SKU: {{$product->sku}} <br> Unidades por Caja: {{$product->units_in_box}}<p>
 
-              <form method="post" action="/updatingStock/{{$product->id}}">
+
+              <form method="post" action="/updatingUnits/{{$product->id}}">
                 @csrf
                 @method('put')
-                <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
-                <div class="uk-margin uk-flex uk-flex-wrap uk-flex-between" uk-margin>
-                  <div>
-                    <span>Unidades:</span><br>
-                    <div uk-form-custom="target: true">
-                      <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
-                      <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}">                    
-                    </div>
-                  </div>
-                  <div>
-                    <span>Cajas:</span><br>
-                    <div uk-form-custom="target: true">
-                      <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
-                      <input required min="0" name="units_in_box" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas disponibles" value="{{old('stock', intval($warehouse->getProductStock($warehouse->id, $product->id)/$product->units_in_box))}}">
-                    </div>
-                  </div>
-                  <br><br>
+                <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">         
+                <span>Unidades:</span><br>
+                <div uk-form-custom="target: true">
+                  <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
+                  <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}">                    
                 </div>
-                <button uk-tooltip="Editar Stock" class="uk-button uk-button-default">Actualizar</button>
+                <button uk-tooltip="Editar Unidades" class="uk-button uk-button-default">Actualizar</button>
               </form>
+
+              <form method="post" action="/updatingBoxes/{{$product->id}}">
+                @csrf
+                @method('put')
+                <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">         
+                <span>Cajas:</span><br>
+                  <div uk-form-custom="target: true">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
+                    <input required min="0" name="boxes" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas disponibles"
+                    @if ($warehouse->getProductStock($warehouse->id, $product->id) > 0)
+                     value="{{old('stock', intval($warehouse->getProductStock($warehouse->id, $product->id)/$product->units_in_box))}}"     
+                    @else
+                     value="0"
+                    @endif
+                    >        
+                  </div>
+                <button uk-tooltip="Editar Cajas" class="uk-button uk-button-default">Actualizar</button>
+              </form>  
+              
+              <form method="post" action="/transferingUnits/{{$product->id}}">
+                @csrf
+                @method('put')
+                <br>
+                <span>Transferir Stock:</span><br>
+                <input type="hidden" name="warehouseOrigin" value={{$warehouse->id}}>
+                <input required min="1" max="{{$warehouse->getProductStock($warehouse->id, $product->id)}}" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades a transferir" value="">                    
+                <span uk-icon="arrow-right"></span>
+                <select class="uk-select uk-form-width-medium" name="warehouseDestiny">Depósito a transferir
+                  @foreach ($warehouses as $transferWarehouse)
+                    @if ($transferWarehouse != $warehouse)
+                    <option value="{{$transferWarehouse->id}}">{{$transferWarehouse->name}}</option>                           
+                    @endif
+                  @endforeach                 
+                </select>
+                <button uk-tooltip="Transferir Unidades" class="uk-button uk-button-default">Transferir Unidades</button>
+              </form> 
+              <form method="post" action="/transferingBoxes/{{$product->id}}">
+                @csrf
+                @method('put')
+                <br>
+                <input type="hidden" name="warehouseOrigin" value={{$warehouse->id}}>
+                <input required step="1" 
+                @if($warehouse->getProductStock($warehouse->id, $product->id) > 0)
+                max="{{$warehouse->getProductStock($warehouse->id, $product->id) / $product->units_in_box}}"
+                @else
+                max="0"
+                @endif 
+                min="1" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas a transferir" value="">                   
+                <span uk-icon="arrow-right"></span>               
+                <select class="uk-select uk-form-width-medium" name="warehouseDestiny">Depósito a transferir
+                  @foreach ($warehouses as $transferWarehouse)
+                    @if ($transferWarehouse != $warehouse)
+                    <option value="{{$transferWarehouse->id}}">{{$transferWarehouse->name}}</option>                           
+                    @endif
+                  @endforeach                  
+                </select>
+                <button uk-tooltip="Transferir Cajas" class="uk-button uk-button-default">Transferir Cajas</button>
+              </form> 
+              
 
             </div>
         </div>
         @endforeach
     </div>
-
 
 </div>
 
