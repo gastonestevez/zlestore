@@ -20,6 +20,6 @@ class Admin
         if (Auth::user() && Auth::user()->role=='admin') {
           return $next($request);
         }
-        return redirect('login');
+        return back()->with('error', 'Permisos insuficientes');
     }
 }

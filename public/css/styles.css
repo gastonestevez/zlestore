@@ -42,7 +42,7 @@ a {
   padding-right: 15px; }
 
 .primer-div {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   margin-top: 80px;
   margin-bottom: 40px; }
 
@@ -74,6 +74,9 @@ a {
 
 .searchForm {
   display: -webkit-inline-box; }
+
+.warehouse-card {
+  cursor: pointer; }
 
 @media (max-width: 992px) {
   .searchForm {

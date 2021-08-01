@@ -61,7 +61,7 @@ Route::post('/warehouse/store', [WarehouseController::class, 'store'])->middlewa
 
 Route::put('/warehouse/update/{id}', [WarehouseController::class, 'update'])->middleware('auth');
 
-Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])->middleware('auth');
+Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])->middleware('admin');
 
 // Products
 
@@ -73,9 +73,9 @@ Route::post('prepare/{id}', [ProductsController::class, 'prepareOrder'])->middle
 
 Route::post('prepare/{id}/changeStatus', [ProductsController::class, 'prepareOrder'])->middleware('auth');
 
-Route::put('/updatingBoxes/{id}', [ProductsController::class, 'updatingBoxes'])->middleware('auth');
+Route::put('/updatingBoxes/{id}', [ProductsController::class, 'updatingBoxes'])->middleware('admin');
 
-Route::put('/updatingUnits/{id}', [ProductsController::class, 'updatingUnits'])->middleware('auth');
+Route::put('/updatingUnits/{id}', [ProductsController::class, 'updatingUnits'])->middleware('admin');
 
 
 // Stock
@@ -86,8 +86,8 @@ Route::get('/product/{woo_id}/stock', [ProductsController::class, 'show'])->midd
 
 Route::get('/products/syncWoocommerce', [ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
 
-Route::put('/transferingUnits/{woo_id}', [WarehouseController::class, 'transferingUnits'])->middleware('auth');
+Route::put('/transferingUnits/{woo_id}', [WarehouseController::class, 'transferingUnits'])->middleware('employee');
 
-Route::put('/transferingBoxes/{woo_id}', [WarehouseController::class, 'transferingBoxes'])->middleware('auth');
+Route::put('/transferingBoxes/{woo_id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
 
 

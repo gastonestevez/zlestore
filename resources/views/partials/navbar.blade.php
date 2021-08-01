@@ -136,7 +136,7 @@
               {{-- <li class="uk-nav-header">Header</li> --}}
               <li class="uk-nav-divider"></li>
               <li>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST">
                   @csrf
                   <button style="background: none;border: none;color: #999;">Salir</button>
                 </form>
