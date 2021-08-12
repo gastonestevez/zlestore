@@ -7,7 +7,7 @@ ZLE - Control de Stock
 <div class="uk-container primer-div">
 
 
-  <h1 class="uk-heading-divider">{{$product->first()->name}}</h1>
+  <h1 class="uk-heading-divider">{{$product->name}}</h1>
 
     <div class="uk-child-width-1-1@s uk-grid-match uk-margin" uk-grid>
         @foreach ($warehouses as $warehouse)
