@@ -23,7 +23,6 @@ ZLE - Control de Stock
               <th>SKU</th>
               <th>Producto</th>
               <th>Unidades</th>
-              <th>Cajas</th>
               <th>Total</th>
               {{-- <th>Gestionar</th> --}}
               <th></th>
@@ -36,7 +35,6 @@ ZLE - Control de Stock
                 <td>{{$order->date_created}}</td>
                 <td>{{$order->status}}</td>
                 <td>{{$order->customerName}}</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -53,7 +51,6 @@ ZLE - Control de Stock
               <td>{{$item->sku}}</td>
               <td>{{$item->name}}</td>
               <td>{{$item->quantity}}</td>
-              <td>{{$item->unidades_por_caja}}</td>
               <td>${{$item->total}}</td>
               <td></td>
             </tr>

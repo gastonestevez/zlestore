@@ -16,13 +16,28 @@ class ProductsController extends Controller
 
     public function loadcsv(Request $request)
     {
+        $warehouses = Warehouse::all();
+        if (count($warehouses) == 0) {
+            return redirect('/')->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
+        }
+
         return view('/products/csv');
     }
 
     public function storecsv(Request $request)
     {
         $csv = Excel::import(new ProductsImport, $request->file('file'));
-        dd($csv);
+        $products =Product::all();
+        $warehouses = Warehouse::all();
+        foreach ($products as $product) {
+            foreach ($warehouses as $warehouse) {
+                $product->getWarehouses()->attach($product->id, [
+                    'warehouse_id' => $warehouse->id,
+                    'quantity' => 0,
+                ]);
+            }
+        }
+        return back()->with('success', 'Los productos fueron agregados a la base.');
     }
 
 
