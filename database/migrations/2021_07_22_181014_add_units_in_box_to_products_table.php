@@ -14,7 +14,7 @@ class AddUnitsInBoxToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->integer('units_in_box');
+            $table->integer('units_in_box')->default(0);
         });
     }
 
