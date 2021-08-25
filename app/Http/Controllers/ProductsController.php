@@ -9,7 +9,7 @@ use App\Models\Warehouse;
 use App\Models\Stock;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
-
+use Carbon\Carbon;
 
 class ProductsController extends Controller
 {
@@ -20,15 +20,16 @@ class ProductsController extends Controller
         if (count($warehouses) == 0) {
             return redirect('/')->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
         }
-
         return view('/products/csv');
     }
 
     public function storecsv(Request $request)
     {
+
         $csv = Excel::import(new ProductsImport, $request->file('file'));
         $products =Product::all();
         $warehouses = Warehouse::all();
+        Product::orderBy('id','desc')->first()->update(['woo_created' => Carbon::now()]);
         foreach ($products as $product) {
             foreach ($warehouses as $warehouse) {
                 $product->getWarehouses()->attach($product->id, [
@@ -37,6 +38,7 @@ class ProductsController extends Controller
                 ]);
             }
         }
+
         return back()->with('success', 'Los productos fueron agregados a la base.');
     }
 
