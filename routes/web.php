@@ -77,6 +77,10 @@ Route::put('/updatingBoxes/{id}', [ProductsController::class, 'updatingBoxes'])-
 
 Route::put('/updatingUnits/{id}', [ProductsController::class, 'updatingUnits'])->middleware('admin');
 
+Route::get('/products/loadcsv', [ProductsController::class, 'loadcsv'])->middleware(('auth'));
+
+Route::post('/products/loadcsv', [ProductsController::class, 'storecsv'])->middleware(('auth'))->name('csv-import');
+
 
 // Stock
 
