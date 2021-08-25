@@ -19,7 +19,7 @@ class ProductsImport implements ToModel
             'sku' => $row[1],
             'name' => $row[2],
             'price' => $row[4],
-            'units_in_box' => $row[5] ?? 0,
+            'units_in_box' => $row[5] ?? 1,
         ]);
     }
 }

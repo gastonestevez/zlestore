@@ -56,6 +56,7 @@ class OrderController extends Controller
                 return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
             } else {
                 $item->localId = $localProduct->id;
+                $item->units_in_box = $localProduct->units_in_box;
             }
 
         }

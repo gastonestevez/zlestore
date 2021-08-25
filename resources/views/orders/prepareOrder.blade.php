@@ -43,7 +43,7 @@ ZLE - Preparar pedido
                     <tr class='item-column'>
                         <td>{{$item->sku}}</td>
                         <td>{{$item->name}}</td>
-                        <td class='item-column-quantity'>{{$item->quantity}}</td>
+                        <td class='item-column-quantity'>{{$item->quantity}} ({{$item->units_in_box}}u/c)</td>
                             @foreach ($warehouses as $w)
                             <td>
                                 <input 

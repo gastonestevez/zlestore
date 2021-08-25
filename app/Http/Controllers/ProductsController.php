@@ -29,7 +29,10 @@ class ProductsController extends Controller
         $csv = Excel::import(new ProductsImport, $request->file('file'));
         $products =Product::all();
         $warehouses = Warehouse::all();
-        Product::orderBy('id','desc')->first()->update(['woo_created' => Carbon::now()]);
+        $lastProduct = Product::orderBy('id','desc')->first();
+        $wc = $this->getWcConfig();
+        $lastSyncDateCreated = $wc->get('products/' . $lastProduct->woo_id)->date_created;
+        $lastProduct->update(['woo_created' => $lastSyncDateCreated]);
         foreach ($products as $product) {
             foreach ($warehouses as $warehouse) {
                 $product->getWarehouses()->attach($product->id, [
@@ -56,8 +59,11 @@ class ProductsController extends Controller
 
             $pr = Product::where('woo_id', 'not like', '%FAKE%')->orderBy('woo_id', 'DESC')->get()->first();
             $wc = $this->getWcConfig();
+
+
             $index = 1;
             $products = [];
+            // dd($pr);
             $queryString = 'products' . '/?after=' . ($pr ? $pr->woo_created : '2020-01-01T12:00:00' . '&order=asc&orderby=id');
             $wcProducts = $wc->get($queryString . '&page=' . $index);
             while (count($wcProducts) > 0) {
