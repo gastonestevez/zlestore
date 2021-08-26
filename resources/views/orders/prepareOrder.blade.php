@@ -40,10 +40,20 @@ ZLE - Preparar pedido
                 @csrf
                 @method('POST')
                 @foreach ($order->line_items as $item)
+                @php
+                $boxes = (int)($item->quantity/$item->units_in_box) > 0 ? (int)($item->quantity/$item->units_in_box) . 'c' : '';
+                $units = $item->quantity%$item->units_in_box > 0 ? $item->quantity%$item->units_in_box . 'u' : '';
+                $boxesAndUnits = $boxes . $units;
+                @endphp
                     <tr class='item-column'>
                         <td>{{$item->sku}}</td>
                         <td>{{$item->name}}</td>
-                        <td class='item-column-quantity'>{{$item->quantity}} ({{$item->units_in_box}}u/c)</td>
+                        <td class='item-column-quantity' >
+                            <div uk-tooltip="title: C son Cajas y U son Unidades; pos: left">
+                                {{$item->quantity}} 
+                                ({{$boxesAndUnits}})
+                            </div>
+                        </td>
                             @foreach ($warehouses as $w)
                             <td>
                                 <input 
