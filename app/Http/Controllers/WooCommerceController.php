@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
+use App\Models\Wpct_postmeta;
+use App\Models\Product;
 
 class WooCommerceController extends Controller
 {
@@ -20,6 +22,32 @@ class WooCommerceController extends Controller
       ]
     );
 
+    // Hay que resolver ciertas cosas. Primero hay que guardar unicamente 
+    // productos de type simple o type variation. No hay que guardar type variable 
+    // Segundo: hay que traer el id, nombre, precio, sku y unidad por caja.
+
+    // Dos maneras de traer un producto (devuelven info distina)
+    $producto = Product::find('4957');
+    // dd($producto);
+    $producto = $woocommerce->get('products/4957');
+    dd($producto);
+    
+
+    // Traer unidades por caja a traves de peticion al cliente de Woo
+    dd($productoSimple->meta_data[0]->value);
+
+    // Traer unidades por caja desde base de datos
+    // Recorro la tabla de los postmeta y busco que la columna post_id sea = al id del producto
+    $product_meta = Postmeta::where('post_id', '=', '4959')->get();
+    // recorro todas las filas de ese producto y busco que la meta_key sea unidades_por_caja y obtengo su value
+    foreach($product_meta as $meta) {
+      if($meta->meta_key === "unidades_por_caja") {
+        $unidades_por_caja = $meta->meta_value;
+      } 
+    }
+    dd($unidades_por_caja);
+
+  
 
     $productoSimple = $woocommerce->get('products/2314'); // sin variaciones $product->type = simple
     $productoVariable = $woocommerce->get('products/2320'); // con variaciones $product->type = variable

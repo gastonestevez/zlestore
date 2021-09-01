@@ -10,14 +10,8 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'sku',
-        'name',
-        'price',
-        'woo_id',
-        'units_in_box',
-        'woo_created'
-    ];
+    public $table = 'Wpct_wc_product_meta_lookup';
+    protected $primaryKey = 'product_id';
 
     public function getWarehouses()
     {
