@@ -32,6 +32,14 @@ class HomeController extends Controller
         ]);
     }
 
+    public function index2()
+    {
+        $products = Product::getProducts();
+        return view('index2', [
+            'products' => $products,
+        ]);
+    }
+
 
     private function getWcConfig(){
         return new Client(

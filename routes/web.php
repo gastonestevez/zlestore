@@ -23,6 +23,8 @@ Auth::routes(['register' => false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
+Route::get('/test', [HomeController::class, 'index2']);
+
 // Orders
 
 Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');
