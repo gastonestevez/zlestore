@@ -68,7 +68,7 @@ class WarehouseController extends Controller
 
   public function store(Request $req) {
       Warehouse::create($req->all());
-      $products = Product::all();
+      $products = Product::getProducts();
 
       $lastWarehouseId = Warehouse::all()->last()->id;
       

@@ -126,82 +126,23 @@ class ProductsController extends Controller
         $sku = $request->get('sku');
         $name = $request->get('name');
         $price = $request->get('price');
-        $woo_id = $request->get('woo_id');
+        $id = $request->get('id');
 
 
-        $products = Product::sku($sku)->name($name)->price($price)->woo_id($woo_id)->paginate(25);
+        $products = Product::getProducts();
         $vac = compact('products', 'request');
 
         return view('/products/products', $vac);
     }
 
-    public function show(String $woo_id)
+    public function show(String $id)
     {
-        $product = Product::where('woo_id', '=', $woo_id)->first();
+        $product = Product::getProduct($id);
         $warehouses = Warehouse::all();
 
         $vac = compact('product', 'warehouses');
 
         return view('/products/product', $vac);
-    }
-
-
-    public function newProducts()
-    {
-        $wc = $this->getWcConfig();
-        $index = 1;
-        $products = [];
-        $wcProducts = $wc->get('products?page=' . $index);
-
-        while (count($wcProducts) > 0) {
-            $products = array_merge($products, $wcProducts);
-            $index += 1;
-            $url = 'products?page=' . $index;
-            $wcProducts = $wc->get($url);
-        }
-
-        $newProducts = false;
-        $productsToAdd = [];
-        $warehousesCount = Warehouse::count() != 0;
-        $warehouses = Warehouse::where('visibility', '1')->get();
-        foreach ($products as $item) {
-            $search = Product::where('woo_id', $item->id)->first();
-            if (!$search && $item->id && $item->status != 'draft' && $item->price) {
-                $productsToAdd[] = $item;
-            }
-        }
-
-        return view('products/newProducts', [
-            'products' => $productsToAdd,
-            'newProducts' => $newProducts,
-            'warehousesCount' => $warehousesCount,
-            'warehouses' => $warehouses,
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->except('_token');
-        $wc = $this->getWcConfig();
-        $wcProduct = $wc->get('products/' . $data['itemId']);
-        $sProduct = new Product;
-        $sProduct->price = $wcProduct->price;
-        $sProduct->sku = $wcProduct->sku;
-        $sProduct->woo_id = $wcProduct->id;
-        $sProduct->visibility = 1;
-        $sProduct->name = $wcProduct->name;
-        $sProduct->save();
-
-        foreach ($data['warehouse'] as $wh) {
-            if ($wh['stock'] > 0) {
-                $result = $sProduct->getWarehouses()->attach($sProduct->id, [
-                    'warehouse_id' => $wh['id'],
-                    'quantity' => $wh['stock'],
-                ]);
-            }
-        }
-
-        return back();
     }
 
     public function prepareOrder(int $id)

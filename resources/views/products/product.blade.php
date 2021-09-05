@@ -14,7 +14,7 @@ ZLE - Control de Stock
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Stock en {{$warehouse->name}}</h3>
-                <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->woo_id}} <br> SKU: {{$product->sku}} <br> Unidades por Caja: {{$product->units_in_box}}<p>
+                <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->id}} <br> SKU: {{$product->sku}} <br> Unidades por Caja: {{$product->units_in_box}}<p>
 
               
             @if(auth()->check() && auth()->user()->role == 'admin')            

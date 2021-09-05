@@ -18,7 +18,7 @@ class Product extends Model
       return DB::table('wpct_posts AS p')
                 ->join('wpct_postmeta AS pm', 'p.id', '=', 'pm.post_id')
                 ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                ->select('p.id', 'pml.sku', 'p.post_title', 'pml.max_price', 'pm.meta_value AS unidades por caja')       
+                ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
                 ->where('pm.meta_key',  '=', 'unidades_por_caja')            
                 ->where('p.id', '=', $id)
                 ->first();
@@ -43,7 +43,7 @@ class Product extends Model
       return DB::table('wpct_posts AS p')
                 ->join('wpct_postmeta AS pm', 'p.id', '=', 'pm.post_id')
                 ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                ->select('p.id', 'pml.sku', 'p.post_title', 'pml.max_price', 'pm.meta_value AS unidades por caja')       
+                ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
                 ->where('pm.meta_key',  '=', 'unidades_por_caja')                          
                 ->whereNotIn('p.id', $productosPadre)
                 ->orderBy('post_title', 'ASC')
@@ -66,10 +66,10 @@ class Product extends Model
         return $query->where('sku', 'LIKE', "%$sku%");
     }
 
-    public function scopeWoo_id($query, $woo_id)
+    public function scopeId($query, $id)
     {
-      if($woo_id)
-        return $query->where('woo_id', 'LIKE', "%$woo_id%");
+      if($id)
+        return $query->where('id', 'LIKE', "%$id%");
     }
 
     public function scopePrice($query, $price)
