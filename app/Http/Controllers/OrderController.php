@@ -49,16 +49,19 @@ class OrderController extends Controller
 
         
 
-        foreach ($wcOrder->line_items as $item) {
-            $localProduct = Product::where('woo_id','=',$item->variation_id ?: $item->product_id)->first();
-            if(!$localProduct) {
-                return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
-            } else {
-                $item->localId = $localProduct->id;
-                $item->units_in_box = $localProduct->units_in_box;
-            }
+        // foreach ($wcOrder->line_items as $item) {
+        //     // $localProduct = Product::where('woo_id','=',$item->variation_id ?: $item->product_id)->first();
+        //     // if(!$localProduct) {
+        //     //     return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
+        //     // } else {
+        //         if(empty($item->variation_id)){
+                    // dd($item);
+        //         }
+        //     // $item->localId = $localProduct->id;
+        //     // $item->units_in_box = $localProduct->units_in_box;
+        //     // }
 
-        }
+       // }
 
         return view('orders/prepareOrder', [
             'order' => $wcOrder,

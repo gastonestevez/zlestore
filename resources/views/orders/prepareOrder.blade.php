@@ -41,8 +41,9 @@ ZLE - Preparar pedido
                 @method('POST')
                 @foreach ($order->line_items as $item)
                 @php
-                $boxes = (int)($item->quantity/$item->units_in_box) > 0 ? (int)($item->quantity/$item->units_in_box) . 'c' : '';
-                $units = $item->quantity%$item->units_in_box > 0 ? $item->quantity%$item->units_in_box . 'u' : '';
+                $item->unidades_por_caja = (int)$item->unidades_por_caja == 0 ? 1 : (int)$item->unidades_por_caja;
+                $boxes = (int)($item->quantity / (int)$item->unidades_por_caja) > 0 ? (int)($item->quantity / (int)$item->unidades_por_caja) . 'c' : '';
+                $units = $item->quantity % (int)$item->unidades_por_caja > 0 ? $item->quantity % (int)$item->unidades_por_caja . 'u' : '';
                 $boxesAndUnits = $boxes . $units;
                 @endphp
                     <tr class='item-column'>
@@ -55,17 +56,24 @@ ZLE - Preparar pedido
                             </div>
                         </td>
                             @foreach ($warehouses as $w)
+                            @php
+                            //Si es producto variable, me traigo ese, si es simple, me traigo product_id
+                            //ya que variation_id va a ser vacio.
+                                $productId = $item->variation_id ?: $item->product_id;
+                                dd($item);
+                                dd($w->getProductStock($w->id, $productId));
+                            @endphp
                             <td>
                                 <input 
-                                    name='product[{{$item->localId}}][{{$w->id}}]'
+                                    name='product[{{$productId}}][{{$w->id}}]'
                                     class="uk-input warehouse-input" 
                                     type="number" 
                                     placeholder="{{$w->name}}" 
                                     value="0" 
                                     min="0" 
-                                    max={{$w->getProductStock($w->id, $item->localId)}}
+                                    max={{$w->getProductStock($w->id, $productId)}}
                                 >
-                                <small>{{$w->getProductStock($w->id, $item->localId)}} en stock</small>
+                                <small>{{$w->getProductStock($w->id, $productId)}} en stock</small>
                             </td>
                             @endforeach
                     </tr>

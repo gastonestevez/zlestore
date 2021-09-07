@@ -38,7 +38,7 @@ ZLE - Control de Stock
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>${{number_format()$order->total, 0,',','.')}}</td>
+                <td>${{number_format($order->total, 0,',','.')}}</td>
                 <td><form action="{{'prepare/'.$order->id}}" method="get"><button class="uk-button uk-button-default" type="submit">Preparar</button></form></td>
                 <td><a href="" uk-icon="icon: close"></a></td>
             </tr>
