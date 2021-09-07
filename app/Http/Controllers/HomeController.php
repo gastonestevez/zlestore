@@ -28,7 +28,7 @@ class HomeController extends Controller
         return view('index', [
             'orders' => $orders,
             'warehouses' => $warehouses,
-            'products' => $products,
+            'products' => count(Product::getProducts()),
         ]);
     }
 

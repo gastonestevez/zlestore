@@ -15,7 +15,7 @@ class Warehouse extends Model
 
     public function getProducts()
     {
-        return $this->belongsToMany(Product::class, 'stocks')->withPivot('quantity')->as('stock');
+        return $this->belongsToMany(Product::class, 'stocks', 'warehouse_id', 'product_id')->withPivot('quantity')->as('stock');
     }
 
     public static function getProductStock(Int $warehouseId, Int $productId)

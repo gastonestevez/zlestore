@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
-use App\Models\Product;
 use Carbon\Carbon;
 
 

@@ -25,6 +25,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/test', [HomeController::class, 'index2']);
 
+Route::view('/index3', 'index3');
+
 // Orders
 
 Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');

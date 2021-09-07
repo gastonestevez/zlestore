@@ -56,8 +56,7 @@ ZLE - Control de Stock
               <th></th>
               <th>SKU</th>
               <th>Nombre</th>
-              <th>Precio</th>
-              <th>Woo_id</th>
+              <th>Precio</th>            
               <th class="uk-table-shrink">Unidades</th>
               <th class="uk-table-shrink">Cajas</th>
           </tr>
@@ -67,9 +66,8 @@ ZLE - Control de Stock
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td><a href="/product/{{ $product->woo_id }}/stock"> {{ $product->name }} </a></td>
-              <td>{{ (int)$product->price }}</td>
-              <td>{{ $product->woo_id }}</td>
+              <td><a href="/product/{{ $product->id }}/stock"> {{ $product->name }} </a></td>
+              <td>${{ number_format($product->price, 0, ',','.') }}</td>
               <form action="/updatingBoxes/{{$product->id}}" method="POST">
                 @method('put')
                 @csrf
@@ -80,7 +78,7 @@ ZLE - Control de Stock
                 @if(auth()->user()->role == 'admin')
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
                 @endif
-                <td><a href="/product/{{$product->woo_id}}/stock" uk-tooltip="Transferir Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
+                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Transferir Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
         @endforeach
@@ -90,7 +88,7 @@ ZLE - Control de Stock
 
   </div>
 
-  {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'woo_id' => $request->woo_id, 'price' => $request->price])->links()}}
+  {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
 </div>
 <script>

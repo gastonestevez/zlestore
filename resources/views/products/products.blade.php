@@ -22,6 +22,7 @@ ZLE - Control de Stock
   <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
     <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
   </a>
+  <p>Productos totales: {{count($products)}}</p>
 
     <div class="uk-flex">
 
@@ -75,7 +76,7 @@ ZLE - Control de Stock
 
   </div>
 
-  {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}}
+  {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
 </div>
 <script>
