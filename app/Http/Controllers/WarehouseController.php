@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Stocks;
 use DB;
 
 class WarehouseController extends Controller
@@ -43,18 +44,15 @@ class WarehouseController extends Controller
     $price = $request->get('price');
 
     $warehouse = Warehouse::find($id);
-    $products = getProducts();
-
-    foreach ($products as $product) {
-      $stock = $warehouse->getProductStock($warehouse->id, $product->id);
-      if ($stock > 0 && $product->units_in_box > 0) {
-        $boxes = intval($stock / $product->units_in_box);
-      } else {
-        $boxes = 0;
-      }
-    }
+    $products = DB::table('wpct_posts AS p')
+                    ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+                    ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
+                    ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
+                    ->where('warehouse_id', "=", $id)
+                    ->where('quantity', '>', 0)
+                    ->get();
     
-    $vac = compact('warehouse', 'products', 'request', 'boxes');
+    $vac = compact('warehouse', 'products', 'request');
 
     return view('warehouses.warehouseProducts', $vac);
   }
@@ -68,19 +66,6 @@ class WarehouseController extends Controller
 
   public function store(Request $req) {
       Warehouse::create($req->all());
-      $products = getProducts();
-
-      $lastWarehouseId = Warehouse::all()->last()->id;
-      
-      foreach ($products as $product) {
-        DB::table('stocks')
-        ->insert([
-          'product_id' => $product->id,
-          'warehouse_id' => $lastWarehouseId,
-          'quantity' => 0
-        ]);
-
-      }
 
 
     return redirect('/warehouse/list')
@@ -103,6 +88,9 @@ class WarehouseController extends Controller
   {
     $warehouse = Warehouse::find($id);
     $warehouse->delete();
+
+    DB::table('stocks')
+        ->where('warehouse_id', '=', $id)->delete();
 
     return redirect('/warehouse/list')
           ->with('success', 'Depósito eliminado exitosamente');

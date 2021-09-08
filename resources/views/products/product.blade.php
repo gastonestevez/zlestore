@@ -10,7 +10,7 @@ ZLE - Control de Stock
   <h1 class="uk-heading-divider">{{$product->name}}</h1>
 
     <div class="uk-child-width-1-1@s uk-grid-match uk-margin" uk-grid>
-        @foreach ($warehouses as $warehouse)
+        @forelse ($warehouses as $warehouse)
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Stock en {{$warehouse->name}}</h3>
@@ -39,7 +39,7 @@ ZLE - Control de Stock
                   <div uk-form-custom="target: true">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
                     <input required min="0" name="boxes" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas disponibles"
-                    @if ($warehouse->getProductStock($warehouse->id, $product->id) > 0)
+                    @if ($warehouse->getProductStock($warehouse->id, $product->id) > 0 && !empty($product->units_in_box))
                      value="{{old('stock', intval($warehouse->getProductStock($warehouse->id, $product->id)/$product->units_in_box))}}"     
                     @else
                      value="0"
@@ -94,7 +94,7 @@ ZLE - Control de Stock
                 <br>
                 <input type="hidden" name="warehouseOrigin" value={{$warehouse->id}}>
                 <input required step="1" 
-                @if($warehouse->getProductStock($warehouse->id, $product->id) > 0)
+                @if($warehouse->getProductStock($warehouse->id, $product->id) > 0 && !empty($product->units_in_box))
                 max="{{$warehouse->getProductStock($warehouse->id, $product->id) / $product->units_in_box}}"
                 @else
                 max="0"
@@ -115,7 +115,10 @@ ZLE - Control de Stock
 
             </div>
         </div>
-        @endforeach
+        @empty
+          <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen depósitos. <a href="/warehouse/new">Crear un nuevo depósito</a></h3>
+
+        @endforelse
     </div>
 
 </div>

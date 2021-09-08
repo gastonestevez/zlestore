@@ -30,7 +30,7 @@ unidades_por_caja: number
               ->where('pm.meta_key',  '=', 'unidades_por_caja')              
               ->orderBy('post_title', 'ASC')  
               ->where('p.id', '=', $id)           
-              ->get();
+              ->first();
 
     return $producto;
   }

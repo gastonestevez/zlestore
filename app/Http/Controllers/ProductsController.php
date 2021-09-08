@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
-use App\Models\Stock;
+use App\Models\Stocks;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use Carbon\Carbon;
@@ -63,6 +63,8 @@ class ProductsController extends Controller
     {
         $product = getProduct($id);
         $warehouses = Warehouse::all();
+        $asd = $warehouses[0]->getProductStock($warehouses[0]->id, $product->id);
+        // dd($product);
 
         $vac = compact('product', 'warehouses');
 
@@ -76,10 +78,11 @@ class ProductsController extends Controller
         $product = getProduct($id);
         $quantity = $request->quantity;
 
-        DB::table('stocks')
-            ->where('warehouse_id', '=', $warehouseId)
-            ->where('product_id', '=', $product->id)
-            ->update(['quantity' => $quantity]);
+        // Use update orCreate en lugar de updateOrInsert por tema de timestamps
+        Stocks::updateOrCreate(
+                ['warehouse_id' => $warehouseId, 'product_id' => $product->id],
+                ['quantity' => $quantity]
+            );
 
         return back()->with('success', 'Stock actualizado correctamente');
     }
@@ -102,10 +105,10 @@ class ProductsController extends Controller
             // nueva cantidad en stock
             $quantity = $sobra + ($product->units_in_box * $request->boxes);
 
-            DB::table('stocks')
-            ->where('warehouse_id', '=', $warehouseId)
-            ->where('product_id', '=', $id)
-            ->update(['quantity' => $quantity]);
+            Stocks::updateOrCreate(
+                ['warehouse_id' => $warehouseId, 'product_id' => $product->id],
+                ['quantity' => $quantity]
+            );
           
             return back()->with('success', 'Stock actualizado correctamente');
         } else {
