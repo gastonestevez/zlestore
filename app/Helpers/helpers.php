@@ -10,16 +10,20 @@ unidades_por_caja: number
 
 */
 
-  function getProducts() {
+  function getProducts($searchParams = []) {
     $productos = DB::table('wpct_posts AS p')
               ->join('wpct_postmeta AS pm', 'p.id', '=', 'pm.post_id')
               ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
               ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
-              ->where('pm.meta_key',  '=', 'unidades_por_caja')              
-              ->orderBy('post_title', 'ASC')
-              ->get();
-        
-    return $productos;
+              ->where('pm.meta_key',  '=', 'unidades_por_caja')
+              ->orderBy('post_title', 'ASC');
+
+    foreach ($searchParams as $key => $value) {
+      if(!empty($value)){
+        $productos->where($key, 'LIKE', '%' . $value . '%');
+      }
+    }
+    return $productos->get();
   }
 
   function getProduct($id) {

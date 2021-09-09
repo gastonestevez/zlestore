@@ -52,8 +52,14 @@ class ProductsController extends Controller
         $price = $request->get('price');
         $id = $request->get('id');
 
-
-        $products = getProducts();
+        // dd($products);
+        $searchParams = array(
+            "p.id" => $id,
+            "p.post_title" => $name,
+            "price" => $price,
+            "pml.sku" => $sku
+        );
+        $products = getProducts($searchParams);
         $vac = compact('products', 'request');
 
         return view('/products/products', $vac);
