@@ -59,7 +59,7 @@ class ProductsController extends Controller
             "price" => $price,
             "pml.sku" => $sku
         );
-        $products = getProducts($searchParams);
+        $products = getProducts($searchParams, true);
         $vac = compact('products', 'request');
 
         return view('/products/products', $vac);

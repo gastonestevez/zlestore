@@ -10,7 +10,7 @@ unidades_por_caja: number
 
 */
 
-  function getProducts($searchParams = []) {
+  function getProducts($searchParams = [], $hasPagination = false) {
     $productos = DB::table('wpct_posts AS p')
               ->join('wpct_postmeta AS pm', 'p.id', '=', 'pm.post_id')
               ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
@@ -23,7 +23,7 @@ unidades_por_caja: number
         $productos->where($key, 'LIKE', '%' . $value . '%');
       }
     }
-    return $productos->get();
+    return $hasPagination ? $productos->paginate(20) : $productos->get();
   }
 
   function getProduct($id) {
