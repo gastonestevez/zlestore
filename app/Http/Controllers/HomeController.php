@@ -24,10 +24,18 @@ class HomeController extends Controller
         $wc = $this->getWcConfig();
         $orders = count($wc->get('orders'. '?&status=pending'));
         $warehouses = Warehouse::all()->count();
-        $products = Product::all()->count();
+        $products = count(getProducts());
         return view('index', [
             'orders' => $orders,
             'warehouses' => $warehouses,
+            'products' => count(getProducts()),
+        ]);
+    }
+
+    public function index2()
+    {
+        $products = Product::getProducts();
+        return view('index2', [
             'products' => $products,
         ]);
     }

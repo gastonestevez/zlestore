@@ -4,6 +4,10 @@ ZLE - Control de Stock
 @endsection
 @section('main')
 
+@php
+    use App\Models\Warehouse;
+@endphp
+
 <div class="uk-container primer-div">
     <h1 class="uk-heading-divider">Gestión de depósitos</h1>
 
@@ -14,7 +18,7 @@ ZLE - Control de Stock
             <div style='cursor: pointer;' class="warehouse-card uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> {{$warehouse->name}}</h3>
                 <p>Ubicado en: {{$warehouse->address}}.</p>
-                <a href="{{url('/warehouse/search/'.$warehouse->id)}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado ({{count($warehouse->getProducts)}} variedad/es en total)</a>
+                <a href="{{url('/warehouse/search/'.$warehouse->id)}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado ({{count(Warehouse::getProducts($warehouse->id))}} variedad/es en total)</a>
             </div>
           </a>
         </div>

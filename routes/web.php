@@ -23,6 +23,10 @@ Auth::routes(['register' => false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
+Route::get('/test', [HomeController::class, 'index2']);
+
+Route::view('/index3', 'index3');
+
 // Orders
 
 Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');
@@ -65,10 +69,6 @@ Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])
 
 // Products
 
-Route::get('/newProducts', [ProductsController::class, 'newProducts'])->middleware('auth');
-
-Route::post('/newProducts/store', [ProductsController::class, 'store'])->middleware('auth');
-
 Route::post('prepare/{id}', [ProductsController::class, 'prepareOrder'])->middleware('auth');
 
 Route::post('prepare/{id}/changeStatus', [ProductsController::class, 'prepareOrder'])->middleware('auth');
@@ -86,12 +86,12 @@ Route::post('/products/loadcsv', [ProductsController::class, 'storecsv'])->middl
 
 Route::get('/products/stock', [ProductsController::class, 'list'])->name('stockList')->middleware('auth');
 
-Route::get('/product/{woo_id}/stock', [ProductsController::class, 'show'])->middleware('auth');
+Route::get('/product/{id}/stock', [ProductsController::class, 'show'])->middleware('auth');
 
 Route::get('/products/syncWoocommerce', [ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
 
-Route::put('/transferingUnits/{woo_id}', [WarehouseController::class, 'transferingUnits'])->middleware('employee');
+Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUnits'])->middleware('employee');
 
-Route::put('/transferingBoxes/{woo_id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
+Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
 
 

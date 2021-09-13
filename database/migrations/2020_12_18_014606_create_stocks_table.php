@@ -16,8 +16,8 @@ class CreateStocksTable extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('product_id')->references('id')->on('products');
-            $table->foreignId('warehouse_id')->references('id')->on('warehouse');
+            $table->integer('product_id');
+            $table->integer('warehouse_id')->references('id')->on('warehouse');
             $table->integer('quantity')->default(0);
         });
     }

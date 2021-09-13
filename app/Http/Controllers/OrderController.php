@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
-use App\Models\Product;
 use Carbon\Carbon;
+use App\Models\Stocks;
 
 
 class OrderController extends Controller
@@ -50,16 +50,19 @@ class OrderController extends Controller
 
         
 
-        foreach ($wcOrder->line_items as $item) {
-            $localProduct = Product::where('woo_id','=',$item->variation_id ?: $item->product_id)->first();
-            if(!$localProduct) {
-                return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
-            } else {
-                $item->localId = $localProduct->id;
-                $item->units_in_box = $localProduct->units_in_box;
-            }
+        // foreach ($wcOrder->line_items as $item) {
+        //     // $localProduct = Product::where('woo_id','=',$item->variation_id ?: $item->product_id)->first();
+        //     // if(!$localProduct) {
+        //     //     return redirect()->route('stockList')->with('error', 'Los productos no están sincronizados.');
+        //     // } else {
+        //         if(empty($item->variation_id)){
+                    // dd($item);
+        //         }
+        //     // $item->localId = $localProduct->id;
+        //     // $item->units_in_box = $localProduct->units_in_box;
+        //     // }
 
-        }
+       // }
 
         return view('orders/prepareOrder', [
             'order' => $wcOrder,
@@ -73,16 +76,20 @@ class OrderController extends Controller
         $transition = $r->transition;
 
         foreach ($rProducts as $idProduct => $stocks) {
-            $productDB = Product::find($idProduct);
+            $productDB = getProduct($idProduct);
             foreach ($stocks as $idWarehouse => $stock) {
                 $warehouseDB = Warehouse::find($idWarehouse);
                 $newStock = $warehouseDB->getProductStock($idWarehouse, $idProduct) - $stock;
-                $productDB
-                    ->getWarehouses()
-                    ->updateExistingPivot(
-                        $idWarehouse, 
-                        ['quantity' => $newStock]
-                    );
+                // $productDB
+                //     ->getWarehouses()
+                //     ->updateExistingPivot(
+                //         $idWarehouse, 
+                //         ['quantity' => $newStock]
+                //     );
+                Stocks::updateOrCreate(
+                    ['warehouse_id' => $idWarehouse, 'product_id' => $productDB->id],
+                    ['quantity' => $newStock]
+                );
             }
         }
         

@@ -19,9 +19,9 @@ ZLE - Control de Stock
       <p>{{\Session::get('success')}}</p>
     </div>
   @endif
-  <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
+  {{-- <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
     <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
-  </a>
+  </a> --}}
 
   <div class="uk-flex">
 
@@ -53,25 +53,25 @@ ZLE - Control de Stock
     <table class="uk-table uk-table-striped uk-table-hover">
       <thead>
           <tr>
-              <th></th>
+              <th>ID</th>
               <th>SKU</th>
               <th>Nombre</th>
               <th>Precio</th>
-              <th>Woo_id</th>
-              <th class="uk-table-shrink">Unidades</th>
-              <th class="uk-table-shrink">Cajas</th>
+              <th>Unidades</th>            
+              {{-- <th class="uk-table-shrink">Unidades</th>
+              <th class="uk-table-shrink">Cajas</th> --}}
           </tr>
       </thead>
       <tbody>
-        @foreach ($products as $product)
+        @forelse ($products as $product)
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td><a href="/product/{{ $product->woo_id }}/stock"> {{ $product->name }} </a></td>
-              <td>{{ (int)$product->price }}</td>
-              <td>{{ $product->woo_id }}</td>
+              <td><a href="/product/{{ $product->id }}/stock"> {{ $product->name }} </a></td>
+              <td>${{ number_format($product->price, 0, ',','.') }}</td>
+              <td>{{ $product->quantity }}</td>
               <form action="/updatingBoxes/{{$product->id}}" method="POST">
-                @method('put')
+                {{-- @method('put')
                 @csrf
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
                 <td><input required min="0" name="quantity" value="{{old('quantity', $warehouse->getProductStock($warehouse->id, $product->id))}}" class="uk-input" placeholder="Stock del producto" readonly disabled></td>                
@@ -79,18 +79,21 @@ ZLE - Control de Stock
                 
                 @if(auth()->user()->role == 'admin')
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
-                @endif
-                <td><a href="/product/{{$product->woo_id}}/stock" uk-tooltip="Transferir Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
+                @endif --}}
+                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
-        @endforeach
+
+        @empty
+          <h3>No hay productos en éste depósito, <a href="/products/stock">Agregar productos</a></h3>
+        @endforelse
 
       </tbody>
     </table>
 
   </div>
 
-  {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'woo_id' => $request->woo_id, 'price' => $request->price])->links()}}
+  {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
 </div>
 <script>
