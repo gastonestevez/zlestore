@@ -23,8 +23,7 @@ class WarehouseController extends Controller
 
   public function list() {
       return view('warehouses.warehouses', [
-          'warehouses' => Warehouse::all(),
-          'products' => count(getProducts())
+          'warehouses' => Warehouse::all()
           ]);
   }
 

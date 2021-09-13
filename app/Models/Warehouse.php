@@ -13,9 +13,10 @@ class Warehouse extends Model
     protected $table = 'warehouse';
     protected $fillable = ['name', 'address', 'visibility'];
 
-    public function getProducts()
+    public static function getProducts($warehouse_id)
     {
-        return $this->belongsToMany(Product::class, 'stocks', 'warehouse_id', 'product_id')->withPivot('quantity')->as('stock');
+      $products = Stocks::select('product_id')->where('warehouse_id', '=', $warehouse_id)->get();
+      return $products;
     }
 
     public static function getProductStock(Int $warehouseId, Int $productId)

@@ -80,7 +80,7 @@ ZLE - Control de Stock
                 @if(auth()->user()->role == 'admin')
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
                 @endif --}}
-                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Transferir Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
+                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
 
