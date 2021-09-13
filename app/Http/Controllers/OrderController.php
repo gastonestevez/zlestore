@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use Carbon\Carbon;
+use App\Models\Stocks;
 
 
 class OrderController extends Controller
@@ -75,16 +76,20 @@ class OrderController extends Controller
         $transition = $r->transition;
 
         foreach ($rProducts as $idProduct => $stocks) {
-            $productDB = Product::find($idProduct);
+            $productDB = getProduct($idProduct);
             foreach ($stocks as $idWarehouse => $stock) {
                 $warehouseDB = Warehouse::find($idWarehouse);
                 $newStock = $warehouseDB->getProductStock($idWarehouse, $idProduct) - $stock;
-                $productDB
-                    ->getWarehouses()
-                    ->updateExistingPivot(
-                        $idWarehouse, 
-                        ['quantity' => $newStock]
-                    );
+                // $productDB
+                //     ->getWarehouses()
+                //     ->updateExistingPivot(
+                //         $idWarehouse, 
+                //         ['quantity' => $newStock]
+                //     );
+                Stocks::updateOrCreate(
+                    ['warehouse_id' => $idWarehouse, 'product_id' => $productDB->id],
+                    ['quantity' => $newStock]
+                );
             }
         }
         

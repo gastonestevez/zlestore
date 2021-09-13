@@ -115,10 +115,11 @@ class WarehouseController extends Controller
           ->where('product_id', '=', $product->id)
           ->update(['quantity' => $stockInOrigin-$quantity]);
 
-      db::table('stocks')
-          ->where('warehouse_id', '=', $warehouseDestiny)
-          ->where('product_id', '=', $product->id)
-          ->update(['quantity' => $stockInDestiny+$quantity]);    
+      Stocks::
+          updateOrCreate(
+            ['warehouse_id' => $warehouseDestiny, 'product_id' => $product->id],
+            ['quantity' => $stockInDestiny+$quantity]
+          );    
 
       return redirect()->back()
           ->with('success', 'Stock actualizado exitosamente');

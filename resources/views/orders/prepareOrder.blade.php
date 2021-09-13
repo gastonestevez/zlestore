@@ -60,8 +60,8 @@ ZLE - Preparar pedido
                             //Si es producto variable, me traigo ese, si es simple, me traigo product_id
                             //ya que variation_id va a ser vacio.
                                 $productId = $item->variation_id ?: $item->product_id;
-                                dd($item);
-                                dd($w->getProductStock($w->id, $productId));
+                                // dd($item);
+                                // dd($w->getProductStock($w->id, $productId));
                             @endphp
                             <td>
                                 <input 
@@ -89,14 +89,14 @@ ZLE - Preparar pedido
         <div uk-form-custom="target: > * > span:first-child">
             <select id='transitionSelect' name='transition' required>
                 <option value=''>Transferir estado a...</option>
-                <option value='processing'>Processing</option>
+                <!-- <option value='processing'>Processing</option> -->
                 <option value='completed'>Completed</option>
-                <option value='cancelled'>Cancelled</option>
-                <option value='refunded'>Refunded</option>
-                <option value='failed'>Failed</option>
+                <!-- <option value='cancelled'>Cancelled</option> -->
+                <!-- <option value='refunded'>Refunded</option> -->
+                <!-- <option value='failed'>Failed</option>
                 <option value='on-hold'>On hold</option>
                 <option value='trash'>Trash</option>
-                <option value='any'>Any</option>
+                <option value='any'>Any</option> -->
             </select>
             <button id='transitionSelectButton' class="uk-button uk-button-default" type="button" tabindex="-1">
                 <span></span>

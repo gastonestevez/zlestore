@@ -23,7 +23,7 @@ ZLE - Control de Stock
                 @csrf
                 @method('put')
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">         
-                <span>Unidades:</span><br>
+                <span>Cantidad:</span><br>
                 <div uk-form-custom="target: true">
                   <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: pencil"></span>
                   <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}">                    
@@ -31,7 +31,7 @@ ZLE - Control de Stock
                 <button uk-tooltip="Editar Unidades" class="uk-button uk-button-default">Actualizar</button>
               </form>
 
-              <form method="post" action="/updatingBoxes/{{$product->id}}">
+              {{-- <form method="post" action="/updatingBoxes/{{$product->id}}">
                 @csrf
                 @method('put')
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">         
@@ -47,17 +47,17 @@ ZLE - Control de Stock
                     >        
                   </div>
                 <button uk-tooltip="Editar Cajas" class="uk-button uk-button-default">Actualizar</button>
-              </form>  
+              </form>   --}}
 
              @endif 
 
              @if(auth()->check() && auth()->user()->role == 'employee')
               <div class="uk-flex uk-flex-wrap">
                 <div class="pr">
-                  <span>Unidades:</span><br>
-                  <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}" readonly disabled><br>                    
+                  <span>Cantidad:</span><br>
+                  <input required min="0" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Cantidad disponibles" value="{{old('stock', $warehouse->getProductStock($warehouse->id, $product->id))}}" readonly disabled><br>                    
                 </div>
-                <div>
+                {{-- <div>
                   <span>Cajas:</span><br>
                   <input required min="0" name="boxes" class="uk-input uk-form-width-medium" type="number" placeholder="Cajas disponibles" readonly disabled
                   @if ($warehouse->getProductStock($warehouse->id, $product->id) > 0)
@@ -66,7 +66,7 @@ ZLE - Control de Stock
                      value="0"
                     @endif
                     >   
-                </div>  
+                </div>   --}}
               </div>   
              @endif
               
@@ -76,7 +76,7 @@ ZLE - Control de Stock
                 <br>
                 <span>Transferir Stock:</span><br>
                 <input type="hidden" name="warehouseOrigin" value={{$warehouse->id}}>
-                <input required min="1" max="{{$warehouse->getProductStock($warehouse->id, $product->id)}}" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Unidades a transferir" value="">                    
+                <input required min="1" max="{{$warehouse->getProductStock($warehouse->id, $product->id)}}" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Cantidad a transferir" value="">                    
                 <span uk-icon="arrow-right"></span>
                 <select class="uk-select uk-form-width-medium" name="warehouseDestiny" required>Depósito a transferir
                   <option value="">Depósito destino</option>
@@ -88,7 +88,7 @@ ZLE - Control de Stock
                 </select>
                 <button uk-tooltip="Transferir Unidades" class="uk-button uk-button-default">Transferir Unidades</button>
               </form> 
-              <form method="post" action="/transferingBoxes/{{$product->id}}">
+              {{-- <form method="post" action="/transferingBoxes/{{$product->id}}">
                 @csrf
                 @method('put')
                 <br>
@@ -110,7 +110,7 @@ ZLE - Control de Stock
                   @endforeach                  
                 </select>
                 <button uk-tooltip="Transferir Cajas" class="uk-button uk-button-default">Transferir Cajas</button>
-              </form> 
+              </form>  --}}
               
 
             </div>
