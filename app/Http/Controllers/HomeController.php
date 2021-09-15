@@ -22,11 +22,11 @@ class HomeController extends Controller
     public function index()
     {
         $wc = $this->getWcConfig();
-        $orders = count($wc->get('orders'. '?&status=pending'));
+        // $orders = count($wc->get('orders'. '?&status=pending,cancelled'));
         $warehouses = Warehouse::all()->count();
-        $products = count(getProducts());
+        // $products = count(getProducts());
         return view('index', [
-            'orders' => $orders,
+            // 'orders' => $orders,
             'warehouses' => $warehouses,
             'products' => count(getProducts()),
         ]);
