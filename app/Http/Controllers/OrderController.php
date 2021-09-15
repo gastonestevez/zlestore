@@ -19,7 +19,7 @@ class OrderController extends Controller
     public function orders()
     {
         $wc = $this->getWcConfig();
-        $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
+        $wcOrders = $wc->get('orders' . '?&order=asc&orderby=date&status=pending,processing');
         foreach ($wcOrders as $order) {
             $order->customerName = $this->getCustomerFullname($wc, $order);
             $order->date_created = (new Carbon($order->date_created))->format('Y-m-d H:i:s');          
@@ -94,7 +94,7 @@ class OrderController extends Controller
         }
         
         $wc = $this->getWcConfig();
-        $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
+        // $wcOrders = $wc->get('orders' . '?&order=desc&orderby=date&status=pending');
 
         // Liberar cuando esté en producción.
         if($transition)
