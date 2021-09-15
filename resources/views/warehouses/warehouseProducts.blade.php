@@ -25,7 +25,7 @@ ZLE - Control de Stock
 
   <div class="uk-flex">
 
-    <form class="searchForm uk-search uk-search-default" method="get">
+    {{-- <form class="searchForm uk-search uk-search-default" method="get">
       <div class="pr uk-margin-bottom">
           <input value="{{old('sku', $request->sku)}}" class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
       </div>
@@ -39,7 +39,7 @@ ZLE - Control de Stock
       <div class="pr uk-margin-bottom">
         <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
       </div>
-   </form>
+   </form> --}}
 
     <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
       <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
