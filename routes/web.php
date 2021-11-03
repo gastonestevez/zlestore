@@ -27,7 +27,7 @@ Route::get('/test', [HomeController::class, 'index2']);
 
 Route::view('/index3', 'index3');
 
-// Orders
+// WcOrders
 
 Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');
 
@@ -95,3 +95,6 @@ Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUn
 Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
 
 
+// Feature - sales-system
+
+Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder']);

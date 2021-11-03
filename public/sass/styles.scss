@@ -76,6 +76,23 @@ a {
   cursor: pointer;
 }
 
+.cart-absolute {
+  background-color: $main-green;
+  color: white;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  cursor: pointer;
+}
+
+.cart-absolute:hover {
+  transition: all .2s ease-in-out;
+  transform: scale(1.1);
+}
+
 // M Medium devices (tablets, less than 992px)
 @media (max-width: 992px) {
 

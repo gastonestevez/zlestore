@@ -17,15 +17,15 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->mediumText('info')->nullable();
-            $table->string('document_link');
-            $table->enum('status',['pending','completed'])->default('pending');
-            $table->integer('total');
+            $table->string('document_link')->nullable();
+            $table->enum('status',['in progress','pending','completed'])->default('in progress');
+            $table->integer('total')->default(0);
 
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->unsignedInteger('concept_id');
-            $table->foreign('concept_id')->references('id')->on('concepts');
+            $table->foreign('concept_id')->references('id')->on('concepts')->nullable();
         });
     }
 

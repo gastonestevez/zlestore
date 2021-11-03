@@ -6,6 +6,10 @@ ZLE - Control de Stock
 
 <div class="uk-container primer-div">
 
+  @if ($orderInProgress)
+    <div class="cart-absolute"><span uk-icon="icon: cart"></span></div>
+  @endif
+
   <h1 class="uk-heading-divider">Productos</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
@@ -13,12 +17,12 @@ ZLE - Control de Stock
       <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/new')}}">aquí</a>.</p>
     </div>
   @endif
-  @if(\Session::has('success'))
+  {{-- @if(\Session::has('success'))
     <div class="uk-alert-success" uk-alert>
       <a class="uk-alert-close" uk-close></a>
       <p>{{\Session::get('success')}}</p>
     </div>
-  @endif
+  @endif --}}
   {{-- <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
     <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
   </a> --}}
@@ -56,6 +60,7 @@ ZLE - Control de Stock
             <th>Id</th>
             <th>SKU</th>
             <th>Nombre</th>
+            <th>Stock total</th>
             <th></th>
             {{-- <th>Acción</th> --}}
           </tr>
@@ -66,7 +71,18 @@ ZLE - Control de Stock
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
               <td>{{ $product->name }}</td>             
-              <td>  <a class="uk-button uk-button-default" href="/product/{{$product->id}}/stock">Ver Stock</a></td>
+              <td>{{getAllStock($product->id)}}</td>
+              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}/stock"><span uk-icon="icon: move"></span></a></td>
+              <td>
+                <form action="/addProductToOrder" method="post" enctype="multipart/form-data">
+                  @csrf
+                  <input type="number" name="quantity" id="" value="0">
+                  <input type="hidden" name="productId" value="{{$product->id}}">
+                  <input type="hidden" name="price" value="{{$product->price}}">
+                  <button type="submit">Agregar</button>
+                </form>
+                </td>
+              <td></td>
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use App\Models\Stocks;
+use App\Models\Order;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use Carbon\Carbon;
@@ -47,12 +48,13 @@ class ProductsController extends Controller
 
     public function list(Request $request)
     {
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+
         $sku = $request->get('sku');
         $name = $request->get('name');
         $price = $request->get('price');
         $id = $request->get('id');
 
-        // dd($products);
         $searchParams = array(
             "p.id" => $id,
             "p.post_title" => $name,
@@ -60,7 +62,9 @@ class ProductsController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        $vac = compact('products', 'request');
+        // $idtest = $products[0]->id;
+        // dd(Warehouse::getProductStock(1, $idtest));
+        $vac = compact('products', 'request', 'orderInProgress');
 
         return view('/products/products', $vac);
     }

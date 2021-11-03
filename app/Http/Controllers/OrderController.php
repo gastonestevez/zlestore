@@ -7,6 +7,9 @@ use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use App\Models\Stocks;
+use App\Models\Order;
+use App\Models\Order_item;
+use Auth;
 
 
 class OrderController extends Controller
@@ -117,5 +120,39 @@ class OrderController extends Controller
               'version' => 'wc/v3',
             ]
           );
+    }
+
+    public function addProductToOrder(Request $request)
+    {
+        // Agrega un producto a una order
+
+        // Busco si ya hay una orden en progreso
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+
+        // Si no hay orden en progreso creo una nueva orden
+        if (!$orderInProgress) {
+            $newOrder = New Order();
+            $newOrder->user_id = auth()->user()->id;
+            $newOrder->concept_id = 1;
+            $newOrder->save();
+        }
+
+        // Llamo a la ultima orden 
+        $lastOrder = Order::get()->last();
+        $lastOrderId = $lastOrder->id;
+
+        // Instancio un nuevo order item y lo asigno a la orden
+        $order_item = New Order_item();
+        $order_item->product_id = $request->productId;
+        $order_item->price = $request->price;
+        $order_item->quantity = $request->quantity;
+        $order_item->order_id = $lastOrderId;
+        $order_item->save();
+
+        // Sumo el valor del nuevo item al total de la orden
+        $lastOrder->total = ($request->price * $request->quantity) + $lastOrder->total;
+        $lastOrder->save();
+
+        return back()->with('success', 'Producto agregado a la orden');
     }
 }

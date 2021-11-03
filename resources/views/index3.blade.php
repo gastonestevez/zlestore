@@ -1,6 +1,6 @@
 {{-- {{dd(getProducts())}}; --}}
 {{-- {{dd(getProduct(4852))}}; --}}
-{{dd(getParentProductsId())}};
+{{dd(getAllStock(1870))}};
 
 
 {{-- 4956 Variacion

@@ -1,4 +1,7 @@
 <?php
+use App\Models\Warehouse;
+use App\Models\Stocks;
+
 //https://dev.to/kingsconsult/how-to-create-laravel-8-helpers-function-global-function-d8n
 /*
 interface Product:
@@ -50,4 +53,15 @@ unidades_por_caja: number
                 ->pluck('id');
 
     return $productosPadre;
+  }
+
+  function getAllStock($productId) {
+    // Trae la totalidad de stock que hay de un producto en todos los depósitos.
+    
+    $stocks = Stocks::where('product_id', '=', $productId)->pluck('quantity');
+    $total = 0;
+    foreach ($stocks as $stock) {
+      $total = $stock + $total;
+    }
+    return $total;
   }
