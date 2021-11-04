@@ -23,7 +23,7 @@ ZLE - Preparar pedido
         </tbody>
     </table>
     <div class="uk-overflow-auto">
-        <form id='orderForm' action='{{url('/storeOrder/' . $order->id)}}' method='POST'>
+        <form id='orderForm' action='{{url('/storeWcOrder/' . $order->id)}}' method='POST'>
 
         <table class="uk-table uk-table-striped uk-table-hover">
             <thead>
@@ -108,7 +108,7 @@ ZLE - Preparar pedido
         <button 
             class="uk-button uk-button-default limpiar-busqueda" 
             style="margin-right: 15px; margin-bottom: 15px;"
-            onclick="storeOrder(event)"
+            onclick="storeWcOrder(event)"
         >
             Distribuir
         </button>
@@ -153,7 +153,7 @@ const displayErrorMessage = () => {
         </div>
     `)
 }
-const storeOrder = (e) => {
+const storeWcOrder = (e) => {
     if(validateStocks()) {
         const select = document.getElementById('transitionSelect')
         const transitionSelect = select.cloneNode(true)

@@ -6,10 +6,6 @@ ZLE - Control de Stock
 
 <div class="uk-container primer-div">
 
-  @if ($orderInProgress)
-    <div class="cart-absolute"><span uk-icon="icon: cart"></span></div>
-  @endif
-
   <h1 class="uk-heading-divider">Productos</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
@@ -26,7 +22,34 @@ ZLE - Control de Stock
   {{-- <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
     <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
   </a> --}}
-  <p>Productos por página: {{count($products)}}</p>
+
+    @if ($orderInProgress)
+
+    <div class="cart-absolute"><span uk-icon="icon: cart"></span></div>
+    
+    <div class="uk-overflow-auto">
+      <p class="green-desc">Orden en progreso</p>
+      ORDER ID: {{$orderInProgress->id}} <br><br>
+      @foreach ($orderItems as $item)
+      <form action="/removeProduct/{{$item->id}}" method="POST">
+        @method('DELETE')
+        @csrf
+          ID: {{$item->product_id}} <br>
+          NOMBRE: {{$item->product_name}} <br>
+          SKU: {{$item->product_sku}} <br>
+          PRECIO: ${{ number_format($item->price, 0,',','.')}} <br>
+          CANTIDAD: {{$item->quantity}} <br>
+          <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
+      </form>
+      @endforeach
+      <br>
+      ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
+      </div>  
+    
+    <hr class="uk-divider-icon">
+    @endif
+
+    <p>Productos por página: {{count($products)}}</p>
 
     <div class="uk-flex">
 
@@ -60,6 +83,7 @@ ZLE - Control de Stock
             <th>Id</th>
             <th>SKU</th>
             <th>Nombre</th>
+            <th>Precio</th>
             <th>Stock total</th>
             <th></th>
             {{-- <th>Acción</th> --}}
@@ -70,16 +94,19 @@ ZLE - Control de Stock
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td>{{ $product->name }}</td>             
+              <td>{{ $product->name }}</td> 
+              <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}/stock"><span uk-icon="icon: move"></span></a></td>
               <td>
-                <form action="/addProductToOrder" method="post" enctype="multipart/form-data">
+                <form action="/addProductToOrder" method="post">
                   @csrf
-                  <input type="number" name="quantity" id="" value="0">
+                  <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" max="{{getAllStock($product->id)}}" min="1" value="0" required>
                   <input type="hidden" name="productId" value="{{$product->id}}">
+                  <input type="hidden" name="name" value="{{$product->name}}">
+                  <input type="hidden" name="sku" value="{{$product->sku}}">
                   <input type="hidden" name="price" value="{{$product->price}}">
-                  <button type="submit">Agregar</button>
+                  <button class="uk-button uk-button-default" uk-tooltip="Agregar a la orden" type="submit"><span uk-icon="plus-circle"></span></button>
                 </form>
                 </td>
               <td></td>
@@ -91,6 +118,9 @@ ZLE - Control de Stock
     </table>
 
   </div>
+
+  
+
   {{ $products->appends($_GET)->links() }}
 
   {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}

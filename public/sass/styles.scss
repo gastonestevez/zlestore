@@ -86,11 +86,26 @@ a {
   bottom: 5%;
   right: 5%;
   cursor: pointer;
+  transition: all .8s ease-in-out;
 }
 
 .cart-absolute:hover {
-  transition: all .2s ease-in-out;
   transform: scale(1.1);
+}
+
+.green-desc {
+  padding: 16px 12px;
+  text-align: left;
+  vertical-align: bottom;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #008F72;
+  text-transform: uppercase;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
 }
 
 // M Medium devices (tablets, less than 992px)

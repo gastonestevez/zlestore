@@ -14,13 +14,13 @@
 
                 <ul class="uk-navbar-nav">
                   <li>
-                      <a href="/">Inicio</a>
+                      <a class="uk-text-bold" href="/">Inicio</a>
                   </li>
                   <li>
-                      <a href="/orders">Pedidos</a>
+                      <a class="uk-text-bold" href="/orders">Pedidos</a>
                   </li>
                     <li>
-                        <a href="{{url('/products/stock')}}">Productos</a>
+                        <a class="uk-text-bold" href="{{url('/products/stock')}}">Productos</a>
                         {{-- <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/products/stock')}}">Gestionar Stock</a></li>
@@ -28,7 +28,7 @@
                         </div> --}}
                     </li>
                     <li>
-                        <a href="{{url('/warehouse/list')}}">Depósitos</a>
+                        <a class="uk-text-bold" href="{{url('/warehouse/list')}}">Depósitos</a>
                         {{-- <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
@@ -79,7 +79,7 @@
 
 {{-- Sticky nav mobile y tablet --}}
 <div class="uk-hidden@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-  <nav class="uk-navbar uk-navbar-container" uk-navbar>
+  <nav class="uk-navbar uk-navbar-container uk-navbar-transparent subtle-background" uk-navbar>
       <div class="uk-navbar-left">
         <a class="uk-navbar-item uk-logo" href="/"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
       </div>

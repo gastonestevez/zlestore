@@ -49,12 +49,18 @@ class ProductsController extends Controller
     public function list(Request $request)
     {
         $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
-
+            if($orderInProgress)
+            {
+                $orderItems = $orderInProgress->orderItems();
+            } else {
+                $orderItems = null;
+            }
+        
         $sku = $request->get('sku');
         $name = $request->get('name');
         $price = $request->get('price');
         $id = $request->get('id');
-
+        
         $searchParams = array(
             "p.id" => $id,
             "p.post_title" => $name,
@@ -62,9 +68,7 @@ class ProductsController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        // $idtest = $products[0]->id;
-        // dd(Warehouse::getProductStock(1, $idtest));
-        $vac = compact('products', 'request', 'orderInProgress');
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
 
         return view('/products/products', $vac);
     }

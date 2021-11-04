@@ -29,13 +29,13 @@ Route::view('/index3', 'index3');
 
 // WcOrders
 
-Route::get('/orders', [OrderController::class, 'orders'])->name('home')->middleware('auth');
+Route::get('/wcOrders', [OrderController::class, 'wcOrders'])->name('home')->middleware('auth');
 
 Route::get('/woocommerce', [WooCommerceController::class, 'wc']);
 
 Route::get('/prepare/{id}', [OrderController::class, 'prepare'])->middleware('auth');
 
-Route::post('/storeOrder/{id}', [OrderController::class, 'storeOrder'])->middleware('auth');
+Route::post('/storeWcOrder/{id}', [OrderController::class, 'storeWcOrder'])->middleware('auth');
 
 
 // Users
@@ -98,3 +98,7 @@ Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBo
 // Feature - sales-system
 
 Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder']);
+
+Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct']);
+
+Route::post('/confirmOrder', [OrderController::class, 'confirmOrder']);
