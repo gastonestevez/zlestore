@@ -16,12 +16,12 @@ ZLE - Control de Stock
   <div class="uk-child-width-1-2@s uk-grid-match uk-margin" uk-grid>
 
     <div>
-      <a href="/orders">
+      <a href="/wcOrders">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-people-carry"></i> Pedidos</h3>
             <p>Lista detallada de pedidos de los clientes</p>
             <br>
-            {{-- <a href="/orders" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$orders}} pedidos pendientes</a> --}}
+            {{-- <a href="/wcOrders" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$orders}} pedidos pendientes</a> --}}
         </div>
       </a>
     </div>

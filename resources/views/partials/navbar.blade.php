@@ -17,7 +17,7 @@
                       <a class="uk-text-bold" href="/">Inicio</a>
                   </li>
                   <li>
-                      <a class="uk-text-bold" href="/orders">Pedidos</a>
+                      <a class="uk-text-bold" href="/wcOrders">Pedidos</a>
                   </li>
                     <li>
                         <a class="uk-text-bold" href="{{url('/products/stock')}}">Productos</a>
@@ -104,7 +104,7 @@
       <ul class="uk-nav uk-nav-offcanvas uk-nav-center uk-nav-parent-icon uk-text-left" style="transform: translateY(50%);" uk-nav="multiple: true">
         {{-- Para que al clickear un link no se cierre el offcanvas hay que agregarle a la etiqueta A el atributo uk-scroll --}}
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/" uk-scroll>Inicio</a></li>
-        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/orders" uk-scroll>Pedidos</a></li>
+        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/wcOrders" uk-scroll>Pedidos</a></li>
         <li class="uk-parent">
           <a href="#">Stock</a>
           @if (Auth::user()->role == 'admin')

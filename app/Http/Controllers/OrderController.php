@@ -126,15 +126,20 @@ class OrderController extends Controller
     {
        
         // Busco si ya hay una orden en progreso
-        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+        // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+
+        $orderInProgress = Order::updateOrCreate(
+            ['status' => 'in progress', 'user_id' => auth()->user()->id],
+            ['concept_id' => 1]
+        );
 
         // Si no hay orden en progreso creo una nueva orden
-        if (!$orderInProgress) {
-            $newOrder = New Order();
-            $newOrder->user_id = auth()->user()->id;
-            $newOrder->concept_id = 1;
-            $newOrder->save();
-        }
+        // if (!$orderInProgress) {
+        //     $newOrder = New Order();
+        //     $newOrder->user_id = auth()->user()->id;
+        //     $newOrder->concept_id = 1;
+        //     $newOrder->save();
+        // }
 
         // Llamo a la ultima orden 
         $lastOrder = Order::get()->last();
@@ -210,5 +215,13 @@ class OrderController extends Controller
         $order->save();
 
         return back()->with('success', 'Producto removido');
+    }
+
+    function confirmOrder(int $id) {
+
+        $order = Order::find($id);
+        $vac = compact('order');
+
+        return view('/orders/confirmOrder', $vac);
     }
 }

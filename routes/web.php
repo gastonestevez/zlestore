@@ -101,4 +101,4 @@ Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])
 
 Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct']);
 
-Route::post('/confirmOrder', [OrderController::class, 'confirmOrder']);
+Route::get('/confirmOrder/{id}', [OrderController::class, 'confirmOrder']);

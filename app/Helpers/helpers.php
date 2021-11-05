@@ -55,6 +55,36 @@ unidades_por_caja: number
     return $productosPadre;
   }
 
+  // Con esta query te trae las categorias y tags de un producto
+  // Pero tiene q ser producto padre o simple.  Si es variación hay q encontrar la forma de buscar el id del padre
+  function getProductTaxonomies($productId) {
+
+    // Detecto si el producto que me pasan es padre, simple o variacion
+    $productParentId = DB::table('wpct_posts AS p')
+                ->where('p.id', '=', $productId)
+                ->select('p.post_parent')
+                ->pluck('post_parent')
+                ->first();
+    
+    // si me da distinto a 0 quiere decir que es una variación. Utilizo el id del padre
+    if ($productParentId != 0) {
+      $productId = $productParentId;
+    }
+
+    $taxonomies = DB::table('wpct_term_relationships AS tr')
+                ->join('wpct_term_taxonomy AS tt', 'tt.term_taxonomy_id', '=', 'tr.term_taxonomy_id')
+                ->join('wpct_terms AS t', 't.term_id', '=', 'tr.term_taxonomy_id')
+                ->select('t.name')
+                ->where('tr.object_id', '=', $productId) 
+                ->where('t.name', '!=', 'Variable')             
+                ->where('t.name', '!=', 'Simple')             
+                ->where('t.name', '!=', 'Sin categorizar')             
+                ->pluck('name')
+                ->toArray();
+              
+    return $taxonomies;
+  }
+
   function getAllStock($productId) {
     // Trae la totalidad de stock que hay de un producto en todos los depósitos.
     

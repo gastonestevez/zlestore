@@ -44,6 +44,8 @@ ZLE - Control de Stock
       @endforeach
       <br>
       ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
+      <br>
+      <a class="uk-button uk-button-default" href="/confirmOrder/{{$orderInProgress->id}}">Confirmar orden</a>
       </div>  
     
     <hr class="uk-divider-icon">

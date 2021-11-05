@@ -9,6 +9,7 @@ use Auth;
 class Order extends Model
 {
     use HasFactory;
+    protected $fillable = ['status', 'user_id', 'concept_id'];
 
     public function concept()
     {
@@ -18,6 +19,11 @@ class Order extends Model
     public function orderItems()
     {
         return $this->hasMany(Order_item::class, 'order_id')->get();
+    }
+
+    public function orderItemsIds()
+    {
+        return $this->hasMany(Order_item::class, 'order_id')->pluck('product_id');
     }
 
     public function orderInProgress()
