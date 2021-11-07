@@ -75,7 +75,7 @@ ZLE - Crear depósito
                 <label><input class="uk-checkbox" name='visibility' value='1' type="checkbox" checked> ¿Es visible?</label>
             </div> --}}
             <button type="submit" class="uk-button uk-button-info">Editar</button>
-            <a class="uk-button uk-button-danger"  href="#confirm{{$warehouse->id}}" uk-toggle>Eliminar</a>
+            <a class="uk-button uk-button-danger"  href="#confirmdelete{{$warehouse->id}}" uk-toggle>Eliminar</a>
             {{-- <label for="eliminar{{$warehouse->id}}" type="submit" class="uk-button uk-button-danger">Eliminar</label> --}}
         </form>
 

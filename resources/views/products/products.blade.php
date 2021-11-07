@@ -6,7 +6,7 @@ ZLE - Control de Stock
 
 <div class="uk-container primer-div">
 
-  <h1 class="uk-heading-divider">Productos</h1>
+  <h1 class="uk-heading-divider">Todos los productos</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
@@ -25,7 +25,11 @@ ZLE - Control de Stock
 
     @if ($orderInProgress)
 
-    <div class="cart-absolute"><span uk-icon="icon: cart"></span></div>
+    <div class="cart-absolute">
+      <a href="/confirmOrder/{{$orderInProgress->id}}">
+        <span style="color:white;" uk-icon="icon: cart"></span>
+      </a>
+    </div>
     
     <div class="uk-overflow-auto">
       <p class="green-desc">Orden en progreso</p>
@@ -45,7 +49,7 @@ ZLE - Control de Stock
       <br>
       ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
       <br>
-      <a class="uk-button uk-button-default" href="/confirmOrder/{{$orderInProgress->id}}">Confirmar orden</a>
+      <a class="uk-button uk-button-default" href="{{route('confirmarOrden', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
       </div>  
     
     <hr class="uk-divider-icon">

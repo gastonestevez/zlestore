@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WooCommerceController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ConceptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,8 +98,21 @@ Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBo
 
 // Feature - sales-system
 
-Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder']);
+Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])->middleware('auth');
 
-Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct']);
+Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
 
-Route::get('/confirmOrder/{id}', [OrderController::class, 'confirmOrder']);
+Route::get('/confirmOrder/{id}', [OrderController::class, 'confirmOrder'])->name('confirmarOrden')->middleware('auth');
+
+Route::post('/orderInvoice/{id}', [OrderController::class, 'orderInvoice'])->middleware('auth');
+
+
+// Concepts
+
+Route::get('/concepts', [ConceptController::class, 'show'])->name('concepts')->middleware('auth');
+
+Route::post('/createConcept', [ConceptController::class, 'create'])->name('createConcept')->middleware('auth');
+
+Route::put('/updateConcept', [ConceptController::class, 'update'])->name('updateConcept')->middleware('auth');
+
+Route::delete('/deleteConcept', [ConceptController::class, 'delete'])->name('deleteConcept')->middleware('auth');

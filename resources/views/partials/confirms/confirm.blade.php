@@ -10,9 +10,13 @@
   if (!isset($id)){
     $id = '';
   }
+
+  if (!isset($method)){
+    $method = 'delete';
+  }
 @endphp
 
-<div id="confirm{{$id}}" uk-modal>
+<div id="confirm{{$method}}{{$id}}" uk-modal>
 
   <div class="uk-modal-dialog">
     <button class="uk-modal-close-default" type="button" uk-close></button>
@@ -28,10 +32,10 @@
     <div class="uk-modal-footer uk-text-right">
       <form action="{{$url}}" method="post">
         <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
-        @method('delete')
+        @method($method)
         @csrf
         <input type="hidden" name="{{$name}}" value="{{$id}}">
-        <button class="uk-button uk-button-danger" type="submit">Eliminar</button>
+        <button class="uk-button uk-button-secondary" type="submit">Aceptar</button>
       </form>
     </div>
   </div>

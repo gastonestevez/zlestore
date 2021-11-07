@@ -9,7 +9,9 @@ use Carbon\Carbon;
 use App\Models\Stocks;
 use App\Models\Order;
 use App\Models\Order_item;
+use App\Models\Concept;
 use Auth;
+use PDF;
 
 
 class OrderController extends Controller
@@ -172,6 +174,8 @@ class OrderController extends Controller
 
         // Instancio un nuevo order item y lo asigno a la orden
         // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
+        $concepts = Concept::all();
+        
         $order_item = Order_item::updateOrCreate(
             ['product_id' => $request->productId, 'order_id' => $lastOrderId,
             'product_name' => $request->name,
@@ -218,10 +222,22 @@ class OrderController extends Controller
     }
 
     function confirmOrder(int $id) {
-
         $order = Order::find($id);
-        $vac = compact('order');
+        $concepts = Concept::all();
+        $vac = compact('order', 'id', 'concepts');
 
         return view('/orders/confirmOrder', $vac);
+    }
+
+    // Genera un pdf con la factura de la orden
+    function orderInvoice(int $id, Request $request) {
+        
+
+        $order = Order::find($id);    
+        $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
+        // $pdf->loadHTML('<h1>Test</h1>');
+        return $pdf->download($order->id . '_' . Carbon::now()->format('dmY') . ".pdf");
+
+        // return view('/orders/orderInvoice');
     }
 }

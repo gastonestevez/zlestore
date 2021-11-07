@@ -35,29 +35,30 @@ ZLE - Confirmar Orden
 
     <hr class="uk-divider-icon">
 
-    <form action="/createDocument" method="POST">
+    <form action="/orderInvoice/{{$id}}" method="POST">
         @method('post')
         @csrf
         
-        <select name="concept_id">
-            <option value="1">Venta en el local</option>  
+        <select name="concept_id" required>
+            <option value="">Seleccione una opción</option>
+            @foreach ($concepts as $concept)
+            <option value="{{$concept->id}}">{{$concept->description}}</option>
+            @endforeach  
             <option value="2">otros</option>  
         </select>
-        <span class="uk-text-lighter">Crear nuevos conceptos</span>
+        <a href="/concepts" target="_blank" class="uk-button-link uk-text-lighter">Crear/eliminar/editar conceptos</a>
 
-        <label for="">Información adicional</label>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
-
-        <button class="uk-button uk-button-default" type="submit">Crear factura</button>
-    </form>
-
-    <form action="">
-        <select name="" id="">
+        {{-- <select name="" id="">
             <option value="default">Elegi una categoria</option> 
             @foreach ($taxonomies as $taxonomy)
             <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
             @endforeach
-        </select>
+        </select> --}}
+
+        <label for="">Información adicional</label>
+        <textarea name="info" id="" cols="30" rows="10"></textarea>
+
+        <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
     </form>
 
 </div>

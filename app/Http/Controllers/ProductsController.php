@@ -77,8 +77,6 @@ class ProductsController extends Controller
     {
         $product = getProduct($id);
         $warehouses = Warehouse::all();
-        $asd = $warehouses[0]->getProductStock($warehouses[0]->id, $product->id);
-        // dd($product);
 
         $vac = compact('product', 'warehouses');
 
