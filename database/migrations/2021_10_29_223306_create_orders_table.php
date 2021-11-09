@@ -24,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->unsignedInteger('concept_id');
+            $table->unsignedInteger('concept_id')->nullable();
             $table->foreign('concept_id')->references('id')->on('concepts')->nullable();
         });
     }

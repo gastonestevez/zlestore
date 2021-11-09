@@ -132,7 +132,7 @@ class OrderController extends Controller
 
         $orderInProgress = Order::updateOrCreate(
             ['status' => 'in progress', 'user_id' => auth()->user()->id],
-            ['concept_id' => 1]
+            ['concept_id' => null]
         );
 
         // Si no hay orden en progreso creo una nueva orden
@@ -174,7 +174,6 @@ class OrderController extends Controller
 
         // Instancio un nuevo order item y lo asigno a la orden
         // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
-        $concepts = Concept::all();
         
         $order_item = Order_item::updateOrCreate(
             ['product_id' => $request->productId, 'order_id' => $lastOrderId,

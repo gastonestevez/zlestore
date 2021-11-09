@@ -14,7 +14,7 @@ class ConceptController extends Controller
 
     function create(Request $request) {
         $concept= new Concept();
-        $concept->description = $request->name;
+        $concept->name = $request->name;
         $concept->save();
 
         return back()->with('success', 'Concepto creado exitosamente');
