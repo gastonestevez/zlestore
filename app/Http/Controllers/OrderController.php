@@ -124,7 +124,9 @@ class OrderController extends Controller
           );
     }
 
-    public function addProductToOrder(Request $request)  // Agrega un producto a una order
+
+    // Agrega un producto a una orden
+    public function addProductToOrder(Request $request)  
     {
        
         // Busco si ya hay una orden en progreso
@@ -197,6 +199,7 @@ class OrderController extends Controller
 
     }
 
+    // Remueve un producto de la orden
     function removeProduct(int $id) {
         $product = Order_item::find($id);
         $order = Order::find($product->order_id);
@@ -220,23 +223,35 @@ class OrderController extends Controller
         return back()->with('success', 'Producto removido');
     }
 
-    function confirmOrder(int $id) {
+    // Muestra la order en formato in progress antes de generar los descuentos y el pdf
+    function orderPreview(int $id) {
         $order = Order::find($id);
         $concepts = Concept::all();
         $vac = compact('order', 'id', 'concepts');
 
-        return view('/orders/confirmOrder', $vac);
+        return view('/orders/orderPreview', $vac);
     }
 
-    // Genera un pdf con la factura de la orden
-    function orderInvoice(int $id, Request $request) {
-        
-
-        $order = Order::find($id);    
+    public function createAndSavePdf(int $id, Request $request, Order $order) { 
         $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
-        // $pdf->loadHTML('<h1>Test</h1>');
-        return $pdf->download($order->id . '_' . Carbon::now()->format('dmY') . ".pdf");
+        $path = public_path('storage');
+        $fileName = $order->id . '_' . Carbon::now()->format('dmY') . ".pdf";
+        $pdf->save($path . '/' . $fileName);    
+    }
 
-        // return view('/orders/orderInvoice');
+    // Genera un pdf con la factura de la orden y pasa el estado a pending
+    function orderToPending(int $id, Request $request) {
+        $order = Order::find($id);   
+        $this->createAndSavePdf($id, $request, $order);
+
+        $order->status = 'pending';
+        $order->save();
+
+        return redirect()->route('sales');
+    }
+
+    // Muesta la tabla de historial de ventas
+    function historySales() {
+        return view('history.sales');
     }
 }

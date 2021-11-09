@@ -102,9 +102,9 @@ Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])
 
 Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
 
-Route::get('/confirmOrder/{id}', [OrderController::class, 'confirmOrder'])->name('confirmarOrden')->middleware('auth');
+Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
 
-Route::post('/orderInvoice/{id}', [OrderController::class, 'orderInvoice'])->middleware('auth');
+Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
 
 
 // Concepts
@@ -116,3 +116,7 @@ Route::post('/createConcept', [ConceptController::class, 'create'])->name('creat
 Route::put('/updateConcept', [ConceptController::class, 'update'])->name('updateConcept')->middleware('auth');
 
 Route::delete('/deleteConcept', [ConceptController::class, 'delete'])->name('deleteConcept')->middleware('auth');
+
+// History
+
+Route::get('/sales', [OrderController::class, 'historySales'])->name('historySales')->middleware('auth');

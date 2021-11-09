@@ -35,7 +35,7 @@ ZLE - Confirmar Orden
 
     <hr class="uk-divider-icon">
 
-    <form action="/orderInvoice/{{$id}}" method="POST">
+    <form action="/orderToPending/{{$id}}" method="POST">
         @method('post')
         @csrf
         

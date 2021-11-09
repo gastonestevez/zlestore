@@ -1,0 +1,1 @@
+Aca va la tabla con las ventas realizadas en el local

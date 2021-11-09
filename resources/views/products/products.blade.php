@@ -26,7 +26,7 @@ ZLE - Control de Stock
     @if ($orderInProgress)
 
     <div class="cart-absolute">
-      <a href="/confirmOrder/{{$orderInProgress->id}}">
+      <a href="/orderPreview/{{$orderInProgress->id}}">
         <span style="color:white;" uk-icon="icon: cart"></span>
       </a>
     </div>
@@ -49,7 +49,7 @@ ZLE - Control de Stock
       <br>
       ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
       <br>
-      <a class="uk-button uk-button-default" href="{{route('confirmarOrden', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
+      <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
       </div>  
     
     <hr class="uk-divider-icon">
