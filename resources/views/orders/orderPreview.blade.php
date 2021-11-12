@@ -27,7 +27,11 @@ ZLE - Confirmar Orden
                 @endphp
             @endif 
         @endforeach
-        <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
+        <form action="/removeProduct/{{$item->id}}" method="POST">
+            @method('DELETE')
+            @csrf
+            <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
+        </form>
     @endforeach
     {{-- {{dd($taxonomies);}} --}}
     <br>

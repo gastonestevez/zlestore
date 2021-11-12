@@ -17,18 +17,31 @@
                       <a class="uk-text-bold" href="/">Inicio</a>
                   </li>
                   <li>
-                      <a class="uk-text-bold" href="/wcOrders">Pedidos</a>
+                      <a class="uk-text-bold" href="#">Pedidos</a>
+                        <div class="uk-navbar-dropdown">
+                          <ul class="uk-nav uk-navbar-dropdown-nav">
+                            <li><a class="uk-text" href="/wcOrders">Pedidos Web</a></li>
+                            <li><a class="uk-text" href="/createOrder">Armar pedido</a></li>
+                            @if ($orderInProgress && $id)
+                              <li><a class="uk-text" href="/orderPreview/{{$id}}">Confirmar pedido</a></li>
+                            @endif
+                          </ul>
+                        </div>
                   </li>
                     <li>
-                        <a class="uk-text-bold" href="{{url('/products/stock')}}">Productos</a>
-                        {{-- <div class="uk-navbar-dropdown">
+                        <a class="uk-text-bold" href="#">Stock</a>
+                        <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="{{url('/products/stock')}}">Gestionar Stock</a></li>
+                                <li><a href="{{url('/products/stock')}}">Stock general</a></li>
+                                <li class="uk-nav-divider"></li>
+                                @foreach ($warehouses as $warehouse)
+                                    <li><a href="{{url('/stock')}}">{{$warehouse->name}}</a></li></li>
+                                @endforeach
                             </ul>
-                        </div> --}}
+                        </div>
                     </li>
                     <li>
-                        <a class="uk-text-bold" href="{{url('/warehouse/list')}}">Depósitos</a>
+                        <a class="uk-text-bold" href="{{url('/warehouses')}}">Depósitos</a>
                         {{-- <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>

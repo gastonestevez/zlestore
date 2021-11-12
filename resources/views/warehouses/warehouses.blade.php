@@ -37,7 +37,7 @@ ZLE - Control de Stock
 
 <script>
     const sendToCreateWarehouse = () => {
-        window.location.pathname = '/warehouse/new'
+        window.location.pathname = '/warehouses/edit'
     }
 </script>
 @endsection

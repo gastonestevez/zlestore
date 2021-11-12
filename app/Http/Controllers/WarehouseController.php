@@ -27,47 +27,17 @@ class WarehouseController extends Controller
           ]);
   }
 
-  public function show(int $id)
-  {
-    $warehouse = Warehouse::find($id);
-    $vac = compact('warehouse');
-
-    return view('warehouses.warehouse', $vac);
-  }
-
-  public function products(Request $request, int $id)
-  {
-
-    $sku = $request->get('sku');
-    $name = $request->get('name');
-    $price = $request->get('price');
-
-    $warehouse = Warehouse::find($id);
-    $products = DB::table('wpct_posts AS p')
-                    ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                    ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-                    ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
-                    ->where('warehouse_id', "=", $id)
-                    ->where('quantity', '>', 0)
-                    ->get();
-    
-    $vac = compact('warehouse', 'products', 'request');
-
-    return view('warehouses.warehouseProducts', $vac);
-  }
-
-  public function new() {
+  public function edit() {
     $warehouses = Warehouse::all();
     $vac = compact('warehouses');
     return view('warehouses.createWarehouse', $vac);
   }
 
-
   public function store(Request $req) {
       Warehouse::create($req->all());
 
 
-    return redirect('/warehouse/list')
+    return redirect('/warehouses')
         ->with('success', 'Depósito creado exitosamente');
   }
 
@@ -79,7 +49,7 @@ class WarehouseController extends Controller
 
     $warehouse->save();
    
-    return redirect('/warehouse/list')
+    return redirect('/warehouses')
       ->with('success', 'Depósito editado exitosamente');
   }
 
@@ -91,7 +61,7 @@ class WarehouseController extends Controller
     DB::table('stocks')
         ->where('warehouse_id', '=', $id)->delete();
 
-    return redirect('/warehouse/list')
+    return redirect('/warehouses')
           ->with('success', 'Depósito eliminado exitosamente');
   }
 

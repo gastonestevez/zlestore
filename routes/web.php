@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WooCommerceController;
 use App\Http\Controllers\OrderController;
@@ -38,6 +38,18 @@ Route::get('/prepare/{id}', [OrderController::class, 'prepare'])->middleware('au
 
 Route::post('/storeWcOrder/{id}', [OrderController::class, 'storeWcOrder'])->middleware('auth');
 
+// Orders - Feature - sales-system
+
+Route::get('/createOrder', [orderController::class, 'createOrder'])->name('createOrder')->middleware('auth');
+
+Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
+
+Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])->middleware('auth');
+
+Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
+
+Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
+
 
 // Users
 
@@ -56,11 +68,9 @@ Route::delete('/deleteuser/{id}', [UserController::class, 'destroy'])->middlewar
 
 // Warehouses
 
-Route::get('/warehouse/list', [WarehouseController::class, 'list'])->middleware('auth');
+Route::get('/warehouses', [WarehouseController::class, 'list'])->middleware('auth');
 
-Route::get('/warehouse/{id}/products', [WarehouseController::class, 'products'])->middleware('auth');
-
-Route::get('/warehouse/new', [WarehouseController::class, 'new'])->name('newWarehouse')->middleware('auth');
+Route::get('/warehouses/edit', [WarehouseController::class, 'edit'])->name('newWarehouse')->middleware('auth');
 
 Route::post('/warehouse/store', [WarehouseController::class, 'store'])->middleware('auth');
 
@@ -68,43 +78,28 @@ Route::put('/warehouse/update/{id}', [WarehouseController::class, 'update'])->mi
 
 Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])->middleware('admin');
 
-// Products
-
-Route::post('prepare/{id}', [ProductsController::class, 'prepareOrder'])->middleware('auth');
-
-Route::post('prepare/{id}/changeStatus', [ProductsController::class, 'prepareOrder'])->middleware('auth');
-
-Route::put('/updatingBoxes/{id}', [ProductsController::class, 'updatingBoxes'])->middleware('admin');
-
-Route::put('/updatingUnits/{id}', [ProductsController::class, 'updatingUnits'])->middleware('admin');
-
-Route::get('/products/loadcsv', [ProductsController::class, 'loadcsv'])->middleware(('auth'));
-
-Route::post('/products/loadcsv', [ProductsController::class, 'storecsv'])->middleware(('auth'))->name('csv-import');
-
-
-// Stock
-
-Route::get('/products/stock', [ProductsController::class, 'list'])->name('stockList')->middleware('auth');
-
-Route::get('/product/{id}/stock', [ProductsController::class, 'show'])->middleware('auth');
-
-Route::get('/products/syncWoocommerce', [ProductsController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
-
 Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUnits'])->middleware('employee');
 
 Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
 
 
-// Feature - sales-system
+// Stock
 
-Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])->middleware('auth');
+Route::get('/stock', [StockController::class, 'allStock'])->name('stockList')->middleware('auth');
 
-Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
+Route::get('/stock/{warehouseId}', [StockController::class, 'warehouseStock'])->middleware('auth');
 
-Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
+Route::post('prepare/{id}', [StockController::class, 'prepareOrder'])->middleware('auth');
 
-Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
+Route::post('prepare/{id}/changeStatus', [StockController::class, 'prepareOrder'])->middleware('auth');
+
+Route::get('/product/{id}/stock', [StockController::class, 'show'])->middleware('auth');
+
+Route::get('/products/syncWoocommerce', [StockController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
+
+Route::put('/updatingBoxes/{id}', [StockController::class, 'updatingBoxes'])->middleware('admin');
+
+Route::put('/updatingUnits/{id}', [StockController::class, 'updatingUnits'])->middleware('admin');
 
 
 // Concepts
@@ -117,6 +112,13 @@ Route::put('/updateConcept', [ConceptController::class, 'update'])->name('update
 
 Route::delete('/deleteConcept', [ConceptController::class, 'delete'])->name('deleteConcept')->middleware('auth');
 
+
 // History
 
 Route::get('/sales', [OrderController::class, 'historySales'])->name('historySales')->middleware('auth');
+
+// Import/export products
+
+Route::get('/products/loadcsv', [StockController::class, 'loadcsv'])->middleware(('auth'));
+
+Route::post('/products/loadcsv', [StockController::class, 'storecsv'])->middleware(('auth'))->name('csv-import');

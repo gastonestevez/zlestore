@@ -6,7 +6,7 @@ ZLE - Control de Stock
 @if(\Session::has('noWarehouses'))
 <div class="uk-alert-danger" uk-alert>
   <a class="uk-alert-close" uk-close></a>
-  <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/new')}}">aquí</a>.</p>
+  <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouses/edit')}}">aquí</a>.</p>
 </div>
 @endif
 <div class="uk-container primer-div">

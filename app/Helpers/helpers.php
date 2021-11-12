@@ -1,6 +1,7 @@
 <?php
 use App\Models\Warehouse;
 use App\Models\Stocks;
+use Illuminate\Support\Str;
 
 //https://dev.to/kingsconsult/how-to-create-laravel-8-helpers-function-global-function-d8n
 /*
@@ -94,4 +95,12 @@ unidades_por_caja: number
       $total = $stock + $total;
     }
     return $total;
+  }
+
+  function getSlug(Int $warehouseId)
+  {
+    $warehouse = Warehouse::where('id', '=', $warehouseId)->get();
+    $slug = Str::slug($warehouse->name, '-');
+
+    return $slug;
   }

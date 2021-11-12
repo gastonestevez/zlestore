@@ -116,7 +116,7 @@ ZLE - Control de Stock
             </div>
         </div>
         @empty
-          <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen depósitos. <a href="/warehouse/new">Crear un nuevo depósito</a></h3>
+          <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen depósitos. <a href="/warehouses/edit">Crear un nuevo depósito</a></h3>
 
         @endforelse
     </div>

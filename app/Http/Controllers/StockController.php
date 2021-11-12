@@ -12,7 +12,7 @@ use App\Imports\ProductsImport;
 use Carbon\Carbon;
 use DB;
 
-class ProductsController extends Controller
+class StockController extends Controller
 {
 
     public function loadcsv(Request $request)
@@ -46,7 +46,7 @@ class ProductsController extends Controller
         return back()->with('success', 'Los productos fueron agregados a la base.');
     }
 
-    public function list(Request $request)
+    public function allStock(Request $request)
     {
         $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
             if($orderInProgress)
@@ -70,8 +70,29 @@ class ProductsController extends Controller
         $products = getProducts($searchParams, true);
         $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
 
-        return view('/products/products', $vac);
+        return view('stock.products', $vac);
     }
+
+    public function warehouseStock(Request $request, int $id)
+  {
+
+    $sku = $request->get('sku');
+    $name = $request->get('name');
+    $price = $request->get('price');
+
+    $warehouse = Warehouse::find($id);
+    $products = DB::table('wpct_posts AS p')
+                    ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+                    ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
+                    ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
+                    ->where('warehouse_id', "=", $id)
+                    ->where('quantity', '>', 0)
+                    ->get();
+    
+    $vac = compact('warehouse', 'products', 'request');
+
+    return view('stock.warehouseStock', $vac);
+  }
 
     public function show(String $id)
     {

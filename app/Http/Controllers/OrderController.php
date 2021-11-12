@@ -124,6 +124,34 @@ class OrderController extends Controller
           );
     }
 
+    // Aqui se comienza a crear una orden
+    public function createOrder(Request $request)
+    {
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+            if($orderInProgress)
+            {
+                $orderItems = $orderInProgress->orderItems();
+            } else {
+                $orderItems = null;
+            }
+        
+        $sku = $request->get('sku');
+        $name = $request->get('name');
+        $price = $request->get('price');
+        $id = $request->get('id');
+        
+        $searchParams = array(
+            "p.id" => $id,
+            "p.post_title" => $name,
+            "price" => $price,
+            "pml.sku" => $sku
+        );
+        $products = getProducts($searchParams, true);
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
+
+        return view('orders.createOrder', $vac);
+    }
+
 
     // Agrega un producto a una orden
     public function addProductToOrder(Request $request)  
@@ -208,7 +236,7 @@ class OrderController extends Controller
         // Si la orden se queda sin productos la elimino
         if (count($order->orderItems()) == 0) {
             $order->delete();
-            return back()->with('success', 'Orden eliminada');
+            return redirect()->route('createOrder')->with('success', 'Orden eliminada');
         }
 
         // Calculo el valor total de la orden
@@ -247,7 +275,7 @@ class OrderController extends Controller
         $order->status = 'pending';
         $order->save();
 
-        return redirect()->route('sales');
+        return redirect()->route('historySales');
     }
 
     // Muesta la tabla de historial de ventas
