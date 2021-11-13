@@ -101,6 +101,13 @@ Route::put('/updatingBoxes/{id}', [StockController::class, 'updatingBoxes'])->mi
 
 Route::put('/updatingUnits/{id}', [StockController::class, 'updatingUnits'])->middleware('admin');
 
+Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
+
+Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
+
+Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
+// Route::get('/orderToPending/{id}', [OrderController::class, 'orderToPendingGet'])->middleware('auth'); // Ruta de prueba
+
 
 // Concepts
 

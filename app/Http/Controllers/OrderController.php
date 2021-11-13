@@ -278,6 +278,18 @@ class OrderController extends Controller
         return redirect()->route('historySales');
     }
 
+    // ruta de prueba para render de pdf
+    // function orderToPendingGet(Request $request) {
+    //     $id = 1;
+    //     $order = Order::find($id);   
+    //     return view('/orders/orderInvoice', ['order' => $order, 'request' => $request]);
+    //     // $this->createAndSavePdf($id, $request, $order);
+
+    //     // $order->status = 'pending';
+    //     // $order->save();
+
+    //     // return redirect()->route('historySales');
+    // }
     // Muesta la tabla de historial de ventas
     function historySales() {
         return view('history.sales');
