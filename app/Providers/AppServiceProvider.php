@@ -7,6 +7,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use App\Models\Order;
 use App\Models\Warehouse;
+use Mockery\Undefined;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,14 +28,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       Paginator::useBootstrap();
+      Paginator::useBootstrap();
 
        // https://www.youtube.com/watch?v=7QWZxjgvEQc
       // Especificamos las vistas donde queremos compartir estas variables
       View::composer(['partials.navbar'], function($view){
+        $orderInProgress = null;
 
         // Traemos todo lo que queremos imprimir en la navbar
-        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+        if(auth()->user()) {
+          $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+        }
         // if ternario
         $id = isset($orderInProgress)?$orderInProgress->id:'';
         

@@ -6,7 +6,7 @@ ZLE - Crear orden
 
 <div class="uk-container primer-div">
 
-  <h1 class="uk-heading-divider">Armado de pedido</h1>
+  <h1 class="uk-heading uk-margin-bottom">Armado de pedido</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
@@ -31,29 +31,45 @@ ZLE - Crear orden
       </a>
     </div>
     
-    <div class="uk-overflow-auto">
-      <p class="green-desc">Orden en progreso</p>
-      ORDER ID: {{$orderInProgress->id}} <br><br>
-      @foreach ($orderItems as $item)
-      <form action="/removeProduct/{{$item->id}}" method="POST">
-        @method('DELETE')
-        @csrf
-          ID: {{$item->product_id}} <br>
-          NOMBRE: {{$item->product_name}} <br>
-          SKU: {{$item->product_sku}} <br>
-          PRECIO: ${{ number_format($item->price, 0,',','.')}} <br>
-          CANTIDAD: {{$item->quantity}} <br>
-          <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
-      </form>
-      @endforeach
-      <br>
-      ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
-      <br>
-      <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
+    <div class="uk-overflow-auto uk-margin-bottom">
+      <h4 class=" uk-heading-line  uk-text-center"> <span> Orden en progreso: #{{$orderInProgress->id}}</span></h4>
+      <table class="uk-table uk-table-divider uk-table-justify uk-table-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>SKU</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+          @foreach ($orderItems as $item)
+          <form action="/removeProduct/{{$item->id}}" method="POST">
+            @method('DELETE')
+            @csrf
+            <tr>
+              <td>{{$item->product_id}}</td>
+              <td>{{$item->product_name}}</td>
+              <td>{{$item->product_sku}}</td>
+              <td>${{ number_format($item->price, 0,',','.')}}</td>
+              <td>{{$item->quantity}}</td>
+              <td><button class="uk-button uk-button-default" type="submit">Remover producto</button></td>
+            </tr>
+          </form>
+          @endforeach  
+        </tbody>
+    </table>
+      <div class="uk-flex uk-margin-bottom">
+          <strong>Total:&nbsp;</strong> ${{ number_format($orderInProgress->total, 0,',','.')}}
+      </div>
+      <div class="uk-flex uk-margin-top">
+          <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
+      </div>
       </div>  
-    
-    <hr class="uk-divider-icon">
     @endif
+    <h4 class="uk-heading-line uk-text-center uk-margin-top"> <span>Productos</span></h4>
 
     <p>Productos por página: {{count($products)}}</p>
 
@@ -73,7 +89,7 @@ ZLE - Crear orden
         <div class="pr uk-margin-bottom">
           <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
         </div>
-     </form>
+      </form>
 
       <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
         <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
