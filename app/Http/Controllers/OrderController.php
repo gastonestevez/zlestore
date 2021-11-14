@@ -264,15 +264,17 @@ class OrderController extends Controller
         $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
         $path = public_path('storage');
         $fileName = $order->id . '_' . Carbon::now()->format('dmY') . ".pdf";
-        $pdf->save($path . '/' . $fileName);    
+        $pdf->save($path . '/' . $fileName);
+        return $fileName;
     }
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
         $order = Order::find($id);   
-        $this->createAndSavePdf($id, $request, $order);
+        $filename = $this->createAndSavePdf($id, $request, $order);
 
         $order->status = 'pending';
+        $order->document_link = 'storage' . '/' . $filename;
         $order->save();
 
         return redirect()->route('historySales');
@@ -292,6 +294,8 @@ class OrderController extends Controller
     // }
     // Muesta la tabla de historial de ventas
     function historySales() {
-        return view('history.sales');
+        $orders = Order::all();   
+        $vac = compact('orders');
+        return view('history.sales', $vac);
     }
 }
