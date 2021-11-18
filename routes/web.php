@@ -22,7 +22,7 @@ use App\Http\Controllers\ConceptController;
 
 Auth::routes(['register' => false]);
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');;
 
 Route::get('/test', [HomeController::class, 'index2']);
 
@@ -53,13 +53,13 @@ Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])-
 
 // Users
 
-Route::get('/users', [UserController::class, 'directory'])->middleware('admin');
+Route::get('/users', [UserController::class, 'directory'])->name('users')->middleware('admin');
 
 Route::post('/adduser', [UserController::class, 'store'])->middleware('admin');
 
-Route::get('/user', [UserController::class, 'show'])->middleware('auth');
+Route::get('/user', [UserController::class, 'show'])->name('profile')->middleware('auth');
 
-Route::get('/user/{id}', [UserController::class, 'showAdmin'])->middleware('admin');
+Route::get('/user/{id}', [UserController::class, 'showAdmin'])->name('showProfile')->middleware('admin');
 
 Route::put('/edituser/{id}', [UserController::class, 'update'])->middleware('auth');
 
@@ -68,38 +68,38 @@ Route::delete('/deleteuser/{id}', [UserController::class, 'destroy'])->middlewar
 
 // Warehouses
 
-Route::get('/warehouses', [WarehouseController::class, 'list'])->middleware('auth');
+Route::get('/warehouses', [WarehouseController::class, 'list'])->name('warehouses')->middleware('auth');
 
-Route::get('/warehouses/edit', [WarehouseController::class, 'edit'])->name('newWarehouse')->middleware('auth');
+Route::get('/warehouses/edit', [WarehouseController::class, 'edit'])->name('editWarehouses')->middleware('auth');
 
-Route::post('/warehouse/store', [WarehouseController::class, 'store'])->middleware('auth');
+Route::post('/warehouse/store', [WarehouseController::class, 'store'])->name('createWarehouse')->middleware('auth');
 
-Route::put('/warehouse/update/{id}', [WarehouseController::class, 'update'])->middleware('auth');
+Route::put('/warehouse/update/{id}', [WarehouseController::class, 'update'])->name('updateWarehouse')->middleware('auth');
 
-Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])->middleware('admin');
+Route::delete('/warehouse/delete/{id}', [WarehouseController::class, 'destroy'])->name('deleteWarehouse')->middleware('admin');
 
-Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUnits'])->middleware('employee');
+Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUnits'])->name('transferingUnits')->middleware('employee');
 
-Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->middleware('employee');
+Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->name('transferingBoxes')->middleware('employee');
 
 
 // Stock
 
 Route::get('/stock', [StockController::class, 'allStock'])->name('stockList')->middleware('auth');
 
-Route::get('/stock/{warehouseId}', [StockController::class, 'warehouseStock'])->middleware('auth');
+Route::get('/stock/{warehouseSlug}', [StockController::class, 'warehouseStock'])->name('warehouseStock')->middleware('auth');
 
 Route::post('prepare/{id}', [StockController::class, 'prepareOrder'])->middleware('auth');
 
 Route::post('prepare/{id}/changeStatus', [StockController::class, 'prepareOrder'])->middleware('auth');
 
-Route::get('/product/{id}/stock', [StockController::class, 'show'])->middleware('auth');
+Route::get('/product/{id}', [StockController::class, 'show'])->name('productStock')->middleware('auth');
 
 Route::get('/products/syncWoocommerce', [StockController::class, 'syncWoocommerce'])->name('syncWoocommerce')->middleware('auth');
 
-Route::put('/updatingBoxes/{id}', [StockController::class, 'updatingBoxes'])->middleware('admin');
+Route::put('/updatingBoxes/{id}', [StockController::class, 'updatingBoxes'])->name('updatingBoxes')->middleware('admin');
 
-Route::put('/updatingUnits/{id}', [StockController::class, 'updatingUnits'])->middleware('admin');
+Route::put('/updatingUnits/{id}', [StockController::class, 'updatingUnits'])->name('updatingUnits')->middleware('admin');
 
 Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
 
@@ -123,6 +123,9 @@ Route::delete('/deleteConcept', [ConceptController::class, 'delete'])->name('del
 // History
 
 Route::get('/sales', [OrderController::class, 'historySales'])->name('historySales')->middleware('auth');
+
+Route::get('/movements', [OrderController::class, 'historyMovements'])->name('historyMovements')->middleware('auth');
+
 
 // Import/export products
 

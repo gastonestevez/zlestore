@@ -73,27 +73,6 @@ class StockController extends Controller
         return view('stock.products', $vac);
     }
 
-    public function warehouseStock(Request $request, int $id)
-  {
-
-    $sku = $request->get('sku');
-    $name = $request->get('name');
-    $price = $request->get('price');
-
-    $warehouse = Warehouse::find($id);
-    $products = DB::table('wpct_posts AS p')
-                    ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                    ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-                    ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
-                    ->where('warehouse_id', "=", $id)
-                    ->where('quantity', '>', 0)
-                    ->get();
-    
-    $vac = compact('warehouse', 'products', 'request');
-
-    return view('stock.warehouseStock', $vac);
-  }
-
     public function show(String $id)
     {
         $product = getProduct($id);
@@ -101,8 +80,30 @@ class StockController extends Controller
 
         $vac = compact('product', 'warehouses');
 
-        return view('/products/product', $vac);
+        return view('stock.product', $vac);
     }
+
+    public function warehouseStock(Request $request, string $warehouseSlug)
+    {
+
+        $sku = $request->get('sku');
+        $name = $request->get('name');
+        $price = $request->get('price');
+
+        $warehouse = Warehouse::where('slug', '=', $warehouseSlug)->first();
+        $products = DB::table('wpct_posts AS p')
+                        ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+                        ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
+                        ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
+                        ->where('warehouse_id', "=", $warehouse->id)
+                        ->where('quantity', '>', 0)
+                        ->get();
+        
+        $vac = compact('warehouse', 'products', 'request');
+
+        return view('stock.warehouseStock', $vac);
+    }
+
 
     public function updatingUnits(Request $request, int $id)
     {

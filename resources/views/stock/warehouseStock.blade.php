@@ -10,7 +10,7 @@ ZLE - Control de Stock
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
-      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/create')}}">aquí</a>.</p>
+      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{route('/warehouses')}}">aquí</a>.</p>
     </div>
   @endif
   @if(\Session::has('success'))
@@ -50,6 +50,7 @@ ZLE - Control de Stock
 
   <div class="uk-overflow-auto">
 
+    @forelse ($products as $product)
     <table class="uk-table uk-table-striped uk-table-hover">
       <thead>
           <tr>
@@ -63,14 +64,13 @@ ZLE - Control de Stock
           </tr>
       </thead>
       <tbody>
-        @forelse ($products as $product)
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td><a href="/product/{{ $product->id }}/stock"> {{ $product->name }} </a></td>
+              <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td>
               <td>${{ number_format($product->price, 0, ',','.') }}</td>
               <td>{{ $product->quantity }}</td>
-              <form action="/updatingBoxes/{{$product->id}}" method="POST">
+              <form action="{{route('updatingBoxes', $product->id)}}" method="POST">
                 {{-- @method('put')
                 @csrf
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
@@ -80,16 +80,18 @@ ZLE - Control de Stock
                 @if(auth()->user()->role == 'admin')
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
                 @endif --}}
-                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
+                <td><a href="{{route('productStock', $product->id)}}" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
 
         @empty
-          <h3>No hay productos en éste depósito, <a href="/products/stock">Agregar productos</a></h3>
-        @endforelse
-
-      </tbody>
-    </table>
+          <br>
+          <h3>No hay productos en éste depósito, <a href="/stock">Agregar productos</a></h3>
+          <br>
+          
+        </tbody>
+      </table>
+      @endforelse
 
   </div>
 

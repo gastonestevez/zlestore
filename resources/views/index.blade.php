@@ -6,7 +6,7 @@ ZLE - Control de Stock
 @if(\Session::has('noWarehouses'))
 <div class="uk-alert-danger" uk-alert>
   <a class="uk-alert-close" uk-close></a>
-  <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouses/edit')}}">aquí</a>.</p>
+  <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{route('editWarehouses')}}">aquí</a>.</p>
 </div>
 @endif
 <div class="uk-container primer-div">
@@ -27,21 +27,21 @@ ZLE - Control de Stock
     </div>
 
     <div>
-      <a href="/products/stock">
+      <a href="{{route('stockList')}}">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-cubes"></i> Stock de Productos</h3>
             <p>Lista de todos los productos existentes</p>
-            <a href="/products/stock" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$products}} productos</a>
+            <a href="{{route('stockList')}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$products}} productos</a>
         </div>
       </a>
     </div>
 
     <div>
-      <a href="/warehouse/list">
+      <a href="{{route('warehouses')}}">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Depósitos</h3>
             <p>Lista de los depósitos existentes</p>
-            <a href="/warehouse/list" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$warehouses}} depósitos</a>
+            <a href="{{route('warehouses')}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$warehouses}} depósitos</a>
         </div>
       </a>
     </div>
