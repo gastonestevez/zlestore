@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Stocks;
 use DB;
+use Illuminate\Support\Str;
 
 class WarehouseController extends Controller
 {
@@ -33,8 +34,15 @@ class WarehouseController extends Controller
     return view('warehouses.createWarehouse', $vac);
   }
 
-  public function store(Request $req) {
-      Warehouse::create($req->all());
+  public function store(Request $request) {
+    $warehouse= new Warehouse();
+    $warehouse->name = $request->name;
+    $warehouse->slug = Str::slug($request->name, '-');
+    $warehouse->address = $request->address;
+    dd($request->type);
+    $warehouse->type = $request->type;
+    $warehouse->visibility = true;
+    $warehouse->save();
 
 
     return redirect('/warehouses')

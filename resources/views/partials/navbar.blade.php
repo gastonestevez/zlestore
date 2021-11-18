@@ -9,21 +9,21 @@
         <nav class="uk-navbar-container uk-navbar-transparent subtle-background pl pr" uk-navbar>
             <div class="uk-navbar-left">
 
-              <a class="uk-navbar-item uk-logo" href="/"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
+              <a class="uk-navbar-item uk-logo" href="{{route('home')}}"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
             @if (Auth::user())
 
                 <ul class="uk-navbar-nav">
                   <li>
-                      <a class="uk-text-bold" href="/">Inicio</a>
+                      <a class="uk-text-bold" href="{{route('home')}}">Inicio</a>
                   </li>
                   <li>
                       <a class="uk-text-bold" href="#">Pedidos</a>
                         <div class="uk-navbar-dropdown">
                           <ul class="uk-nav uk-navbar-dropdown-nav">
-                            <li><a class="uk-text" href="/wcOrders">Pedidos Web</a></li>
-                            <li><a class="uk-text" href="/createOrder">Armar pedido</a></li>
+                            <li><a class="uk-text" href="/wcOrders">Pedidos online</a></li>
+                            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido</a></li>
                             @if ($orderInProgress && $id)
-                              <li><a class="uk-text" href="/orderPreview/{{$id}}">Confirmar pedido</a></li>
+                              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Confirmar pedido</a></li>
                             @endif
                           </ul>
                         </div>
@@ -32,22 +32,27 @@
                         <a class="uk-text-bold" href="#">Stock</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="{{url('/products/stock')}}">Stock general</a></li>
+                                <li><a href="{{route('stockList')}}">Stock general</a></li>
                                 <li class="uk-nav-divider"></li>
                                 @foreach ($warehouses as $warehouse)
-                                    <li><a href="{{url('/stock')}}">{{$warehouse->name}}</a></li></li>
+                                    <li><a href="{{route('warehouseStock', $warehouse->slug)}}">{{$warehouse->name}}</a></li></li>
                                 @endforeach
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a class="uk-text-bold" href="{{url('/warehouses')}}">Depósitos</a>
-                        {{-- <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
-                            </ul>
-                        </div> --}}
+                        <a class="uk-text-bold" href="{{route('warehouses')}}">Depósitos</a>
                     </li>
+                    <li>
+                      <a class="uk-text-bold" href="#">Historial</a>
+                      <div class="uk-navbar-dropdown">
+                        <ul class="uk-nav uk-navbar-dropdown-nav">
+                          <li><a href="{{route('historySales')}}">Ventas local</a></li>                    
+                          <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>                    
+                          <li><a style="cursor:not-allowed" href="#">Movimientos</a></li>                    
+                        </ul>
+                    </div>
+                  </li>
                 </ul>
             </div>
 
@@ -65,10 +70,10 @@
                       <div class="uk-navbar-dropdown">
                           <ul class="uk-nav uk-navbar-dropdown-nav">
                             @if (Auth::user())
-                              <li><a href="/user">Mi perfil</a></li>
+                              <li><a href="{{route('profile')}}">Mi perfil</a></li>
                             @endif
                             @if (Auth::user()->role == 'admin')
-                              <li><a href="/users">Gestionar usuarios</a></li>
+                              <li><a href="{{route('users')}}">Gestionar usuarios</a></li>
                             @endif
                               {{-- <li class="uk-nav-header">Header</li> --}}
                               <li class="uk-nav-divider"></li>
@@ -94,7 +99,7 @@
 <div class="uk-hidden@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
   <nav class="uk-navbar uk-navbar-container uk-navbar-transparent subtle-background" uk-navbar>
       <div class="uk-navbar-left">
-        <a class="uk-navbar-item uk-logo" href="/"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
+        <a class="uk-navbar-item uk-logo" href="{{route('home')}}"><img class="logo-nav" src="/img/LogoZLESTORE.png" alt="Logo ZLE" /></a>
       </div>
       <div class="uk-navbar-right">
         <ul class="uk-hidden@m uk-navbar-nav uk-nav-parent-icon">
@@ -116,21 +121,41 @@
     @if (Auth::user())
       <ul class="uk-nav uk-nav-offcanvas uk-nav-center uk-nav-parent-icon uk-text-left" style="transform: translateY(50%);" uk-nav="multiple: true">
         {{-- Para que al clickear un link no se cierre el offcanvas hay que agregarle a la etiqueta A el atributo uk-scroll --}}
-        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/" uk-scroll>Inicio</a></li>
+        <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="{{route('home')}}" uk-scroll>Inicio</a></li>
+        <li class="uk-parent">
+          <a href="#">Pedidos</a>
+          <ul class="uk-nav-sub">
+            <li><a class="uk-text" href="/wcOrders">Pedidos online</a></li>
+            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido</a></li>
+            @if ($orderInProgress && $id)
+              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Confirmar pedido</a></li>
+            @endif
+          </ul>
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/wcOrders" uk-scroll>Pedidos</a></li>
         <li class="uk-parent">
           <a href="#">Stock</a>
           @if (Auth::user()->role == 'admin')
               <ul class="uk-nav-sub">
-                  <li><a href="{{url('/newProducts')}}">Gestionar Stock</a></li>
+                  <li><a href="{{route('stockList')}}">Stock general</a></li>
+                  <li class="uk-nav-divider"></li>
+                  @foreach ($warehouses as $warehouse)
+                      <li><a href="{{route('warehouseStock', $warehouse->slug)}}">{{$warehouse->name}}</a></li></li>
+                  @endforeach
               </ul>
           @endif
         </li>
+        <li>
+          <a href="{{route('warehouses')}}">Depósitos</a>
+        </li>
+          
         <li class="uk-parent">
-          <a href="/warehouse/list">Depósitos</a>
-              <ul class="uk-nav-sub">
-                  <li><a href="{{url('/warehouse/list')}}">Gestionar depósitos</a></li>
-              </ul>
+          <a href="#">Historial</a>
+          <ul class="uk-nav-sub">
+            <li><a href="{{route('showProfile', Auth::user()->id)}}">Ventas local</a></li>
+            <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>
+            <li><a style="cursor:not-allowed" href="#">Movimientos</a></li>
+
+          </ul>
         </li>
 
         <hr class="uk-divider-small">
@@ -143,9 +168,9 @@
 
           <ul class="uk-nav-sub">
             @if (Auth::user())
-              <li><a href="/user/{{Auth::user()->id}}">Mi perfil</a></li>
+              <li><a href="{{route('showProfile', Auth::user()->id)}}">Mi perfil</a></li>
             @endif
-              <li><a href="/users">Gestionar usuarios</a></li>
+              <li><a href="{{route('users')}}">Gestionar usuarios</a></li>
               {{-- <li class="uk-nav-header">Header</li> --}}
               <li class="uk-nav-divider"></li>
               <li>

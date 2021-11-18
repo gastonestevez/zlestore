@@ -22,7 +22,20 @@ class Warehouse extends Model
     public static function getProductStock(Int $warehouseId, Int $productId)
     {
       $stock = Stocks::where('product_id', '=', $productId)->where('warehouse_id', '=', $warehouseId)->pluck('quantity')->first();
+      isset($stock)?$stock:$stock=0;
       return $stock;
+    }
+
+    public static function getShops()
+    {
+      $shops = Warehouse::where('type', '=', 'shop')->get();
+      return $shops;
+    }
+
+    public static function getStorages()
+    {
+      $storages = Warehouse::where('type', '=', 'storage')->get();
+      return $storages;
     }
     
 }

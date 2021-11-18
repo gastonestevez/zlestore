@@ -23,38 +23,6 @@ ZLE - Control de Stock
     <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
   </a> --}}
 
-    @if ($orderInProgress)
-
-    <div class="cart-absolute">
-      <a href="/orderPreview/{{$orderInProgress->id}}">
-        <span style="color:white;" uk-icon="icon: cart"></span>
-      </a>
-    </div>
-    
-    <div class="uk-overflow-auto">
-      <p class="green-desc">Orden en progreso</p>
-      ORDER ID: {{$orderInProgress->id}} <br><br>
-      @foreach ($orderItems as $item)
-      <form action="/removeProduct/{{$item->id}}" method="POST">
-        @method('DELETE')
-        @csrf
-          ID: {{$item->product_id}} <br>
-          NOMBRE: {{$item->product_name}} <br>
-          SKU: {{$item->product_sku}} <br>
-          PRECIO: ${{ number_format($item->price, 0,',','.')}} <br>
-          CANTIDAD: {{$item->quantity}} <br>
-          <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
-      </form>
-      @endforeach
-      <br>
-      ORDER TOTAL: ${{ number_format($orderInProgress->total, 0,',','.')}}
-      <br>
-      <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
-      </div>  
-    
-    <hr class="uk-divider-icon">
-    @endif
-
     <p>Productos por página: {{count($products)}}</p>
 
     <div class="uk-flex">
@@ -91,8 +59,7 @@ ZLE - Control de Stock
             <th>Nombre</th>
             <th>Precio</th>
             <th>Stock total</th>
-            <th></th>
-            {{-- <th>Acción</th> --}}
+            <th>Acciones</th>
           </tr>
       </thead>
       <tbody>
@@ -103,18 +70,7 @@ ZLE - Control de Stock
               <td>{{ $product->name }}</td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
-              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}/stock"><span uk-icon="icon: move"></span></a></td>
-              <td>
-                <form action="/addProductToOrder" method="post">
-                  @csrf
-                  <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" max="{{getAllStock($product->id)}}" min="1" value="0" required>
-                  <input type="hidden" name="productId" value="{{$product->id}}">
-                  <input type="hidden" name="name" value="{{$product->name}}">
-                  <input type="hidden" name="sku" value="{{$product->sku}}">
-                  <input type="hidden" name="price" value="{{$product->price}}">
-                  <button class="uk-button uk-button-default" uk-tooltip="Agregar a la orden" type="submit"><span uk-icon="plus-circle"></span></button>
-                </form>
-                </td>
+              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
               <td></td>
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>

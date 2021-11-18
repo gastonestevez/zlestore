@@ -107,6 +107,9 @@ ZLE - Crear orden
             <th>Nombre</th>
             <th>Precio</th>
             <th>Stock total</th>
+            @foreach ($shops as $shop)
+                  <th>{{$shop->name}}</th>
+              @endforeach
             <th></th>
             {{-- <th>Acción</th> --}}
           </tr>
@@ -119,7 +122,10 @@ ZLE - Crear orden
               <td>{{ $product->name }}</td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
-              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}/stock"><span uk-icon="icon: move"></span></a></td>
+              @foreach ($shops as $shop)
+                  <td>{{$shop->getProductStock($shop->id, $product->id)}}</td>
+              @endforeach
+              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span uk-icon="icon: move"></span></a></td>
               <td>
                 <form action="/addProductToOrder" method="post">
                   @csrf

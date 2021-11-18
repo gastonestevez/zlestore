@@ -49,7 +49,7 @@ class OrderController extends Controller
         $wcOrder->date_created = (new Carbon($wcOrder->date_created))->format('Y-m-d H:i:s');
 
         if(count($warehouses) == 0) {
-            return redirect()->route('newWarehouse')->with('error', 'No hay depósitos para distribuir la orden.');
+            return redirect()->route('editWarehouses')->with('error', 'No hay depósitos para distribuir la orden.');
         }
 
 
@@ -134,6 +134,8 @@ class OrderController extends Controller
             } else {
                 $orderItems = null;
             }
+
+        $shops = Warehouse::getShops();
         
         $sku = $request->get('sku');
         $name = $request->get('name');
@@ -147,7 +149,7 @@ class OrderController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops');
 
         return view('orders.createOrder', $vac);
     }
@@ -297,5 +299,10 @@ class OrderController extends Controller
         $orders = Order::all();   
         $vac = compact('orders');
         return view('history.sales', $vac);
+    }
+
+    // Muesta la tabla de historial de movimientos
+    function historyMovements() {
+        return view('history.movements');
     }
 }
