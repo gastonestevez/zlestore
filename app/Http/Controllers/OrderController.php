@@ -282,13 +282,13 @@ class OrderController extends Controller
         return redirect()->route('historySales');
     }
 
-    function orderToCompleted(int $id) {
+    function orderToCompleted(int $id, Request $request) {
         // encuentro la orden
         $order = Order::find($id);
         // encuentro sus items
         $orderItems = $order->orderItems();
         // busco el warehouse de donde se descontará el stock (hacer que lo elija el admin con un select)
-        $warehouse = Warehouse::where('type', '=', 'shop')->first();
+        $warehouse = Warehouse::find($request->shopId);
         // encuentro el id del warehouse
         $warehouseId = $warehouse->id;
 
@@ -332,8 +332,9 @@ class OrderController extends Controller
     // }
     // Muesta la tabla de historial de ventas
     function historySales() {
-        $orders = Order::all();   
-        $vac = compact('orders');
+        $orders = Order::all();  
+        $shops = Warehouse::getShops();
+        $vac = compact('orders', 'shops');
         return view('history.sales', $vac);
     }
 

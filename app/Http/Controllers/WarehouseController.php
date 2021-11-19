@@ -39,7 +39,6 @@ class WarehouseController extends Controller
     $warehouse->name = $request->name;
     $warehouse->slug = Str::slug($request->name, '-');
     $warehouse->address = $request->address;
-    dd($request->type);
     $warehouse->type = $request->type;
     $warehouse->visibility = true;
     $warehouse->save();

@@ -60,7 +60,7 @@ ZLE - Confirmar Orden
                     </td>
                 </tr>
 
-                @include('partials.confirms.completeOrder',['url'=>"/orderToCompleted/{$order->id}", 'message'=>"Seguro quieres completar la orden #{$order->id}? El stock de cada item se descontará del local", 'id' => $order->id])
+                @include('partials.confirms.completeOrder',['url'=>"/orderToCompleted/{$order->id}", 'message'=>"Seguro quieres completar la orden #{$order->id}? El stock de cada item se descontará del local elegido", 'id' => $order->id])
                 @include('partials.confirms.cancelOrder',['url'=>"/orderToCancelled/{$order->id}", 'message'=>"Seguro quieres cancelar la orden #{$order->id}? No podrás volver a cambiar su estado", 'id' => $order->id])
 
 

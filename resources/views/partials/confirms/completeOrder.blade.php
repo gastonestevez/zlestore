@@ -18,8 +18,15 @@
 
     <div class="uk-modal-footer uk-text-right">
       <form action="{{$url}}" method="post">
-        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+        @method('put')
         @csrf
+        <select class="uk-select uk-inline uk-width-auto" name="shopId" required>
+          <option value="">Selecciona un local</option>
+          @foreach ($shops as $shop)
+              <option value="{{$shop->id}}">{{$shop->name}}</option>
+          @endforeach
+        </select>
+        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
         <button class="uk-button uk-button-secondary" type="submit">Aceptar</button>
       </form>
     </div>
