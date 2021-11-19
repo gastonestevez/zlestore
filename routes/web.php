@@ -44,11 +44,18 @@ Route::get('/createOrder', [orderController::class, 'createOrder'])->name('creat
 
 Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
 
-Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])->middleware('auth');
+Route::post('/addProductToOrder', [OrderController::class, 'addProductToOrder'])->name('addProductToOrder')->middleware('auth');
 
 Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
 
-Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
+Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
+
+Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->name('orderToPending')->middleware('auth');
+
+Route::put('/orderToCompleted/{id}', [OrderController::class, 'orderToCompleted'])->name('orderToCompleted')->middleware('auth');
+
+Route::put('/orderToCancelled/{id}', [OrderController::class, 'orderToCancelled'])->name('orderToCancelled')->middleware('auth');
+
 
 
 // Users
@@ -102,11 +109,6 @@ Route::put('/updatingBoxes/{id}', [StockController::class, 'updatingBoxes'])->na
 Route::put('/updatingUnits/{id}', [StockController::class, 'updatingUnits'])->name('updatingUnits')->middleware('admin');
 
 Route::delete('/removeProduct/{id}', [OrderController::class, 'removeProduct'])->middleware('auth');
-
-Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
-
-Route::post('/orderToPending/{id}', [OrderController::class, 'orderToPending'])->middleware('auth');
-// Route::get('/orderToPending/{id}', [OrderController::class, 'orderToPendingGet'])->middleware('auth'); // Ruta de prueba
 
 
 // Concepts

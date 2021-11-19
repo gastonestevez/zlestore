@@ -32,7 +32,26 @@ ZLE - Crear orden
     </div>
     
     <div class="uk-overflow-auto uk-margin-bottom">
-      <h4 class=" uk-heading-line  uk-text-center"> <span> Orden en progreso: #{{$orderInProgress->id}}</span></h4>
+      <h4 class=" uk-heading-line  uk-text-center"> <span> Orden en progreso: #{{$orderInProgress->id}}</span></h4>    
+    
+    <div style="margin: 0 auto; text-align: -webkit-center; width: 90%;">
+      {{-- Coloco la barra de porcentaje --}}
+      <progress class="uk-progress progress-green" value="50" max="100" style="border:2px solid #333; text-align: left;"></progress>
+    </div>
+      
+      
+        {{-- <div class="box-padding" style="display:flex; flex-direction: row; justify-content: space-around;">
+          <div style="display:flex; flex-direction: column;"> --}}
+            {{-- Enumero los estados con la ayuda de una variable contador definida en la linea 393 --}}
+            {{-- <span class="contador" style="display:flex; flex-direction: column; align-items: center; color: #707070;">1</span> --}}
+            {{-- Escribo los estados --}}
+            {{-- <span style="font-size: 12px; text-align: center; color: #707070;">En progreso</span>
+          </div>
+        </div> --}}
+      
+      
+      
+      
       <table class="uk-table uk-table-divider uk-table-justify uk-table-middle">
         <thead>
             <tr>
@@ -127,7 +146,7 @@ ZLE - Crear orden
               @endforeach
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span uk-icon="icon: move"></span></a></td>
               <td>
-                <form action="/addProductToOrder" method="post">
+                <form action="{{route('addProductToOrder')}}" method="post">
                   @csrf
                   <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" max="{{getAllStock($product->id)}}" min="1" value="0" required>
                   <input type="hidden" name="productId" value="{{$product->id}}">

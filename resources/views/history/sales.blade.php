@@ -14,30 +14,61 @@ ZLE - Confirmar Orden
         $taxonomies = [];
     @endphp
     <h4 class=" uk-heading-line uk-text-center uk-margin-top"> <span>Listado de ordenes</span></h4>
-    <table class="uk-table uk-table-divider uk-margin-bottom">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Creación</th>
-                <th>Estado</th>
-                <th>Total</th>
-                <th>PDF</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($orders as $order)
-            <tr>
-                <td>{{$order->id}}</td>
-                <td>{{$order->created_at->isoFormat('DD-MM-YYYY [a las] hh:mm')}}</td>
-                <td>{{$order->status}}</td>
-                <td>$ {{$order->total}}</td>
-                @if($order->document_link)
+
+    <div class="uk-overflow-auto">
+        <table class="uk-table uk-table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Creación</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>PDF</th>
+                    <th>Completar</th>
+                    <th>Cancelar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($orders as $order)
+                <tr>
+                    <td>{{$order->id}}</td>
+                    <td>{{$order->created_at->isoFormat('DD-MM-YYYY [a las] hh:mm')}}</td>
                     <td>
-                        <a href="{{$order->document_link}}" uk-icon="icon: file-pdf">Descargar &nbsp;</a>
+                        @if($order->status == 'in progress')
+                        <a href="{{route('orderPreview', $order->id)}}">{{$order->status}}</a>
+                        @else
+                        {{$order->status}}
+                        @endif
                     </td>
-                @endif
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                    <td>${{number_format($order->total, 0,',','.')}}</td>
+                        <td @if(!$order->document_link)
+                                style="visibility: hidden"
+                            @endif >
+                            <a class="uk-button uk-button-default" uk-tooltip="Ver orden" href="{{$order->document_link}}"><span uk-icon="icon: file-pdf"></span></a></td>
+                        </td>
+                    <td @if($order->status == 'completed' || $order->status == 'in progress') 
+                            style="visibility: hidden"
+                        @endif >
+                        <a href="#complete{{$order->id}}" class="uk-button uk-button-default" uk-tooltip="Completar" uk-toggle><span uk-icon="icon: check"></span></a>
+                    </td>
+                    <td @if($order->status == 'pending')
+                        style="visibility: visible"
+                        @else
+                        style="visibility: hidden"
+                        @endif >
+                        <a href="#cancel{{$order->id}}" class="uk-button uk-button-default" uk-tooltip="Cancelar" uk-toggle><span uk-icon="icon: close"></span></a>
+                    </td>
+                </tr>
+
+                @include('partials.confirms.completeOrder',['url'=>"/orderToCompleted/{$order->id}", 'message'=>"Seguro quieres completar la orden #{$order->id}? El stock de cada item se descontará del local", 'id' => $order->id])
+                @include('partials.confirms.cancelOrder',['url'=>"/orderToCancelled/{$order->id}", 'message'=>"Seguro quieres cancelar la orden #{$order->id}? No podrás volver a cambiar su estado", 'id' => $order->id])
+
+
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
 </div>
+
+@endsection

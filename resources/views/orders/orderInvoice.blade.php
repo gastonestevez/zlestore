@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ZLE - PDF</title>
+    <title>ZLE - PDF orden #{{$order->id}}</title>
 </head>
 <style>
     * {
@@ -68,7 +68,7 @@
     </header>
     <main>
         <div class="main-table">
-            <h4>Presupuesto</h4>
+            <h4>Presupuesto orden #{{$order->id}}</h4>
             <table>
                 <tr>
                     <th>ID</th>
@@ -84,14 +84,14 @@
                     <td>{{$item->product_name}}</td>
                     <td>{{$item->product_sku}} </td>
                     <td>{{$item->quantity}}</td>
-                    <td>{{$item->price}}</td>
+                    <td>${{number_format($item->price, 0,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
         </div>
         <div class="main-total">
             <h4>
-                Total: {{$order->total}}
+                Total: ${{number_format($order->total, 0,',','.')}}
             </h4>
         </div>
         @if($request->info)

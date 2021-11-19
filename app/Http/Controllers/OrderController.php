@@ -282,6 +282,42 @@ class OrderController extends Controller
         return redirect()->route('historySales');
     }
 
+    function orderToCompleted(int $id) {
+        // encuentro la orden
+        $order = Order::find($id);
+        // encuentro sus items
+        $orderItems = $order->orderItems();
+        // busco el warehouse de donde se descontará el stock (hacer que lo elija el admin con un select)
+        $warehouse = Warehouse::where('type', '=', 'shop')->first();
+        // encuentro el id del warehouse
+        $warehouseId = $warehouse->id;
+
+        // itero todos los items de la orden y les resto el stock en el warehouse elegido
+        foreach ($orderItems as $item) {
+            $productId = $item->product_id;
+            $stockToSubstract = $item->quantity;
+            $stock = Warehouse::getProductStock($warehouseId, $productId);
+            $newStock = $stock - $stockToSubstract;
+            Stocks::updateOrCreate(
+                ['warehouse_id' => $warehouseId, 'product_id' => $productId],
+                ['quantity' => $newStock]
+            );
+        }
+
+        // paso la orden a estado completed
+
+        $order->status = 'completed';
+        $order->save();
+
+        return redirect()->route('historySales')->with('success', 'Orden completada');
+    }
+
+    function orderToCancelled(int $id) {
+        $order = Order::find($id);
+        $order->status = 'cancelled';
+        $order->save();
+    }
+
     // ruta de prueba para render de pdf
     // function orderToPendingGet(Request $request) {
     //     $id = 1;

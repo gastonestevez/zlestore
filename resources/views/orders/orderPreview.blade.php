@@ -64,7 +64,7 @@ ZLE - Confirmar Orden
     <h4 class=" uk-heading-line  uk-text-center uk-margin-top"> <span>Adicionales</span></h4>
 
 
-    <form class="uk-form-stacked" action="/orderToPending/{{$id}}" method="POST">
+    <form class="uk-form-stacked" action="{{route('orderToPending', $id)}} method="POST">
         @method('post')
         @csrf
         <div class="uk-margin">
