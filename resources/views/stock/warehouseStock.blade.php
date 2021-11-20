@@ -51,8 +51,8 @@ ZLE - Control de Stock
   <div class="uk-overflow-auto">
 
     @forelse ($products as $product)
-    <table class="uk-table uk-table-striped uk-table-hover">
-      <thead>
+      <table class="uk-table uk-table-striped uk-table-hover">
+        <thead>
           <tr>
               <th>ID</th>
               <th>SKU</th>
@@ -62,8 +62,8 @@ ZLE - Control de Stock
               {{-- <th class="uk-table-shrink">Unidades</th>
               <th class="uk-table-shrink">Cajas</th> --}}
           </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
@@ -83,15 +83,16 @@ ZLE - Control de Stock
                 <td><a href="{{route('productStock', $product->id)}}" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
-
-        @empty
+        </tbody>
+      </table>
+    @empty
           <br>
           <h3>No hay productos en éste depósito, <a href="/stock">Agregar productos</a></h3>
           <br>
           
         </tbody>
       </table>
-      @endforelse
+    @endforelse
 
   </div>
 

@@ -30,7 +30,7 @@ Route::view('/index3', 'index3');
 
 // WcOrders
 
-Route::get('/wcOrders', [OrderController::class, 'wcOrders'])->name('home')->middleware('auth');
+Route::get('/wcOrders', [OrderController::class, 'wcOrders'])->name('wcOrders')->middleware('auth');
 
 Route::get('/woocommerce', [WooCommerceController::class, 'wc']);
 
