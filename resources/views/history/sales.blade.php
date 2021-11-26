@@ -64,7 +64,7 @@ ZLE - Confirmar Orden
                 @include('partials.confirms.cancelOrder',['url'=>"/orderToCancelled/{$order->id}", 'message'=>"Seguro quieres cancelar la orden #{$order->id}? No podrás volver a cambiar su estado", 'id' => $order->id])
                 @empty
                 <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen ordenes actualmente.</h3>
-                @endforeach
+                @endforelse
 
             </tbody>
         </table>

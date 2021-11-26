@@ -64,38 +64,53 @@ ZLE - Confirmar Orden
     <h4 class=" uk-heading-line  uk-text-center uk-margin-top"> <span>Adicionales</span></h4>
 
 
-    <form class="uk-form-stacked" action="{{route('orderToPending', $id)}} method="POST">
+    <form class="uk-form-stacked" action="{{route('orderToPending', $id)}}" method="POST">
         @method('post')
         @csrf
         <div class="uk-margin">
             <div class="uk-form-label">Concepto</div>
-            <div class="uk-form-controls">
-                <select class="uk-select" name="concept_id" required>
-                    <option value="">Seleccione una opción</option>
-                    @foreach ($concepts as $concept)
-                    <option value="{{$concept->id}}">{{$concept->name}}</option>
-                    @endforeach  
-                    <option value="2">otros</option>  
-                </select>
-            </div>
+                <div class="uk-form-controls">
+                    <select class="uk-select" name="concept_id" required>
+                        <option value="">Seleccione una opción</option>
+                        @foreach ($concepts as $concept)
+                        <option value="{{$concept->id}}">{{$concept->name}}</option>
+                        @endforeach  
+                        <option value="2">otros</option>  
+                    </select>
+                </div>
             <small>
                 <a href="/concepts">Crear/Modificar/Eliminar un concepto</a>
             </small>
         </div>
-
-        {{-- <select name="" id="">
-            <option value="default">Elegi una categoria</option> 
-            @foreach ($taxonomies as $taxonomy)
-            <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
-            @endforeach
-        </select> --}}
+        
         <div class="uk-margin">
             <div class='uk-form-label'>Información adicional</div>
             <div class="uk-form-controls">
                 <textarea class="uk-input" name="info" id="" cols="30" rows="10"></textarea>
-
             </div>
         </div>
+
+        <div class="uk-margin">
+            <div class="uk-form-label">Descuento</div>
+                <div class="uk-form-controls">
+                    <select class="uk-select" name="category_discount" id="">
+                        <option value="default">Elegi una categoria</option> 
+                        <option value="all">Todas</option> 
+                        @foreach ($taxonomies as $taxonomy)
+                        <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        
+        <div class="uk-margin">
+            <div class='uk-form-label'>Valor de descuento</div>
+            <div class="uk-form-controls">
+                <input type="number" name="discount">
+            </div>
+        </div>
+
+
         <div class="uk-margin">
             <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
         </div>

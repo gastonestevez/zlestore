@@ -272,11 +272,44 @@ class OrderController extends Controller
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
+        // dd($request->all());
+        // dd($request->category_discount);
         $order = Order::find($id);   
+        
+        // si envia un descuento por request
+        if ($request->discount) {
+            // si el descuento es para toda la orden
+            if ($request->category_discount == "all") {
+                $order->total = $order->total - ($order->total * $request->discount / 100);
+                $order->save();
+            } else {
+            // si el descuento es para alguna categoría
+            $categoryDiscount = $request->category_discount;
+            // recorro todos los productos de la orden. 
+                foreach ($order->orderItemsIds() as $itemId) {
+                    // llamo a sus categorías con getProductTaxonomies($productId) y dentro del array encuentra la categoria enviada por request aplico un descuento a su order_item->price o creo otra tabla discount_price?
+                    if(in_array($request->category_discount, getProductTaxonomies($itemId))){
+                        $orderItem = Order_item::where('product_id', '=', $itemId)->where('order_id', '=', $order->id)->first();
+                        $orderItem->price = $orderItem->price - ($orderItem->price * $request->discount / 100);
+                        $orderItem->save();
+                    }               
+                }
+
+                // vuelvo a calcular el total de la orden con los nuevos precios
+                $total = 0;
+                foreach ($order->orderItems() as $item) {
+                    $total += ($item->quantity * $item->price);
+                }
+                $order->total = $total;
+                $order->save();
+            }
+        }
+
         $filename = $this->createAndSavePdf($id, $request, $order);
 
         $order->status = 'pending';
         $order->document_link = 'storage' . '/' . $filename;
+
         $order->save();
 
         return redirect()->route('historySales');

@@ -112,6 +112,7 @@ ZLE - Crear orden
                   <th>{{$shop->name}}</th>
               @endforeach
             <th></th>
+            <th></th>
             {{-- <th>Acción</th> --}}
           </tr>
       </thead>
@@ -138,7 +139,6 @@ ZLE - Crear orden
                   <button class="uk-button uk-button-default" uk-tooltip="Agregar a la orden" type="submit"><span uk-icon="plus-circle"></span></button>
                 </form>
                 </td>
-              <td></td>
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach
