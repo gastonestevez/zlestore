@@ -14,6 +14,23 @@ ZLE - Confirmar Orden
         $taxonomies = [];
     @endphp
     <h4 class=" uk-heading-line uk-text-center uk-margin-top"> <span>Listado de ordenes</span></h4>
+    <h5>Búsqueda</h5>
+    <form class="searchForm uk-search uk-search-default" method="get">
+        <div class="pr uk-margin-bottom">
+            <input value="{{old('id', $request->id)}}" class="uk-search-input" type="search" placeholder="ID ..." name="id">
+        </div>
+        <div class="pr uk-margin-bottom">
+            <input value="{{old('createdAt', $request->createdAt)}}" type="date" class="uk-search-input" name="createdAt">
+        </div>
+        <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
+        <div class="pr uk-margin-bottom">
+            <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
+        </div>
+    </form>
+
+    <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
+        <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
+    </form>
 
     <div class="uk-overflow-auto">
         <table class="uk-table uk-table-striped">
@@ -32,7 +49,7 @@ ZLE - Confirmar Orden
                 @forelse ($orders as $order)
                 <tr>
                     <td>{{$order->id}}</td>
-                    <td>{{$order->created_at->isoFormat('DD-MM-YYYY [a las] hh:mm')}}</td>
+                    <td>@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i')}} @endif</td>
                     <td>
                         @if($order->status == 'in progress')
                         <a href="{{route('orderPreview', $order->id)}}">{{$order->status}}</a>
@@ -68,6 +85,8 @@ ZLE - Confirmar Orden
 
             </tbody>
         </table>
+        {{ $orders->appends($_GET)->links() }}
+
     </div>
 </div>
 

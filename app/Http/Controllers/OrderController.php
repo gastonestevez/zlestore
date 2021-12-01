@@ -12,7 +12,7 @@ use App\Models\Order_item;
 use App\Models\Concept;
 use Auth;
 use PDF;
-
+use DB;
 
 class OrderController extends Controller
 {
@@ -364,10 +364,28 @@ class OrderController extends Controller
     //     // return redirect()->route('historySales');
     // }
     // Muesta la tabla de historial de ventas
-    function historySales() {
-        $orders = Order::all();  
+    function historySales(Request $request) {
+        $searchId = $request->get('id');
+        $createdAt = $request->get('createdAt');
+
+        $searchParams = array(
+            "id" => $searchId,
+            "created_at" => $createdAt,
+        );
+        $orders = DB::table('orders');
+        if(!empty($searchId)){
+            $orders = Order::where('id', '=', $searchId);
+        }
+
+        if(!empty($createdAt)){
+            $from = $createdAt . ' 00:00:00';
+            $to = $createdAt . ' 23:59:59';
+            $orders = $orders->whereBetween('created_at', array($from, $to));
+        }
+        $orders = $orders->paginate(20);
+        
         $shops = Warehouse::getShops();
-        $vac = compact('orders', 'shops');
+        $vac = compact('orders', 'shops', 'request');
         return view('history.sales', $vac);
     }
 
