@@ -86,9 +86,9 @@ class StockController extends Controller
     public function warehouseStock(Request $request, string $warehouseSlug)
     {
 
+        $id = $request->get('id');
         $sku = $request->get('sku');
         $name = $request->get('name');
-        $price = $request->get('price');
 
         $warehouse = Warehouse::where('slug', '=', $warehouseSlug)->first();
         $products = DB::table('wpct_posts AS p')
@@ -96,9 +96,19 @@ class StockController extends Controller
                         ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
                         ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
                         ->where('warehouse_id', "=", $warehouse->id)
-                        ->where('quantity', '>', 0)
-                        ->get();
-        
+                        ->where('quantity', '>', 0);
+
+        if(!empty($sku)){
+            $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
+        }
+        if(!empty($name)){
+            $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
+        }
+        if(!empty($id)){
+            $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
+        }
+
+        $products = $products->paginate(20);
         $vac = compact('warehouse', 'products', 'request');
 
         return view('stock.warehouseStock', $vac);
