@@ -71,7 +71,7 @@ ZLE - Control de Stock
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Unidades</th>            
+            <th>Stock</th>            
             {{-- <th class="uk-table-shrink">Unidades</th>
             <th class="uk-table-shrink">Cajas</th> --}}
         </tr>

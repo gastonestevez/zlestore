@@ -20,10 +20,10 @@
                       <a class="uk-text-bold" href="#">Pedidos</a>
                         <div class="uk-navbar-dropdown">
                           <ul class="uk-nav uk-navbar-dropdown-nav">
-                            <li><a class="uk-text" href="/wcOrders">Pedidos online</a></li>
-                            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido</a></li>
+                            <li><a class="uk-text" href="/wcOrders">Ver pedidos online</a></li>
+                            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido offline</a></li>
                             @if ($orderInProgress && $id)
-                              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Confirmar pedido</a></li>
+                              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Continuar pedido offline</a></li>
                             @endif
                           </ul>
                         </div>
@@ -47,9 +47,9 @@
                       <a class="uk-text-bold" href="#">Historial</a>
                       <div class="uk-navbar-dropdown">
                         <ul class="uk-nav uk-navbar-dropdown-nav">
-                          <li><a href="{{route('historySales')}}">Ventas local</a></li>                    
+                          <li><a href="{{route('historySales')}}">Ventas offline</a></li>                    
                           <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>                    
-                          <li><a style="cursor:not-allowed" href="#">Movimientos</a></li>                    
+                          <li><a style="cursor:not-allowed" href="#">Movimientos de stock</a></li>                    
                         </ul>
                     </div>
                   </li>
@@ -125,10 +125,10 @@
         <li class="uk-parent">
           <a href="#">Pedidos</a>
           <ul class="uk-nav-sub">
-            <li><a class="uk-text" href="/wcOrders">Pedidos online</a></li>
-            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido</a></li>
+            <li><a class="uk-text" href="/wcOrders">Ver pedidos online</a></li>
+            <li><a class="uk-text" href="{{route('createOrder')}}">Armar pedido offline</a></li>
             @if ($orderInProgress && $id)
-              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Confirmar pedido</a></li>
+              <li><a class="uk-text" href="{{route('orderPreview', $id)}}">Continuar pedido offline</a></li>
             @endif
           </ul>
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/wcOrders" uk-scroll>Pedidos</a></li>
@@ -151,9 +151,9 @@
         <li class="uk-parent">
           <a href="#">Historial</a>
           <ul class="uk-nav-sub">
-            <li><a href="{{route('showProfile', Auth::user()->id)}}">Ventas local</a></li>
+            <li><a href="{{route('showProfile', Auth::user()->id)}}">Ventas offline</a></li>
             <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>
-            <li><a style="cursor:not-allowed" href="#">Movimientos</a></li>
+            <li><a style="cursor:not-allowed" href="#">Movimientos de stock</a></li>
 
           </ul>
         </li>

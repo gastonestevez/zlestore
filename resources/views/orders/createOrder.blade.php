@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('titulo')
-ZLE - Crear orden
+ZLE - Crear pedido
 @endsection
 @section('main')
 
@@ -32,7 +32,7 @@ ZLE - Crear orden
     </div>
     
     <div class="uk-overflow-auto uk-margin-bottom">
-      <h4 class=" uk-heading-line  uk-text-center"> <span> Orden en progreso: #{{$orderInProgress->id}}</span></h4>     
+      <h4 class=" uk-heading-line  uk-text-center"> <span> Pedido en progreso: #{{$orderInProgress->id}}</span></h4>     
       
       <table class="uk-table uk-table-divider uk-table-justify uk-table-middle">
         <thead>
@@ -66,7 +66,7 @@ ZLE - Crear orden
           <strong>Total:&nbsp;</strong> ${{ number_format($orderInProgress->total, 0,',','.')}}
       </div>
       <div class="uk-flex uk-margin-top">
-          <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar orden</a>
+          <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar pedido</a>
       </div>
       </div>  
     @endif

@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('titulo')
-ZLE - Confirmar Orden
+ZLE - Historial
 @endsection
 @section('main')
 
@@ -13,7 +13,7 @@ ZLE - Confirmar Orden
     @php
         $taxonomies = [];
     @endphp
-    <h4 class=" uk-heading-line uk-text-center uk-margin-top"> <span>Listado de ordenes</span></h4>
+    <h4 class=" uk-heading-line uk-text-center uk-margin-top"> <span>Historial - Ventas offline</span></h4>
     <h5>Búsqueda</h5>
     <form class="searchForm uk-search uk-search-default" method="get">
         <div class="pr uk-margin-bottom">
