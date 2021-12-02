@@ -36,7 +36,7 @@ ZLE - Confirmar Orden
                 <td>{{$item->quantity}} </td>
                 <td>
                     @foreach (getProductTaxonomies($item->product_id) as $taxonomy)        
-                        <span class="uk-badge">{{$taxonomy}}</span>
+                        <span class="uk-badge" style="background: #008F72; padding: 3px 10px 3px 10px;">{{$taxonomy}}</span>
                         @if (array_search($taxonomy, $taxonomies) === false)
                             @php
                                 $taxonomies[] = $taxonomy
@@ -48,7 +48,7 @@ ZLE - Confirmar Orden
                     <form action="/removeProduct/{{$item->id}}" method="POST">
                         @method('DELETE')
                         @csrf
-                        <button class="uk-button uk-button-default" type="submit">Remover producto</button> <br>
+                        <button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button> <br>
                     </form>
                 </td>
             </tr>
@@ -57,64 +57,68 @@ ZLE - Confirmar Orden
     </table>
     
     {{-- {{dd($taxonomies);}} --}}
-    <div class="uk-margin-top">
-        <strong>Total:&nbsp;</strong> ${{ number_format($order->total, 0,',','.')}}
+    <div class="uk-margin-top uk-flex">
+        <strong>Total:&nbsp;${{ number_format($order->total, 0,',','.')}}</strong>
     </div>
 
+    <br>
     <h4 class=" uk-heading-line  uk-text-center uk-margin-top"> <span>Adicionales</span></h4>
 
+    <div class="uk-container-xsmall">
 
-    <form class="uk-form-stacked" action="{{route('orderToPending', $id)}}" method="POST">
-        @method('post')
-        @csrf
-        <div class="uk-margin">
-            <div class="uk-form-label">Concepto</div>
-                <div class="uk-form-controls">
-                    <select class="uk-select" name="concept_id" required>
-                        <option value="">Seleccione una opción</option>
-                        @foreach ($concepts as $concept)
-                        <option value="{{$concept->id}}">{{$concept->name}}</option>
-                        @endforeach  
-                        <option value="2">otros</option>  
-                    </select>
-                </div>
-            <small>
-                <a href="/concepts">Crear/Modificar/Eliminar un concepto</a>
-            </small>
-        </div>
-        
-        <div class="uk-margin">
-            <div class='uk-form-label'>Información adicional</div>
-            <div class="uk-form-controls">
-                <textarea class="uk-input" name="info" id="" cols="30" rows="10"></textarea>
+        <form class="uk-form-stacked" action="{{route('orderToPending', $id)}}" method="POST">
+            @method('post')
+            @csrf
+            <div class="uk-margin">
+                <div class="uk-form-label">Concepto</div>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" name="concept_id">
+                            <option value="">Seleccione una opción</option>
+                            @foreach ($concepts as $concept)
+                            <option value="{{$concept->id}}">{{$concept->name}}</option>
+                            @endforeach  
+                            <option value="2">otros</option>  
+                        </select>
+                    </div>
+                <small>
+                    <a href="/concepts">Crear/Modificar/Eliminar un concepto</a>
+                </small>
             </div>
-        </div>
-
-        <div class="uk-margin">
-            <div class="uk-form-label">Descuento</div>
+            
+            <div class="uk-margin">
+                <div class='uk-form-label'>Información adicional</div>
                 <div class="uk-form-controls">
-                    <select class="uk-select" name="category_discount" id="">
-                        <option value="default">Elegi una categoria</option> 
-                        <option value="all">Todas</option> 
-                        @foreach ($taxonomies as $taxonomy)
-                        <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
-                        @endforeach
-                    </select>
+                    <textarea class="uk-input" name="info" id="" cols="30" rows="10"></textarea>
                 </div>
             </div>
-        
-        <div class="uk-margin">
-            <div class='uk-form-label'>Valor de descuento</div>
-            <div class="uk-form-controls">
-                <input type="number" name="discount">
+
+            <div class="uk-margin">
+                <div class="uk-form-label">Descuento</div>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" name="category_discount" id="">
+                            <option value="default">Elige una categoria</option> 
+                            <option value="all">Todas</option> 
+                            @foreach ($taxonomies as $taxonomy)
+                            <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            
+            <div class="uk-margin">
+                <div class='uk-form-label'>Valor de descuento</div>
+                <div class="uk-form-controls">
+                    <input class="uk-input" type="number" name="discount" max="100">
+                </div>
             </div>
-        </div>
 
 
-        <div class="uk-margin">
-            <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
-        </div>
-    </form>
+            <div class="uk-margin">
+                <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
+            </div>
+        </form>
+
+    </div>
 
 </div>
 

@@ -56,7 +56,7 @@ ZLE - Crear orden
               <td>{{$item->product_sku}}</td>
               <td>${{ number_format($item->price, 0,',','.')}}</td>
               <td>{{$item->quantity}}</td>
-              <td><button class="uk-button uk-button-default" type="submit">Remover producto</button></td>
+              <td><button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>
             </tr>
           </form>
           @endforeach  
@@ -107,9 +107,9 @@ ZLE - Crear orden
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Stock total</th>
+            <th>Stock</th>
             @foreach ($shops as $shop)
-                  <th>{{$shop->name}}</th>
+                  <th class="uk-text-nowrap">{{$shop->name}}</th>
               @endforeach
             <th></th>
             <th></th>
@@ -121,14 +121,14 @@ ZLE - Crear orden
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td>{{ $product->name }}</td> 
+              <td><a href="{{route('productStock', $product->id)}}">{{ $product->name }}</a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
               @foreach ($shops as $shop)
                   <td>{{$shop->getProductStock($shop->id, $product->id)}}</td>
               @endforeach
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span uk-icon="icon: move"></span></a></td>
-              <td>
+              <td class="uk-text-nowrap">
                 <form action="{{route('addProductToOrder')}}" method="post">
                   @csrf
                   <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" max="{{getAllStock($product->id)}}" min="1" value="0" required>

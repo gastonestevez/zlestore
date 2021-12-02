@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Auth;
 
 class Order extends Model
@@ -29,5 +30,11 @@ class Order extends Model
     public function orderInProgress()
     {
         $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+    }
+
+    public function orderAuthor()
+    {
+        $autor = $this->belongsTo(User::class, 'user_id')->first();
+        return $autor->name;
     }
 }

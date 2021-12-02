@@ -67,7 +67,7 @@ ZLE - Control de Stock
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td>{{ $product->name }}</td> 
+              <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
