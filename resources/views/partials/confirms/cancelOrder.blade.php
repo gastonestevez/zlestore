@@ -18,6 +18,7 @@
       <div class="uk-modal-footer uk-text-right">
         <form action="{{$url}}" method="post">
           <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+          @method('put')
           @csrf
           <button class="uk-button uk-button-secondary" type="submit">Aceptar</button>
         </form>

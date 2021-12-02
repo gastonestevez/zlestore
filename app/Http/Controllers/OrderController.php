@@ -255,11 +255,16 @@ class OrderController extends Controller
 
     // Muestra la order en formato in progress antes de generar los descuentos y el pdf
     function orderPreview(int $id) {
-        $order = Order::find($id);
+        $order = Order::where('id', '=', $id)->where('status', '=', 'in progress')->first();
         $concepts = Concept::all();
         $vac = compact('order', 'id', 'concepts');
 
-        return view('/orders/orderPreview', $vac);
+        if ($order && $order->count() > 0) {
+            return view('/orders/orderPreview', $vac);          
+        } else {
+            return back();
+        }
+
     }
 
     public function createAndSavePdf(int $id, Request $request, Order $order) { 
@@ -330,11 +335,15 @@ class OrderController extends Controller
             $productId = $item->product_id;
             $stockToSubstract = $item->quantity;
             $stock = Warehouse::getProductStock($warehouseId, $productId);
-            $newStock = $stock - $stockToSubstract;
-            Stocks::updateOrCreate(
-                ['warehouse_id' => $warehouseId, 'product_id' => $productId],
-                ['quantity' => $newStock]
-            );
+            if ($stock >= $stockToSubstract) {
+                $newStock = $stock - $stockToSubstract;
+                Stocks::updateOrCreate(
+                    ['warehouse_id' => $warehouseId, 'product_id' => $productId],
+                    ['quantity' => $newStock]
+                );
+            } else {
+                return back()->with('error', 'No hay stock disponible de todos los productos de la orden en el local elegido');
+            }
         }
 
         // paso la orden a estado completed
@@ -349,6 +358,8 @@ class OrderController extends Controller
         $order = Order::find($id);
         $order->status = 'cancelled';
         $order->save();
+
+        return redirect()->route('historySales')->with('success', 'Orden cancelada');
     }
 
     // ruta de prueba para render de pdf

@@ -31,7 +31,11 @@ class UserController extends Controller
     $user = User::find($id);
     $vac = compact('user');
 
-    return view('users/user', $vac);
+    if ($user) {
+      return view('users/user', $vac);
+    } else {
+      return back();
+    }
   }
 
   public function store(Request $request)

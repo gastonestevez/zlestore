@@ -65,7 +65,7 @@ ZLE - Historial
                             @endif >
                             <a class="uk-button uk-button-default" uk-tooltip="Ver orden" href="{{$order->document_link}}"><span uk-icon="icon: file-pdf"></span></a></td>
                         </td>
-                    <td @if($order->status == 'completed' || $order->status == 'in progress') 
+                    <td @if($order->status == 'completed' || $order->status == 'in progress' || $order->status == 'cancelled' ) 
                             style="visibility: hidden"
                         @endif >
                         <a href="#complete{{$order->id}}" class="uk-button uk-button-default" uk-tooltip="Completar" uk-toggle><span uk-icon="icon: check"></span></a>

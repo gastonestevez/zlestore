@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->timestamps();
             $table->mediumText('info')->nullable();
             $table->string('document_link')->nullable();
-            $table->enum('status',['in progress','pending','completed'])->default('in progress');
+            $table->enum('status',['in progress','pending','completed', 'cancelled'])->default('in progress');
             $table->integer('total')->default(0);
 
             $table->unsignedInteger('user_id');

@@ -91,28 +91,34 @@ class StockController extends Controller
         $name = $request->get('name');
 
         $warehouse = Warehouse::where('slug', '=', $warehouseSlug)->first();
-        $products = DB::table('wpct_posts AS p')
-                        ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                        ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-                        ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
-                        ->where('warehouse_id', "=", $warehouse->id)
-                        ->where('quantity', '>', 0);
+        
+        if ($warehouse && $warehouse->count() > 0) {
 
-        if(!empty($sku)){
-            $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
-        }
-        if(!empty($name)){
-            $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
-        }
-        if(!empty($id)){
-            $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
-        }
+            $products = DB::table('wpct_posts AS p')
+                            ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+                            ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
+                            ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
+                            ->where('warehouse_id', "=", $warehouse->id)
+                            ->where('quantity', '>', 0);
 
-        $products = $products->paginate(20);
-        $vac = compact('warehouse', 'products', 'request');
+            if(!empty($sku)){
+                $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
+            }
+            if(!empty($name)){
+                $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
+            }
+            if(!empty($id)){
+                $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
+            }
 
-        return view('stock.warehouseStock', $vac);
-    }
+            $products = $products->paginate(20);
+            $vac = compact('warehouse', 'products', 'request');
+
+            return view('stock.warehouseStock', $vac);           
+        } else {
+            return back();
+        }
+    } 
 
 
     public function updatingUnits(Request $request, int $id)
