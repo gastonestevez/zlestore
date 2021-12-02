@@ -84,7 +84,7 @@ ZLE - Usuarios
         </div>
         <div class="uk-card-footer uk-flex uk-flex-between">
             <a href="/user/{{$user->id}}" class="uk-button uk-button-text">Editar</a>
-            <a href="#confirm{{$user->id}}" class="uk-button uk-button-text" uk-toggle>Eliminar</a>
+            <a href="#confirmdelete{{$user->id}}" class="uk-button uk-button-text" uk-toggle>Eliminar</a>
             @include('partials.confirms.confirm',['url'=>"/deleteuser/{$user->id}", 'message'=>"Seguro quiere eliminar el usuario {$user->name}?", 'name'=>'user_id', 'id'=>"{$user->id}"])
         </div>
 

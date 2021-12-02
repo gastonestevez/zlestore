@@ -7,7 +7,12 @@ use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use App\Models\Stocks;
-
+use App\Models\Order;
+use App\Models\Order_item;
+use App\Models\Concept;
+use Auth;
+use PDF;
+use DB;
 
 class OrderController extends Controller
 {
@@ -16,7 +21,7 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function orders()
+    public function wcOrders()
     {
         $wc = $this->getWcConfig();
         $wcOrders = $wc->get('orders' . '?&order=asc&orderby=date&status=pending,processing');
@@ -24,7 +29,7 @@ class OrderController extends Controller
             $order->customerName = $this->getCustomerFullname($wc, $order);
             $order->date_created = (new Carbon($order->date_created))->format('Y-m-d H:i:s');          
         }
-        return view('orders/orders', [
+        return view('orders/wcOrders', [
             'orders' => $wcOrders,
         ]);
     }
@@ -44,7 +49,7 @@ class OrderController extends Controller
         $wcOrder->date_created = (new Carbon($wcOrder->date_created))->format('Y-m-d H:i:s');
 
         if(count($warehouses) == 0) {
-            return redirect()->route('newWarehouse')->with('error', 'No hay depósitos para distribuir la orden.');
+            return redirect()->route('editWarehouses')->with('error', 'No hay depósitos para distribuir la orden.');
         }
 
 
@@ -70,7 +75,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function storeOrder($id, Request $r)
+    public function storeWcOrder($id, Request $r)
     {
         $rProducts = $r->product;
         $transition = $r->transition;
@@ -117,5 +122,286 @@ class OrderController extends Controller
               'version' => 'wc/v3',
             ]
           );
+    }
+
+    // Aqui se comienza a crear una orden
+    public function createOrder(Request $request)
+    {
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+            if($orderInProgress)
+            {
+                $orderItems = $orderInProgress->orderItems();
+            } else {
+                $orderItems = null;
+            }
+
+        $shops = Warehouse::getShops();
+        
+        $sku = $request->get('sku');
+        $name = $request->get('name');
+        $price = $request->get('price');
+        $id = $request->get('id');
+        
+        $searchParams = array(
+            "p.id" => $id,
+            "p.post_title" => $name,
+            "price" => $price,
+            "pml.sku" => $sku
+        );
+        $products = getProducts($searchParams, true);
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops');
+
+        return view('orders.createOrder', $vac);
+    }
+
+
+    // Agrega un producto a una orden
+    public function addProductToOrder(Request $request)  
+    {
+       
+        // Busco si ya hay una orden en progreso
+        // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+
+        $orderInProgress = Order::updateOrCreate(
+            ['status' => 'in progress', 'user_id' => auth()->user()->id],
+            ['concept_id' => null]
+        );
+
+        // Si no hay orden en progreso creo una nueva orden
+        // if (!$orderInProgress) {
+        //     $newOrder = New Order();
+        //     $newOrder->user_id = auth()->user()->id;
+        //     $newOrder->concept_id = 1;
+        //     $newOrder->save();
+        // }
+
+        // Llamo a la ultima orden 
+        $lastOrder = Order::get()->last();
+        $lastOrderId = $lastOrder->id;
+
+        // Si el order item a agregar ya existe en la correspondiente orden sumo las cantidades (ALTERNATIVA 1)
+        // $items = $lastOrder->orderItems();
+        // foreach ($items as $item) {
+        //    if ($item->product_id == $request->productId) {
+        //        $order_item = Order_item::find($item->id);
+        //        $order_item->quantity += $request->quantity;
+        //        if ($order_item->quantity > getAllStock($request->productId)) {
+        //         return back()->with('error', 'Stock limitado');
+        //        }
+        //        $order_item->save();
+        //        return back()->with('success', 'Cantidad actualizada');
+        //    }
+        // }
+
+        // Si el order item a agregar ya existe en la correspondiente orden sumo las cantidades (ALTERNATIVA 2)
+        // $repeatedItem = Order_item::where('order_id', '=', $lastOrderId)->where('product_id', '=', $request->productId)->get()->first();
+        // if ($repeatedItem) {
+        //     $repeatedItem->quantity += $request->quantity;
+        //     if ($repeatedItem->quantity > getAllStock($request->productId)) {
+        //         return back()->with('error', 'Stock limitado');
+        //     }
+        //     $repeatedItem->save();
+        //     return back()->with('success', 'Cantidad actualizada');
+        // }
+
+        // Instancio un nuevo order item y lo asigno a la orden
+        // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
+        
+        $order_item = Order_item::updateOrCreate(
+            ['product_id' => $request->productId, 'order_id' => $lastOrderId,
+            'product_name' => $request->name,
+            'product_sku' => $request->sku,
+            'order_id' => $lastOrderId,
+            'price' => $request->price],
+            ['quantity' => $request->quantity]
+        );
+
+        // Calculo el valor total de la orden
+        $total = 0;
+        foreach ($lastOrder->orderItems() as $item) {
+            $total += ($item->quantity * $item->price);
+        }
+
+        $lastOrder->total = $total;
+        $lastOrder->save();
+
+        return back()->with('success', 'Producto agregado a la orden');
+
+    }
+
+    // Remueve un producto de la orden
+    function removeProduct(int $id) {
+        $product = Order_item::find($id);
+        $order = Order::find($product->order_id);
+        $product->delete();
+
+        // Si la orden se queda sin productos la elimino
+        if (count($order->orderItems()) == 0) {
+            $order->delete();
+            return redirect()->route('createOrder')->with('success', 'Orden eliminada');
+        }
+
+        // Calculo el valor total de la orden
+        $total = 0;
+        foreach ($order->orderItems() as $item) {
+            $total += ($item->quantity * $item->price);
+        }
+
+        $order->total = $total;
+        $order->save();
+
+        return back()->with('success', 'Producto removido');
+    }
+
+    // Muestra la order en formato in progress antes de generar los descuentos y el pdf
+    function orderPreview(int $id) {
+        $order = Order::where('id', '=', $id)->where('status', '=', 'in progress')->first();
+        $concepts = Concept::all();
+        $vac = compact('order', 'id', 'concepts');
+
+        if ($order && $order->count() > 0) {
+            return view('/orders/orderPreview', $vac);          
+        } else {
+            return back();
+        }
+
+    }
+
+    public function createAndSavePdf(int $id, Request $request, Order $order) { 
+        $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
+        $path = public_path('storage');
+        $fileName = $order->id . '_' . Carbon::now()->format('dmY') . ".pdf";
+        $pdf->save($path . '/' . $fileName);
+        return $fileName;
+    }
+
+    // Genera un pdf con la factura de la orden y pasa el estado a pending
+    function orderToPending(int $id, Request $request) {
+        // dd($request->all());
+        // dd($request->category_discount);
+        $order = Order::find($id);   
+        
+        // si envia un descuento por request
+        if ($request->discount) {
+            // si el descuento es para toda la orden
+            if ($request->category_discount == "all") {
+                $order->total = $order->total - ($order->total * $request->discount / 100);
+                $order->save();
+            } else {
+            // si el descuento es para alguna categoría
+            $categoryDiscount = $request->category_discount;
+            // recorro todos los productos de la orden. 
+                foreach ($order->orderItemsIds() as $itemId) {
+                    // llamo a sus categorías con getProductTaxonomies($productId) y dentro del array encuentra la categoria enviada por request aplico un descuento a su order_item->price o creo otra tabla discount_price?
+                    if(in_array($request->category_discount, getProductTaxonomies($itemId))){
+                        $orderItem = Order_item::where('product_id', '=', $itemId)->where('order_id', '=', $order->id)->first();
+                        $orderItem->price = $orderItem->price - ($orderItem->price * $request->discount / 100);
+                        $orderItem->save();
+                    }               
+                }
+
+                // vuelvo a calcular el total de la orden con los nuevos precios
+                $total = 0;
+                foreach ($order->orderItems() as $item) {
+                    $total += ($item->quantity * $item->price);
+                }
+                $order->total = $total;
+                $order->save();
+            }
+        }
+
+        $filename = $this->createAndSavePdf($id, $request, $order);
+
+        $order->status = 'pending';
+        $order->document_link = 'storage' . '/' . $filename;
+
+        $order->save();
+
+        return redirect()->route('historySales');
+    }
+
+    function orderToCompleted(int $id, Request $request) {
+        // encuentro la orden
+        $order = Order::find($id);
+        // encuentro sus items
+        $orderItems = $order->orderItems();
+        // busco el warehouse de donde se descontará el stock (hacer que lo elija el admin con un select)
+        $warehouse = Warehouse::find($request->shopId);
+        // encuentro el id del warehouse
+        $warehouseId = $warehouse->id;
+
+        // itero todos los items de la orden y les resto el stock en el warehouse elegido
+        foreach ($orderItems as $item) {
+            $productId = $item->product_id;
+            $stockToSubstract = $item->quantity;
+            $stock = Warehouse::getProductStock($warehouseId, $productId);
+            if ($stock >= $stockToSubstract) {
+                $newStock = $stock - $stockToSubstract;
+                Stocks::updateOrCreate(
+                    ['warehouse_id' => $warehouseId, 'product_id' => $productId],
+                    ['quantity' => $newStock]
+                );
+            } else {
+                return back()->with('error', 'No hay stock disponible de todos los productos de la orden en el local elegido');
+            }
+        }
+
+        // paso la orden a estado completed
+
+        $order->status = 'completed';
+        $order->save();
+
+        return redirect()->route('historySales')->with('success', 'Orden completada');
+    }
+
+    function orderToCancelled(int $id) {
+        $order = Order::find($id);
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->route('historySales')->with('success', 'Orden cancelada');
+    }
+
+    // ruta de prueba para render de pdf
+    // function orderToPendingGet(Request $request) {
+    //     $id = 1;
+    //     $order = Order::find($id);   
+    //     return view('/orders/orderInvoice', ['order' => $order, 'request' => $request]);
+    //     // $this->createAndSavePdf($id, $request, $order);
+
+    //     // $order->status = 'pending';
+    //     // $order->save();
+
+    //     // return redirect()->route('historySales');
+    // }
+    // Muesta la tabla de historial de ventas
+    function historySales(Request $request) {
+        $searchId = $request->get('id');
+        $createdAt = $request->get('createdAt');
+
+        $searchParams = array(
+            "id" => $searchId,
+            "created_at" => $createdAt,
+        );
+        $orders = DB::table('orders');
+        if(!empty($searchId)){
+            $orders = Order::where('id', '=', $searchId);
+        }
+
+        if(!empty($createdAt)){
+            $from = $createdAt . ' 00:00:00';
+            $to = $createdAt . ' 23:59:59';
+            $orders = $orders->whereBetween('created_at', array($from, $to));
+        }
+        $orders = $orders->paginate(20);
+        
+        $shops = Warehouse::getShops();
+        $vac = compact('orders', 'shops', 'request');
+        return view('history.sales', $vac);
+    }
+
+    // Muesta la tabla de historial de movimientos
+    function historyMovements() {
+        return view('history.movements');
     }
 }

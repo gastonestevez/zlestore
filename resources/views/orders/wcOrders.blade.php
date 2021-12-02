@@ -9,7 +9,7 @@ ZLE - Control de Stock
   <h1 class="uk-heading-divider">Lista de Pedidos</h1>
 
 
-    <a href="/orders" class="uk-button uk-button-secondary uk-margin">ACTUALIZAR PEDIDOS</a>
+    <a href="/wcOrders" class="uk-button uk-button-secondary uk-margin">ACTUALIZAR PEDIDOS</a>
 
   <div class="uk-overflow-auto">
 

@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use App\Models\Stocks;
+use App\Models\Order;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use Carbon\Carbon;
 use DB;
 
-class ProductsController extends Controller
+class StockController extends Controller
 {
 
     public function loadcsv(Request $request)
@@ -45,14 +46,21 @@ class ProductsController extends Controller
         return back()->with('success', 'Los productos fueron agregados a la base.');
     }
 
-    public function list(Request $request)
+    public function allStock(Request $request)
     {
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+            if($orderInProgress)
+            {
+                $orderItems = $orderInProgress->orderItems();
+            } else {
+                $orderItems = null;
+            }
+        
         $sku = $request->get('sku');
         $name = $request->get('name');
         $price = $request->get('price');
         $id = $request->get('id');
-
-        // dd($products);
+        
         $searchParams = array(
             "p.id" => $id,
             "p.post_title" => $name,
@@ -60,22 +68,58 @@ class ProductsController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        $vac = compact('products', 'request');
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
 
-        return view('/products/products', $vac);
+        return view('stock.products', $vac);
     }
 
     public function show(String $id)
     {
         $product = getProduct($id);
         $warehouses = Warehouse::all();
-        $asd = $warehouses[0]->getProductStock($warehouses[0]->id, $product->id);
-        // dd($product);
 
         $vac = compact('product', 'warehouses');
 
-        return view('/products/product', $vac);
+        return view('stock.product', $vac);
     }
+
+    public function warehouseStock(Request $request, string $warehouseSlug)
+    {
+
+        $id = $request->get('id');
+        $sku = $request->get('sku');
+        $name = $request->get('name');
+
+        $warehouse = Warehouse::where('slug', '=', $warehouseSlug)->first();
+        
+        if ($warehouse && $warehouse->count() > 0) {
+
+            $products = DB::table('wpct_posts AS p')
+                            ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+                            ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
+                            ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
+                            ->where('warehouse_id', "=", $warehouse->id)
+                            ->where('quantity', '>', 0);
+
+            if(!empty($sku)){
+                $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
+            }
+            if(!empty($name)){
+                $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
+            }
+            if(!empty($id)){
+                $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
+            }
+
+            $products = $products->paginate(20);
+            $vac = compact('warehouse', 'products', 'request');
+
+            return view('stock.warehouseStock', $vac);           
+        } else {
+            return back();
+        }
+    } 
+
 
     public function updatingUnits(Request $request, int $id)
     {

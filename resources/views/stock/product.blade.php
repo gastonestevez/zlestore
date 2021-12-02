@@ -13,13 +13,13 @@ ZLE - Control de Stock
         @forelse ($warehouses as $warehouse)
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-                <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Stock en {{$warehouse->name}}</h3>
+                <h3 class="uk-card-title">@if($warehouse->type == 'storage')<i class="fas fa-warehouse icon"></i>@else <i class="fas fa-store-alt"></i></i>@endif Stock en {{$warehouse->name}}</h3>
                 <p class="">Producto: {{$product->name}} <br>WOO ID: {{$product->id}} <br> SKU: {{$product->sku}} <br> Unidades por Caja: {{$product->units_in_box}}<p>
 
               
             @if(auth()->check() && auth()->user()->role == 'admin')            
               
-              <form method="post" action="/updatingUnits/{{$product->id}}">
+              <form method="post" action="{{route('updatingUnits', $product->id)}}">
                 @csrf
                 @method('put')
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">         
@@ -70,7 +70,7 @@ ZLE - Control de Stock
               </div>   
              @endif
               
-              <form method="post" action="/transferingUnits/{{$product->id}}">
+              <form method="post" action="{{route('transferingUnits', $product->id)}}">
                 @csrf
                 @method('put')
                 <br>
@@ -116,7 +116,7 @@ ZLE - Control de Stock
             </div>
         </div>
         @empty
-          <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen depósitos. <a href="/warehouse/new">Crear un nuevo depósito</a></h3>
+          <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen depósitos. <a href="{{route('editWarehouses')}}">Crear un nuevo depósito</a></h3>
 
         @endforelse
     </div>

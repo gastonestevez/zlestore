@@ -14,11 +14,11 @@ ZLE - Control de Stock
     <div class="uk-child-width-1-2@s uk-grid-match uk-margin" uk-grid>
         @foreach ($warehouses as $warehouse)
         <div>
-          <a href="/warehouse/{{$warehouse->id}}/products">
+          <a href="{{route('warehouseStock', ['warehouseSlug' => $warehouse->slug])}}">
             <div style='cursor: pointer;' class="warehouse-card uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-                <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> {{$warehouse->name}}</h3>
+                <h3 class="uk-card-title">@if($warehouse->type == 'storage')<i class="fas fa-warehouse icon"></i>@else <i class="fas fa-store-alt"></i></i>@endif  {{$warehouse->name}}</h3>
                 <p>Ubicado en: {{$warehouse->address}}.</p>
-                <a href="/warehouse/{{$warehouse->id}}/products" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado ({{count(Warehouse::getProducts($warehouse->id))}} variedad/es en total)</a>
+                <a href="{{route('warehouseStock', ['warehouseSlug' => $warehouse->slug])}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Listado ({{count(Warehouse::getProducts($warehouse->id))}} variedad/es en total)</a>
             </div>
           </a>
         </div>
@@ -37,7 +37,7 @@ ZLE - Control de Stock
 
 <script>
     const sendToCreateWarehouse = () => {
-        window.location.pathname = '/warehouse/new'
+        window.location.pathname = '/warehouses/edit'
     }
 </script>
 @endsection

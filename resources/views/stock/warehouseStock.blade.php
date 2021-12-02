@@ -10,7 +10,7 @@ ZLE - Control de Stock
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
-      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouse/create')}}">aquí</a>.</p>
+      <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{route('/warehouses')}}">aquí</a>.</p>
     </div>
   @endif
   @if(\Session::has('success'))
@@ -40,7 +40,21 @@ ZLE - Control de Stock
         <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
       </div>
    </form> --}}
-
+   <form class="searchForm uk-search uk-search-default" method="get">
+    <div class="pr uk-margin-bottom">
+        <input value="{{old('id', $request->id)}}" class="uk-search-input" type="search" placeholder="ID ..." name="id">
+    </div>
+    <div class="pr uk-margin-bottom">
+        <input value="{{old('sku', $request->sku)}}" class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
+    </div>
+    <div class="pr uk-margin-bottom">
+        <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
+    </div>
+    <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
+    <div class="pr uk-margin-bottom">
+      <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
+    </div>
+  </form>
     <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
       <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
     </form>
@@ -52,25 +66,25 @@ ZLE - Control de Stock
 
     <table class="uk-table uk-table-striped uk-table-hover">
       <thead>
-          <tr>
-              <th>ID</th>
-              <th>SKU</th>
-              <th>Nombre</th>
-              <th>Precio</th>
-              <th>Unidades</th>            
-              {{-- <th class="uk-table-shrink">Unidades</th>
-              <th class="uk-table-shrink">Cajas</th> --}}
-          </tr>
+        <tr>
+            <th>ID</th>
+            <th>SKU</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>            
+            {{-- <th class="uk-table-shrink">Unidades</th>
+            <th class="uk-table-shrink">Cajas</th> --}}
+        </tr>
       </thead>
       <tbody>
-        @forelse ($products as $product)
+    @forelse ($products as $product)
           <tr>
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
-              <td><a href="/product/{{ $product->id }}/stock"> {{ $product->name }} </a></td>
+              <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td>
               <td>${{ number_format($product->price, 0, ',','.') }}</td>
               <td>{{ $product->quantity }}</td>
-              <form action="/updatingBoxes/{{$product->id}}" method="POST">
+              <form action="{{route('updatingBoxes', $product->id)}}" method="POST">
                 {{-- @method('put')
                 @csrf
                 <input name="warehouse_id" value="{{$warehouse->id}}" hidden type="hidden">
@@ -80,20 +94,27 @@ ZLE - Control de Stock
                 @if(auth()->user()->role == 'admin')
                 <td><button uk-tooltip="Editar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: pencil"></span></button></td>
                 @endif --}}
-                <td><a href="/product/{{$product->id}}/stock" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
+                <td><a href="{{route('productStock', $product->id)}}" uk-tooltip="Gestionar Stock" class="uk-button uk-button-default uk-margin"><span uk-icon="icon: move"></span></a></td>
               </form>
           </tr>
+          @empty
+          <tr>
+            <td>
+            <h4>No se encontraron productos en este depósito. <a href="/stock">Agregar productos</a></h4>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
 
-        @empty
-          <h3>No hay productos en éste depósito, <a href="/products/stock">Agregar productos</a></h3>
-        @endforelse
-
-      </tbody>
-    </table>
+          </tr>
+      @endforelse
+    </tbody>
+  </table>
 
   </div>
 
-  {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
+  {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id])->links()}}
 
 </div>
 <script>

@@ -5246,7 +5246,7 @@ ul.uk-nav-sub {
  * Nav items
  */
 .uk-navbar-nav > li > a {
-  color: #999;
+  color: #666;
   text-transform: uppercase;
   transition: 0.1s ease-in-out;
   transition-property: color, background-color;
@@ -5258,7 +5258,7 @@ ul.uk-nav-sub {
 .uk-navbar-nav > li:hover > a,
 .uk-navbar-nav > li > a:focus,
 .uk-navbar-nav > li > a.uk-open {
-  color: #666;
+  color: #999;
   outline: none;
 }
 /* OnClick */
@@ -5333,9 +5333,9 @@ ul.uk-nav-sub {
 [class*='uk-navbar-dropdown-top'] {
   margin-top: -15px;
 }
-[class*='uk-navbar-dropdown-bottom'] {
+/* [class*='uk-navbar-dropdown-bottom'] {
   margin-top: 15px;
-}
+} */
 [class*='uk-navbar-dropdown-left'] {
   margin-left: -15px;
 }

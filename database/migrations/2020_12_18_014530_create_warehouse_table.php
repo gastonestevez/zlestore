@@ -17,7 +17,9 @@ class CreateWarehouseTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->string('address');
+            $table->enum('type',['storage','shop'])->default('storage');
             $table->boolean('visibility')->nullable();
         });
     }
