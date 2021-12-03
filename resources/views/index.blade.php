@@ -50,7 +50,7 @@ ZLE - Control de Stock
       <a href="{{route('warehouses')}}">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Depósitos</h3>
-            <p>Lista de los depósitos existentes</p>
+            <p>Lista de las depósitos existentes</p>
             <a href="{{route('warehouses')}}" class="uk-link-heading"><i class="fas fa-list-alt"></i> Actualmente existen {{$warehouses}} depósitos</a>
         </div>
       </a>
@@ -60,7 +60,7 @@ ZLE - Control de Stock
       <a href="{{route('historySales')}}">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <h3 class="uk-card-title"><i class="fas fa-barcode"></i> Historial de ventas offline</h3>
-            <p>Lista de los ventas realizadas en el local</p>
+            <p>Lista de las ventas realizadas en el local</p>
         </div>
       </a>
     </div>
@@ -70,7 +70,7 @@ ZLE - Control de Stock
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
             <span class="uk-label uk-margin-left" style="background:purple; font-size: 10px;">Próximamente V3</span>
             <h3 class="uk-card-title"><i class="fas fa-qrcode"></i> Historial de ventas online</h3>
-            <p>Lista de los ventas realizadas en la tienda online</p>
+            <p>Lista de las ventas realizadas en la tienda online</p>
         </div>
       </a>
     </div>
