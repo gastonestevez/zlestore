@@ -19,6 +19,7 @@ unidades_por_caja: number
               ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
               ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
               ->where('pm.meta_key',  '=', 'unidades_por_caja')
+              // ->orderBy('id', 'DESC');
               ->orderBy('post_title', 'ASC');
 
     foreach ($searchParams as $key => $value) {

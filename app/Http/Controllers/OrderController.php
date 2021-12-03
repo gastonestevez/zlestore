@@ -269,7 +269,8 @@ class OrderController extends Controller
 
     public function createAndSavePdf(int $id, Request $request, Order $order) { 
         $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
-        $path = public_path('storage');
+        // $path = public_path('storage');
+        $path = storage_path('app/public');
         $fileName = $order->id . '_' . Carbon::now()->format('dmY') . ".pdf";
         $pdf->save($path . '/' . $fileName);
         return $fileName;
@@ -277,8 +278,6 @@ class OrderController extends Controller
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
-        // dd($request->all());
-        // dd($request->category_discount);
         $order = Order::find($id);   
         
         // si envia un descuento por request
