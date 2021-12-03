@@ -11,6 +11,9 @@ ZLE - Usuarios
     <fieldset class="uk-fieldset">
 
         <legend class="uk-legend">Iniciar Sesion</legend>
+        @error('email')
+              <p style="color: red;">Datos incorrectos</p>
+          @enderror
 
         <div class="uk-margin">
           <div class="uk-inline">

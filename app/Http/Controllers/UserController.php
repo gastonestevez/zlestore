@@ -89,6 +89,7 @@ class UserController extends Controller
     ];
 
     $this->validate($request, $reglas,$mensajes);
+    // dd($request->all());
 
     $user = User::find($id);
     $user->name = $request->name;
@@ -96,7 +97,7 @@ class UserController extends Controller
 
     if ($request['password'])
     {
-      $user->password = Hash::make($request['new_password']);
+      $user->password = Hash::make($request['password']);
     }
 
     $user->role = $request->role;
