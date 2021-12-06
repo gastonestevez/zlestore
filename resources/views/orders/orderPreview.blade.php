@@ -92,10 +92,11 @@ ZLE - Confirmar Orden
                 </div>
             </div>
 
-            <div class="uk-margin">
-                <div class="uk-form-label">Descuento</div>
+            <div id='discounts' hidden>
+                <div class="uk-margin">
+                    <div class="uk-form-label">Descuento {DISCOUNT_NUMBER}</div>
                     <div class="uk-form-controls">
-                        <select class="uk-select" name="category_discount" id="">
+                        <select class="uk-select" name="category_discount[]" id="">
                             <option value="default">Elige una categoria</option> 
                             <option value="all">Todas</option> 
                             @foreach ($taxonomies as $taxonomy)
@@ -104,15 +105,20 @@ ZLE - Confirmar Orden
                         </select>
                     </div>
                 </div>
-            
-            <div class="uk-margin">
-                <div class='uk-form-label'>Valor de descuento</div>
-                <div class="uk-form-controls">
-                    <input class="uk-input" type="number" name="discount" max="100">
+                
+                <div class="uk-margin">
+                    <div class='uk-form-label'>Valor de descuento</div>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" type="number" name="discount[]" max="100">
+                    </div>
                 </div>
             </div>
-
-
+            <div class="uk-margin">
+                <button id='addDiscountButton' type="button" class="uk-button uk-button-default">Nuevo Descuento</button>
+            </div>
+            <div class="uk-margin">
+                <button hidden id='removeDiscountsButton' type="button" class="uk-button uk-button-default">Remover Descuentos</button>
+            </div>
             <div class="uk-margin">
                 <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
             </div>
@@ -123,3 +129,4 @@ ZLE - Confirmar Orden
 </div>
 
 @endsection
+<script src="/js/discounts.js" charset="utf-8"></script>
