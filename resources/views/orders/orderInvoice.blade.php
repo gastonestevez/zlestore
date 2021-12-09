@@ -90,16 +90,18 @@
             </table>
         </div>
         <div class="main-total">
-            @if ($request->category_discount != "default")
-                @if ($request->category_discount == "all")
-                <h4>
-                    Se realizó un descuento del {{$request->discount}}% en el total de la compra
-                </h4> 
-                @else   
-                <h4>
-                    Se realizó un descuento del {{$request->discount}}% en la categoría {{$request->category_discount}}
-                </h4>       
-                @endif
+            @if ($request->category_discount)
+                @foreach ($request->category_discount as $index => $category_discount)
+                    @if ($category_discount == "all")
+                    <h4>
+                        Se realizó un descuento del {{$request->discount[$index]}}% en el total de la compra
+                    </h4> 
+                    @else   
+                    <h4>
+                        Se realizó un descuento del {{$request->discount[$index]}}% en la categoría {{$category_discount}}
+                    </h4>       
+                    @endif
+                @endforeach
             @endif
             <h4>
                 Total: ${{number_format($order->total, 0,',','.')}}
