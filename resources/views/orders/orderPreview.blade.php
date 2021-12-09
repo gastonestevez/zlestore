@@ -96,8 +96,8 @@ ZLE - Confirmar Orden
                 <div class="uk-margin">
                     <div class="uk-form-label">Descuento {DISCOUNT_NUMBER}</div>
                     <div class="uk-form-controls">
-                        <select class="uk-select" name="category_discount[]" id="">
-                            <option value="default">Elige una categoria</option> 
+                        <select required class="uk-select" name="category_discount[]" id="">
+                            <option value="">Elige una categoria</option> 
                             <option value="all">Todas</option> 
                             @foreach ($taxonomies as $taxonomy)
                             <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
@@ -109,7 +109,7 @@ ZLE - Confirmar Orden
                 <div class="uk-margin">
                     <div class='uk-form-label'>Valor de descuento</div>
                     <div class="uk-form-controls">
-                        <input class="uk-input" type="number" name="discount[]" max="100">
+                        <input required class="uk-input" min="1" type="number" name="discount[]" max="100">
                     </div>
                 </div>
             </div>

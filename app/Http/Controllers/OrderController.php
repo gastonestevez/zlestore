@@ -278,18 +278,17 @@ class OrderController extends Controller
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
-        dd($request->all());
         $order = Order::find($id);   
-        
+
         // si envia un descuento por request
+        $isTotalDiscount = 0;
         if ($request->category_discount && $request->discount) {
             // si el descuento es para toda la orden
             foreach ($request->category_discount as $index => $categoryDiscount) {
                 # code...
                 if($request->discount[$index]){
                     if ($categoryDiscount == "all") {
-                        $order->total = $order->total - ($order->total * $request->discount[$index] / 100);
-                        $order->save();
+                        $isTotalDiscount = $request->discount[$index];
                     } else {
                     // recorro todos los productos de la orden. 
                         foreach ($order->orderItemsIds() as $itemId) {
@@ -300,17 +299,19 @@ class OrderController extends Controller
                                 $orderItem->save();
                             }               
                         }
-    
-                        // vuelvo a calcular el total de la orden con los nuevos precios
-                        $total = 0;
-                        foreach ($order->orderItems() as $item) {
-                            $total += ($item->quantity * $item->price);
-                        }
-                        $order->total = $total;
-                        $order->save();
                     }
                 }
             }
+            // vuelvo a calcular el total de la orden con los nuevos precios
+            $total = 0;
+            foreach ($order->orderItems() as $item) {
+                $total += ($item->quantity * $item->price);
+            }
+            $order->total = $total;
+            if($isTotalDiscount > 0) {
+                $order->total = $order->total - ($isTotalDiscount * $order->total / 100);
+            }
+            
         }
 
         $filename = $this->createAndSavePdf($id, $request, $order);
