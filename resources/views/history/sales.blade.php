@@ -52,7 +52,7 @@ ZLE - Historial
                 <tr>
                     <td>{{$order->id}}</td>
                     <td>@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}} @endif</td>
-                    <td>{{$order->concept->name}}</td>
+                    <td>@if(isset($order->concept->name)){{$order->concept->name}}@else -- @endif</td>
                     <td>{{$order->orderAuthor()->name}}</td>
                     <td>
                         @if($order->status == 'in progress')
