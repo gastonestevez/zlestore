@@ -38,7 +38,8 @@ ZLE - Historial
                 <tr>
                     <th>ID</th>
                     <th>Fecha</th>
-                    {{-- <th>Autor</th> --}}
+                    <th>Concepto</th>
+                    <th>Autor</th>
                     <th>Estado</th>
                     <th>Total</th>
                     <th class="uk-table-shrink">Documento</th>
@@ -51,7 +52,8 @@ ZLE - Historial
                 <tr>
                     <td>{{$order->id}}</td>
                     <td>@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}} @endif</td>
-                    {{-- <td>{{dd($order->orderAuthor())}}</td> --}}
+                    <td>{{$order->concept->name}}</td>
+                    <td>{{$order->orderAuthor()->name}}</td>
                     <td>
                         @if($order->status == 'in progress')
                         <a href="{{route('orderPreview', $order->id)}}">{{$order->status}}</a>

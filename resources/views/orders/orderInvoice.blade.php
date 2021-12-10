@@ -54,8 +54,8 @@
         margin-top: 10px;
     }
     .main-total {
+        width: 100%;
         margin-top: 10px;
-        float:right;
     }
     .main-notes {
         margin-top: 32px;

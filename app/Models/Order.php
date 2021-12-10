@@ -34,7 +34,6 @@ class Order extends Model
 
     public function orderAuthor()
     {
-        $autor = $this->belongsTo(User::class, 'user_id')->first();
-        return $autor->name;
+        return $this->belongsTo(User::class, 'user_id')->first();
     }
 }

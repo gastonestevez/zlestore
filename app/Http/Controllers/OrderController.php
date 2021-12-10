@@ -387,7 +387,7 @@ class OrderController extends Controller
             "id" => $searchId,
             "created_at" => $createdAt,
         );
-        $orders = DB::table('orders');
+        $orders = Order::orderBy('created_at', 'DESC');
         if(!empty($searchId)){
             $orders = Order::where('id', '=', $searchId);
         }
