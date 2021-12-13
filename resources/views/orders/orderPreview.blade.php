@@ -13,7 +13,8 @@ ZLE - Confirmar Orden
     @php
         $taxonomies = [];
     @endphp
-    <h4 class=" uk-heading-line  uk-text-center"> <span>Resumen de orden</span></h4>
+    <div name='orderId' hidden id="{{$order->id}}"></div>
+    <h4 class=" uk-heading-line  uk-text-center pt-5"> <span>Resumen de orden</span></h4>
     <table class="uk-table uk-table-divider uk-margin-bottom">
         <thead>
             <tr>
@@ -130,3 +131,11 @@ ZLE - Confirmar Orden
 
 @endsection
 <script src="/js/discounts.js" charset="utf-8"></script>
+<script>
+    function show_my_receipt() {
+        const orderId = document.getElementsByName("orderId")[0].id
+        const date = new Date(Date.now()).toLocaleDateString("es-MX");
+        const now = date.replaceAll('/', '');
+        const page = '/storage/'+orderId+'_'+now+'.pdf';
+    }
+</script>

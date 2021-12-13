@@ -60,6 +60,13 @@
     .main-notes {
         margin-top: 32px;
     }
+
+    .total {
+        font-size: 18px;
+        border: 2px solid rgb(0, 0, 0);
+        padding: 10px;
+     display: inline-block;
+    }
 </style>
 <body>
     <header class="header">
@@ -103,7 +110,7 @@
                     @endif
                 @endforeach
             @endif
-            <h4>
+            <h4 class="total">
                 Total: ${{number_format($order->total, 0,',','.')}}
             </h4>
         </div>

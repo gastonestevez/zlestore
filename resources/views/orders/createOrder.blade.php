@@ -131,7 +131,11 @@ ZLE - Crear pedido
               <td class="uk-text-nowrap">
                 <form action="{{route('addProductToOrder')}}" method="post">
                   @csrf
-                  <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" max="{{getAllStock($product->id)}}" min="1" value="0" required>
+                  <input class="uk-input" style="width:80px;" type="number" name="quantity" id="" 
+                  {{-- max="{{getAllStock($product->id)}}" remove stock validation --}}
+                  min="1" 
+                  value="0" 
+                  required>
                   <input type="hidden" name="productId" value="{{$product->id}}">
                   <input type="hidden" name="name" value="{{$product->name}}">
                   <input type="hidden" name="sku" value="{{$product->sku}}">

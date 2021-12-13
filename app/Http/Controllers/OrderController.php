@@ -337,17 +337,19 @@ class OrderController extends Controller
         // itero todos los items de la orden y les resto el stock en el warehouse elegido
         foreach ($orderItems as $item) {
             $productId = $item->product_id;
-            $stockToSubstract = $item->quantity;
+            // $stockToSubstract = $item->quantity; remove stock validation
             $stock = Warehouse::getProductStock($warehouseId, $productId);
-            if ($stock >= $stockToSubstract) {
-                $newStock = $stock - $stockToSubstract;
+            // if ($stock >= $stockToSubstract) { remove stock validation
+                // $newStock = $stock - $stockToSubstract; remove stock validation
+                $newStock = $stock - $item->quantity;
+
                 Stocks::updateOrCreate(
                     ['warehouse_id' => $warehouseId, 'product_id' => $productId],
                     ['quantity' => $newStock]
                 );
-            } else {
-                return back()->with('error', 'No hay stock disponible de todos los productos de la orden en el local elegido');
-            }
+            // } else { 
+                // return back()->with('error', 'No hay stock disponible de todos los productos de la orden en el local elegido');
+            // }
         }
 
         // paso la orden a estado completed
