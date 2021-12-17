@@ -71,7 +71,7 @@
 <body>
     <header class="header">
         <img class="header__nav-pic" src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/LogoZLESTORE.png'))) }}" alt="Logo ZLE" />
-        <h4>{{$order->created_at->isoFormat('DD-MM-YYYY hh:mm')}}</h4>
+        <h4>{{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}}</h4>
     </header>
     <main>
         <div class="main-table">
