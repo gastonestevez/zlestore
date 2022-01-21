@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- HTML RENDER TO EXPORT PDF -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,20 +79,20 @@
             <h4>Presupuesto orden #{{$order->id}}</h4>
             <table>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>SKU</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Precio U.</th>
+                    <th>Precio T.</th>
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
                 <tr>
-                    <td>{{$item->product_id}}</td>
                     <td>{{$item->product_name}}</td>
                     <td>{{$item->product_sku}} </td>
                     <td>{{$item->quantity}}</td>
-                    <td>${{number_format($item->price, 0,',','.')}}</td>
+                    <td>${{number_format($item->subPrice, 0,',','.')}}</td>
+                    <td>${{number_format(($item->subPrice * $item->quantity), 0,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -111,7 +112,10 @@
                 @endforeach
             @endif
             <h4 class="total">
-                Total: ${{number_format($order->total, 0,',','.')}}
+                Total sin descuentos: ${{number_format($order->subTotal, 0,',','.')}}
+            </h4>
+            <h4 class="total">
+                Total con descuentos: ${{number_format($order->total, 0,',','.')}}
             </h4>
         </div>
         @if($request->info)
