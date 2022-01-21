@@ -105,6 +105,7 @@ class StockController extends Controller
                 $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
             }
             if(!empty($name)){
+                $name = str_replace(' ', '%', $name);
                 $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
             }
             if(!empty($id)){

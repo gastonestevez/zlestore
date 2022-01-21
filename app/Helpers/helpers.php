@@ -24,6 +24,7 @@ unidades_por_caja: number
 
     foreach ($searchParams as $key => $value) {
       if(!empty($value)){
+        $value = str_replace(' ', '%', $value);
         $productos->where($key, 'LIKE', '%' . $value . '%');
       }
     }
