@@ -61,12 +61,14 @@
     .main-notes {
         margin-top: 32px;
     }
-
+    .total-container {
+        margin-top: 32px;
+    }
     .total {
         font-size: 18px;
         border: 2px solid rgb(0, 0, 0);
         padding: 10px;
-     display: inline-block;
+        display: inline-block;
     }
 </style>
 <body>
@@ -91,8 +93,8 @@
                     <td>{{$item->product_name}}</td>
                     <td>{{$item->product_sku}} </td>
                     <td>{{$item->quantity}}</td>
-                    <td>${{number_format($item->subPrice, 0,',','.')}}</td>
-                    <td>${{number_format(($item->subPrice * $item->quantity), 0,',','.')}}</td>
+                    <td>${{number_format($item->subprice, 0,',','.')}}</td>
+                    <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -111,12 +113,14 @@
                     @endif
                 @endforeach
             @endif
-            <h4 class="total">
-                Total sin descuentos: ${{number_format($order->subTotal, 0,',','.')}}
-            </h4>
-            <h4 class="total">
-                Total con descuentos: ${{number_format($order->total, 0,',','.')}}
-            </h4>
+            <div class="total-container">
+                <h4 class="total">
+                    Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
+                </h4>
+                <h4 class="total">
+                    Total con descuentos: ${{number_format($order->total, 0,',','.')}}
+                </h4>
+            </div>
         </div>
         @if($request->info)
             <div class="main-notes">

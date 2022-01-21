@@ -158,11 +158,11 @@ class OrderController extends Controller
     // Agrega un producto a una orden
     public function addProductToOrder(Request $request)  
     {
-       
+
         // Busco si ya hay una orden en progreso
         // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
 
-        $orderInProgress = Order::updateOrCreate(
+        Order::updateOrCreate(
             ['status' => 'in progress', 'user_id' => auth()->user()->id],
             ['concept_id' => null]
         );
@@ -207,11 +207,12 @@ class OrderController extends Controller
         // Instancio un nuevo order item y lo asigno a la orden
         // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
         
-        $order_item = Order_item::updateOrCreate(
+        Order_item::updateOrCreate(
             ['product_id' => $request->productId, 'order_id' => $lastOrderId,
             'product_name' => $request->name,
             'product_sku' => $request->sku,
             'order_id' => $lastOrderId,
+            'subprice' => $request->price,
             'price' => $request->price],
             ['quantity' => $request->quantity]
         );
@@ -223,6 +224,7 @@ class OrderController extends Controller
         }
 
         $lastOrder->total = $total;
+        $lastOrder->subtotal = $total;
         $lastOrder->save();
 
         return back()->with('success', 'Producto agregado a la orden');
@@ -304,6 +306,7 @@ class OrderController extends Controller
             }
             // vuelvo a calcular el total de la orden con los nuevos precios
             $total = 0;
+
             foreach ($order->orderItems() as $item) {
                 $total += ($item->quantity * $item->price);
             }
