@@ -28,7 +28,7 @@ unidades_por_caja: number
         $productos->where($key, 'LIKE', '%' . $value . '%');
       }
     }
-    return $hasPagination ? $productos->paginate(20) : $productos->get();
+    return $hasPagination ? $productos->paginate(100) : $productos->get();
   }
 
   function getProduct($id) {

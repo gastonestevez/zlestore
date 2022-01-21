@@ -402,7 +402,7 @@ class OrderController extends Controller
             $to = $createdAt . ' 23:59:59';
             $orders = $orders->whereBetween('created_at', array($from, $to));
         }
-        $orders = $orders->paginate(20);
+        $orders = $orders->paginate(100);
         
         $shops = Warehouse::getShops();
         $vac = compact('orders', 'shops', 'request');

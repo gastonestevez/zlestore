@@ -112,7 +112,7 @@ class StockController extends Controller
                 $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
             }
 
-            $products = $products->paginate(20);
+            $products = $products->paginate(100);
             $vac = compact('warehouse', 'products', 'request');
 
             return view('stock.warehouseStock', $vac);           
