@@ -160,15 +160,7 @@ ZLE - Crear pedido
 
 </div>
 <script>
-  const handleSync = () => {
-    const syncButton = document.getElementById('syncButton')
-    syncButton.innerHTML = `  
-    <button class="uk-button uk-button-secondary uk-margin">
-      <i class="fas fa-sync fa-spin"></i> 
-      &nbsp;&nbsp;Sincronizando...
-    </button>
-`
-  }
+
 </script>
 @endsection
 
