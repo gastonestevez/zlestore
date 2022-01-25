@@ -158,7 +158,11 @@ class OrderController extends Controller
     // Agrega un producto a una orden
     public function addProductToOrder(Request $request)  
     {
+        if($request->storageItems) {
+            $localStorage = json_decode($request->storageItems);
+            dd($localStorage);
 
+        }
         // Busco si ya hay una orden en progreso
         // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
 

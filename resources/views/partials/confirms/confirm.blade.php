@@ -14,6 +14,7 @@
   if (!isset($method)){
     $method = 'delete';
   }
+// dd($id, $message, $enableModalDescription);
 @endphp
 
 <div id="confirm{{$method}}{{$id}}" uk-modal>
@@ -27,10 +28,14 @@
 
     <div class="uk-modal-body">
       <p>{{ $message ?? "Esta seguro que lo desea eliminar?"}}</p>
+      @if (isset($enableModalDescription))
+        <div id='modalDescription'>
+        </div>
+      @endif
     </div>
 
     <div class="uk-modal-footer uk-text-right">
-      <form action="{{$url}}" method="post">
+      <form id='formConfirmationModal' action="{{$url}}" method="post">
         <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
         @method($method)
         @csrf
