@@ -93,6 +93,12 @@ a {
 .cart-absolute:hover {
   transform: scale(1.1); }
 
+.badge-absolute {
+  position: absolute;
+  bottom: 0;
+  background-color: black;
+}
+
 .green-desc {
   padding: 16px 12px;
   text-align: left;
