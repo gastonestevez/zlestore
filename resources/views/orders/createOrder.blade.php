@@ -180,6 +180,10 @@ const cartButton = document.getElementById('cartButton')
 const formConfirmationModal = document.getElementById('formConfirmationModal')
 const cartAnchor = document.getElementById('cartAnchor')
 
+const clearCart = () => {
+  window.localStorage.clear()
+}
+
 formConfirmationModal.addEventListener('submit', (e) => {
   e.preventDefault()
   let items = []
@@ -192,6 +196,7 @@ formConfirmationModal.addEventListener('submit', (e) => {
   storageInput.setAttribute('name', 'storageItems')
   storageInput.setAttribute('value', JSON.stringify(items))
   storageForm.appendChild(storageInput)
+  clearCart()
   storageForm.submit()
 })
 
@@ -274,9 +279,6 @@ stockInputs.forEach( i => {
     });
 })
 
-const clearCart = () => {
-  window.localStorage.clear()
-}
 
 window.onload = () => {
   refreshIconCart()

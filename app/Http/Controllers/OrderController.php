@@ -160,16 +160,61 @@ class OrderController extends Controller
     {
         if($request->storageItems) {
             $localStorage = json_decode($request->storageItems);
-            dd($localStorage);
+            
+
+            // Busco si ya hay una orden en progreso
+            // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+            Order::updateOrCreate(
+                ['status' => 'in progress', 'user_id' => auth()->user()->id],
+                ['concept_id' => null]
+            );
+
+            // Llamo a la ultima orden 
+            $lastOrder = Order::get()->last();
+            $lastOrderId = $lastOrder->id;
+
+            // Si el order item a agregar ya existe en la correspondiente orden sumo las cantidades (ALTERNATIVA 2)
+            // $repeatedItem = Order_item::where('order_id', '=', $lastOrderId)->where('product_id', '=', $request->productId)->get()->first();
+            // if ($repeatedItem) {
+            //     $repeatedItem->quantity += $request->quantity;
+            //     if ($repeatedItem->quantity > getAllStock($request->productId)) {
+            //         return back()->with('error', 'Stock limitado');
+            //     }
+            //     $repeatedItem->save();
+            //     return back()->with('success', 'Cantidad actualizada');
+            // }
+
+            // Instancio un nuevo order item y lo asigno a la orden
+            // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
+            foreach ($localStorage as $item) {
+                $product = getProduct($item->id);
+
+                Order_item::updateOrCreate(
+                    ['product_id' => $product->id, 
+                    'order_id' => $lastOrderId,
+                    'product_name' => $product->name,
+                    'product_sku' => $product->sku,
+                    'order_id' => $lastOrderId,
+                    'subprice' => $product->price,
+                    'price' => $product->price],
+                    ['quantity' => $item->quantity]
+                );
+
+            }
+
+            // Calculo el valor total de la orden
+            $total = 0;
+            foreach ($lastOrder->orderItems() as $item) {
+                $total += ($item->quantity * $item->price);
+            }
+
+            $lastOrder->total = $total;
+            $lastOrder->subtotal = $total;
+            $lastOrder->save();
+
+            return back()->with('success', 'Producto agregado a la orden');
 
         }
-        // Busco si ya hay una orden en progreso
-        // $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
-
-        Order::updateOrCreate(
-            ['status' => 'in progress', 'user_id' => auth()->user()->id],
-            ['concept_id' => null]
-        );
 
         // Si no hay orden en progreso creo una nueva orden
         // if (!$orderInProgress) {
@@ -179,9 +224,7 @@ class OrderController extends Controller
         //     $newOrder->save();
         // }
 
-        // Llamo a la ultima orden 
-        $lastOrder = Order::get()->last();
-        $lastOrderId = $lastOrder->id;
+
 
         // Si el order item a agregar ya existe en la correspondiente orden sumo las cantidades (ALTERNATIVA 1)
         // $items = $lastOrder->orderItems();
@@ -197,42 +240,7 @@ class OrderController extends Controller
         //    }
         // }
 
-        // Si el order item a agregar ya existe en la correspondiente orden sumo las cantidades (ALTERNATIVA 2)
-        // $repeatedItem = Order_item::where('order_id', '=', $lastOrderId)->where('product_id', '=', $request->productId)->get()->first();
-        // if ($repeatedItem) {
-        //     $repeatedItem->quantity += $request->quantity;
-        //     if ($repeatedItem->quantity > getAllStock($request->productId)) {
-        //         return back()->with('error', 'Stock limitado');
-        //     }
-        //     $repeatedItem->save();
-        //     return back()->with('success', 'Cantidad actualizada');
-        // }
-
-        // Instancio un nuevo order item y lo asigno a la orden
-        // https://laravel.com/docs/8.x/eloquent#inserting-and-updating-models (ALTERNATIVA 3 LA MEJOR!!)
-        
-        Order_item::updateOrCreate(
-            ['product_id' => $request->productId, 'order_id' => $lastOrderId,
-            'product_name' => $request->name,
-            'product_sku' => $request->sku,
-            'order_id' => $lastOrderId,
-            'subprice' => $request->price,
-            'price' => $request->price],
-            ['quantity' => $request->quantity]
-        );
-
-        // Calculo el valor total de la orden
-        $total = 0;
-        foreach ($lastOrder->orderItems() as $item) {
-            $total += ($item->quantity * $item->price);
-        }
-
-        $lastOrder->total = $total;
-        $lastOrder->subtotal = $total;
-        $lastOrder->save();
-
-        return back()->with('success', 'Producto agregado a la orden');
-
+    
     }
 
     // Remueve un producto de la orden
