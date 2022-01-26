@@ -86,6 +86,8 @@
                     <th>Cantidad</th>
                     <th>Precio U.</th>
                     <th>Precio T.</th>
+                    <th>% Dto.</th>
+                    <th>Precio Dto.</th>
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
@@ -95,6 +97,8 @@
                     <td>{{$item->quantity}}</td>
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
                     <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
+                    <td>{{$item->discounts}}</td>
+                    <td>${{number_format($item->price, 0,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>

@@ -310,8 +310,9 @@ class OrderController extends Controller
                             if(in_array($categoryDiscount, getProductTaxonomies($itemId))){
                                 $orderItem = Order_item::where('product_id', '=', $itemId)->where('order_id', '=', $order->id)->first();
                                 $orderItem->price = $orderItem->price - ($orderItem->price * $request->discount[$index] / 100);
+                                $orderItem->discounts = $orderItem->discounts . ' ' . $request->discount[$index] . '%,';
                                 $orderItem->save();
-                            }               
+                            }
                         }
                     }
                 }
