@@ -105,13 +105,14 @@ class StockController extends Controller
                 $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');
             }
             if(!empty($name)){
+                $name = str_replace(' ', '%', $name);
                 $products = $products->where('p.post_title', 'LIKE', '%' . $name . '%');
             }
             if(!empty($id)){
                 $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
             }
 
-            $products = $products->paginate(20);
+            $products = $products->paginate(100);
             $vac = compact('warehouse', 'products', 'request');
 
             return view('stock.warehouseStock', $vac);           

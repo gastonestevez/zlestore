@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- HTML RENDER TO EXPORT PDF -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -60,12 +61,14 @@
     .main-notes {
         margin-top: 32px;
     }
-
+    .total-container {
+        margin-top: 32px;
+    }
     .total {
         font-size: 18px;
         border: 2px solid rgb(0, 0, 0);
         padding: 10px;
-     display: inline-block;
+        display: inline-block;
     }
 </style>
 <body>
@@ -78,20 +81,24 @@
             <h4>Presupuesto orden #{{$order->id}}</h4>
             <table>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>SKU</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Precio U.</th>
+                    <th>Precio T.</th>
+                    <th>% Dto.</th>
+                    <th>Total c/Dto.</th>
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
                 <tr>
-                    <td>{{$item->product_id}}</td>
                     <td>{{$item->product_name}}</td>
                     <td>{{$item->product_sku}} </td>
                     <td>{{$item->quantity}}</td>
-                    <td>${{number_format($item->price, 0,',','.')}}</td>
+                    <td>${{number_format($item->subprice, 0,',','.')}}</td>
+                    <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
+                    <td>{{$item->discounts}}</td>
+                    <td>${{number_format(($item->price * $item->quantity), 2,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -110,9 +117,14 @@
                     @endif
                 @endforeach
             @endif
-            <h4 class="total">
-                Total: ${{number_format($order->total, 0,',','.')}}
-            </h4>
+            <div class="total-container">
+                <h4 class="total">
+                    Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
+                </h4>
+                <h4 class="total">
+                    Total con descuentos: ${{number_format($order->total, 2,',','.')}}
+                </h4>
+            </div>
         </div>
         @if($request->info)
             <div class="main-notes">
