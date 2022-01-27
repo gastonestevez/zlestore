@@ -226,6 +226,7 @@ const renderTable = (body) => `
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Cantidad</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -234,7 +235,25 @@ const renderTable = (body) => `
     </table>
   `
 
+const removeItem = (id) => {
+  window.localStorage.removeItem(id)
+  const modalDescription = document.getElementById('modalDescription')
+  const table = getTableComponent()
+  modalDescription.innerHTML = table
+  refreshIconCart()
+}
+
+const onChangePreviewItem = (id) => {
+  const itemInputValue = document.getElementById(`modal-${id}`).value
+  const item = JSON.parse(window.localStorage.getItem(id))
+  window.localStorage.setItem(id, JSON.stringify({...item, quantity: itemInputValue}));
+  refreshIconCart()
+
+}
+
 const renderItem = (item) => `<td>${item}</td>`
+const renderInputItem = (item, id = 0) => `<td><input min='1' type="number" id="modal-${id}" onchange="onChangePreviewItem(${id})" value="${item}"></td>`
+const removeItemButton = (id) => `<td><button onclick="removeItem(${id})" class="uk-button uk-button-default" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>`
 
 const getTableComponent = () => {
   let items = ``
@@ -245,7 +264,8 @@ const getTableComponent = () => {
         <tr>
           ${renderItem(item.id)}
           ${renderItem(item.name)}
-          ${renderItem(item.quantity)}
+          ${renderInputItem(item.quantity, item.id)}
+          ${removeItemButton(item.id)}
         </tr>`
     }
   });

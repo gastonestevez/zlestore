@@ -87,7 +87,7 @@
                     <th>Precio U.</th>
                     <th>Precio T.</th>
                     <th>% Dto.</th>
-                    <th>Precio Dto.</th>
+                    <th>Total c/Dto.</th>
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
@@ -98,7 +98,7 @@
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
                     <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
                     <td>{{$item->discounts}}</td>
-                    <td>${{number_format($item->price, 0,',','.')}}</td>
+                    <td>${{number_format(($item->price * $item->quantity), 2,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -122,7 +122,7 @@
                     Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
                 </h4>
                 <h4 class="total">
-                    Total con descuentos: ${{number_format($order->total, 0,',','.')}}
+                    Total con descuentos: ${{number_format($order->total, 2,',','.')}}
                 </h4>
             </div>
         </div>

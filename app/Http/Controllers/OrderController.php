@@ -154,6 +154,18 @@ class OrderController extends Controller
         return view('orders.createOrder', $vac);
     }
 
+    // Muestra la order en formato in progress antes de generar los descuentos y el pdf
+    public static function orderPreview(int $id) {
+        $order = Order::where('id', '=', $id)->where('status', '=', 'in progress')->first();
+        $concepts = Concept::all();
+        $vac = compact('order', 'id', 'concepts');
+        if ($order && $order->count() > 0) {
+            return view('/orders/orderPreview', $vac);          
+        } else {
+            return back();
+        }
+
+    }
 
     // Agrega un producto a una orden
     public function addProductToOrder(Request $request)  
@@ -212,8 +224,8 @@ class OrderController extends Controller
             $lastOrder->subtotal = $total;
             $lastOrder->save();
 
-            return back()->with('success', 'Producto agregado a la orden');
-
+            // return back()->with('success', 'Producto agregado a la orden');
+            return self::orderPreview($lastOrderId);
         }
 
         // Si no hay orden en progreso creo una nueva orden
@@ -267,19 +279,7 @@ class OrderController extends Controller
         return back()->with('success', 'Producto removido');
     }
 
-    // Muestra la order en formato in progress antes de generar los descuentos y el pdf
-    function orderPreview(int $id) {
-        $order = Order::where('id', '=', $id)->where('status', '=', 'in progress')->first();
-        $concepts = Concept::all();
-        $vac = compact('order', 'id', 'concepts');
 
-        if ($order && $order->count() > 0) {
-            return view('/orders/orderPreview', $vac);          
-        } else {
-            return back();
-        }
-
-    }
 
     public function createAndSavePdf(int $id, Request $request, Order $order) { 
         $pdf = PDF::loadView('orders.orderInvoice', ['order' => $order, 'request' => $request]);
