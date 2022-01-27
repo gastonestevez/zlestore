@@ -14,7 +14,7 @@ class AlterTableOrdersChangeTotal extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->decimal('total', 8, 2)->change();
+            $table->decimal('total', 11, 2)->change();
         });
     }
 
