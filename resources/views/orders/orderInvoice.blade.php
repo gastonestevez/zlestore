@@ -82,22 +82,28 @@
             <table>
                 <tr>
                     <th>Nombre</th>
-                    <th>SKU</th>
-                    <th>Cantidad</th>
+                    <th style="width: 100px">SKU</th>
+                    <th>Cant.</th>
                     <th>Precio U.</th>
-                    <th>Precio T.</th>
-                    <th>% Dto.</th>
-                    <th>Total c/Dto.</th>
+                    @if ($request->category_discount)
+                        <th>Precio T.</th>
+                        <th>% Dto.</th>
+                        <th>Total c/Dto.</th>
+                    @else 
+                        <th>Total.</th>
+                    @endif
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
                 <tr>
                     <td>{{$item->product_name}}</td>
                     <td>{{$item->product_sku}} </td>
-                    <td>{{$item->quantity}}</td>
+                    <td width=50px>{{$item->quantity}}</td>
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
-                    <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
-                    <td>{{$item->discounts}}</td>
+                    @if ($request->category_discount)
+                        <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
+                        <td>{{$item->discounts}}</td>
+                    @endif
                     <td>${{number_format(($item->price * $item->quantity), 2,',','.')}}</td>
                 </tr>
                 @endforeach
@@ -118,12 +124,18 @@
                 @endforeach
             @endif
             <div class="total-container">
+                @if ($request->category_discount)
                 <h4 class="total">
                     Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
                 </h4>
                 <h4 class="total">
                     Total con descuentos: ${{number_format($order->total, 2,',','.')}}
                 </h4>
+                @else
+                <h4 class="total">
+                    Total: ${{number_format($order->total, 0,',','.')}}
+                </h4>
+                @endif
             </div>
         </div>
         @if($request->info)
