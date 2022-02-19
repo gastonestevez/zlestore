@@ -23,6 +23,7 @@ ZLE - Confirmar Orden
                 <th>SKU</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
+                <th>Uni/caja</th>
                 <th>Tags</th>
                 <th>Acción</th>
             </tr>
@@ -30,11 +31,12 @@ ZLE - Confirmar Orden
         <tbody>
             @foreach ($order->orderItems() as $item)
             <tr>
-                <td>{{$item->product_id}} </td>
-                <td>{{$item->product_name}} </td>
-                <td>{{$item->product_sku}} </td>
-                <td>${{ number_format($item->price, 0,',','.')}} </td>
+                <td>{{$item->product_id}}</td>
+                <td>{{$item->product_name}}</td>
+                <td>{{$item->product_sku}}</td>
+                <td>${{ number_format($item->price, 0,',','.')}}</td>
                 <td>{{$item->quantity}} </td>
+                <td>{{getProduct($item->product_id)->units_in_box}}</td>
                 <td>
                     @foreach (getProductTaxonomies($item->product_id) as $taxonomy)        
                         <span class="uk-badge" style="background: #008F72; padding: 3px 10px 3px 10px;">{{$taxonomy}}</span>

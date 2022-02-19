@@ -83,7 +83,8 @@
                 <tr>
                     <th>Nombre</th>
                     <th style="width: 100px">SKU</th>
-                    <th>Cant.</th>
+                    <th style="width: 50px">Cant.</th>
+                    <th style="width: 50px">Uni/caja</th>
                     <th>Precio U.</th>
                     @if ($request->category_discount)
                         <th>Precio T.</th>
@@ -97,8 +98,9 @@
                 @foreach ($order->orderItems() as $item)
                 <tr>
                     <td>{{$item->product_name}}</td>
-                    <td>{{$item->product_sku}} </td>
+                    <td>{{$item->product_sku}}</td>
                     <td width=50px>{{$item->quantity}}</td>
+                    <td>{{getProduct($item->product_id)->units_in_box}}</td>
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
                     @if ($request->category_discount)
                         <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
@@ -110,7 +112,7 @@
             </table>
         </div>
         <div class="main-total">
-            @if ($request->category_discount)
+            {{-- @if ($request->category_discount)
                 @foreach ($request->category_discount as $index => $category_discount)
                     @if ($category_discount == "all")
                     <h4>
@@ -122,7 +124,7 @@
                     </h4>       
                     @endif
                 @endforeach
-            @endif
+            @endif --}}
             <div class="total-container">
                 @if ($request->category_discount)
                 <h4 class="total">
