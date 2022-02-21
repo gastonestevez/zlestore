@@ -49,7 +49,7 @@ ZLE - Crear pedido
               <td>{{$item->product_id}}</td>
               <td>{{$item->product_name}}</td>
               <td>{{$item->product_sku}}</td>
-              <td>{{getProduct($product->id)->units_in_box}}</td>
+              <td>{{getProduct($item->product_id)->units_in_box}}</td>
               <td>${{ number_format($item->price, 0,',','.')}}</td>
               <td>{{$item->quantity}}</td>
               <td><button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>
