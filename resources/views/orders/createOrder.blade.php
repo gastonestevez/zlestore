@@ -34,6 +34,7 @@ ZLE - Crear pedido
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>SKU</th>
+                <th>Uni/caja</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Acción</th>
@@ -48,6 +49,7 @@ ZLE - Crear pedido
               <td>{{$item->product_id}}</td>
               <td>{{$item->product_name}}</td>
               <td>{{$item->product_sku}}</td>
+              <td>{{getProduct($product->id)->units_in_box}}</td>
               <td>${{ number_format($item->price, 0,',','.')}}</td>
               <td>{{$item->quantity}}</td>
               <td><button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>
@@ -102,11 +104,12 @@ ZLE - Crear pedido
             <th>Id</th>
             <th>SKU</th>
             <th>Nombre</th>
+            <th>Uni/caja</th>
             <th>Precio</th>
             <th>Stock</th>
             @foreach ($shops as $shop)
                   <th class="uk-text-nowrap">{{$shop->name}}</th>
-              @endforeach
+            @endforeach
             <th></th>
             <th></th>
             {{-- <th>Acción</th> --}}
@@ -118,6 +121,7 @@ ZLE - Crear pedido
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
               <td><a href="{{route('productStock', $product->id)}}">{{ $product->name }}</a></td> 
+              <td>{{getProduct($product->id)->units_in_box}}</td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
               @foreach ($shops as $shop)
