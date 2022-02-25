@@ -19,7 +19,7 @@ class Order extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(Order_item::class, 'order_id')->get();
+        return $this->hasMany(Order_item::class, 'order_id')->orderBy('product_name')->get();
     }
 
     public function orderItemsIds()
