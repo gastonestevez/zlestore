@@ -64,7 +64,7 @@ class StockController extends Controller
         $searchParams = array(
             "p.id" => $id,
             "p.post_title" => $name,
-            "price" => $price,
+            "pml.max_price" => $price,
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
@@ -89,6 +89,7 @@ class StockController extends Controller
         $id = $request->get('id');
         $sku = $request->get('sku');
         $name = $request->get('name');
+        $price = $request->get('price');
 
         $warehouse = Warehouse::where('slug', '=', $warehouseSlug)->first();
         
@@ -112,6 +113,10 @@ class StockController extends Controller
                 $products = $products->where('p.id', 'LIKE', '%' . $id . '%');
             }
 
+            if(!empty($price)){
+                $products = $products->where('pml.max_price', '=', $price);
+            }
+            
             $products = $products->paginate(100);
             $vac = compact('warehouse', 'products', 'request');
 

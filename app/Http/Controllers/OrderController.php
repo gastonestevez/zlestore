@@ -145,7 +145,7 @@ class OrderController extends Controller
         $searchParams = array(
             "p.id" => $id,
             "p.post_title" => $name,
-            "price" => $price,
+            "pml.max_price" => $price,
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);

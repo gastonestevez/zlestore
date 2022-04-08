@@ -24,8 +24,12 @@ unidades_por_caja: number
 
     foreach ($searchParams as $key => $value) {
       if(!empty($value)){
-        $value = str_replace(' ', '%', $value);
-        $productos->where($key, 'LIKE', '%' . $value . '%');
+        if($key === 'pml.max_price'){
+          $productos->where($key, '=', $value);
+        } else {
+          $value = str_replace(' ', '%', $value);
+          $productos->where($key, 'LIKE', '%' . $value . '%');
+        }
       }
     }
     return $hasPagination ? $productos->paginate(100) : $productos->get();
