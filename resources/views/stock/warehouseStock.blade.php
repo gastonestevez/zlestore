@@ -54,10 +54,17 @@ ZLE - Control de Stock
     <div class="pr uk-margin-bottom">
       <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
     </div>
+    <div class="pr uk-margin-bottom">
+      <label for="exportar" uk-tooltip="Exportar depósito a planilla" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Exportar</label>
+    </div>
   </form>
-    <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
-      <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
-    </form>
+  <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
+    <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
+  </form>
+  <form class="uk-search uk-search-default"  style="pointer-events: none;" method="get" action="{{route('exportCsv', $warehouse->id)}}">
+    <button id='exportar' hidden class="uk-button uk-button-default limpiar-busqueda">Exportar</button>
+  </form>
+  
 
 
   </div>
