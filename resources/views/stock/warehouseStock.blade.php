@@ -6,7 +6,7 @@ ZLE - Control de Stock
 
 <div class="uk-container primer-div">
 
-  <h1 class="uk-heading-divider">Productos en {{$warehouse->name}}</h1>
+  <h1 class="uk-heading-divider mb-4">Productos en {{$warehouse->name}}</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
       <a class="uk-alert-close" uk-close></a>
@@ -19,54 +19,39 @@ ZLE - Control de Stock
       <p>{{\Session::get('success')}}</p>
     </div>
   @endif
-  {{-- <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
-    <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
-  </a> --}}
+  
 
   <div class="uk-flex">
 
-    {{-- <form class="searchForm uk-search uk-search-default" method="get">
+    <form class="searchForm uk-search uk-search-default" method="get">
+      <div class="pr uk-margin-bottom">
+          <input value="{{old('id', $request->id)}}" class="uk-search-input" type="search" placeholder="ID ..." name="id">
+      </div>
       <div class="pr uk-margin-bottom">
           <input value="{{old('sku', $request->sku)}}" class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
       </div>
       <div class="pr uk-margin-bottom">
-          <input value="{{old('woo_id', $request->woo_id)}}" class="uk-search-input" type="search" placeholder="Woo ID ..." name="woo_id">
+          <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
       </div>
       <div class="pr uk-margin-bottom">
-          <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
+        <input value="{{old('name', $request->price)}}" class="uk-search-input" type="search" placeholder="Precio ..." name="price">
       </div>
       <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
       <div class="pr uk-margin-bottom">
         <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
       </div>
-   </form> --}}
-   <form class="searchForm uk-search uk-search-default" method="get">
-    <div class="pr uk-margin-bottom">
-        <input value="{{old('id', $request->id)}}" class="uk-search-input" type="search" placeholder="ID ..." name="id">
-    </div>
-    <div class="pr uk-margin-bottom">
-        <input value="{{old('sku', $request->sku)}}" class="uk-search-input" type="search" placeholder="SKU ..." name="sku">
-    </div>
-    <div class="pr uk-margin-bottom">
-        <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
-    </div>
-    <div class="pr uk-margin-bottom">
-      <input value="{{old('name', $request->price)}}" class="uk-search-input" type="search" placeholder="Precio ..." name="price">
-    </div>
-    <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
-    <div class="pr uk-margin-bottom">
-      <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
-    </div>
-    <div class="pr uk-margin-bottom">
-      <label for="exportar" uk-tooltip="Exportar depósito a planilla" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Exportar</label>
-    </div>
-  </form>
-  <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
-    <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
-  </form>
-  <form class="uk-search uk-search-default"  style="pointer-events: none;" method="get" action="{{route('exportCsv', $warehouse->id)}}">
-    <button id='exportar' hidden class="uk-button uk-button-default limpiar-busqueda">Exportar</button>
-  </form>
+      <div class="pr uk-margin-bottom">
+        <label for="exportar" uk-tooltip="Exportar depósito a planilla" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Exportar</label>
+      </div>
+    </form>
+
+    <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
+      <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
+    </form>
+
+    <form class="uk-search uk-search-default"  style="pointer-events: none;" method="get" action="{{route('exportCsv', $warehouse->id)}}">
+      <button id='exportar' hidden class="uk-button uk-button-default limpiar-busqueda">Exportar</button>
+    </form>
   
 
 
