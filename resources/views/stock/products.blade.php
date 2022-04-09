@@ -13,15 +13,6 @@ ZLE - Control de Stock
       <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouses/edit')}}">aquí</a>.</p>
     </div>
   @endif
-  {{-- @if(\Session::has('success'))
-    <div class="uk-alert-success" uk-alert>
-      <a class="uk-alert-close" uk-close></a>
-      <p>{{\Session::get('success')}}</p>
-    </div>
-  @endif --}}
-  {{-- <a href={{route('syncWoocommerce')}} onclick="handleSync()" id="syncButton">
-    <button class="uk-button uk-button-secondary uk-margin">SINCRONIZAR LISTA</button>
-  </a> --}}
 
     <p>Productos por página: {{count($products)}}</p>
 
@@ -36,6 +27,9 @@ ZLE - Control de Stock
         </div>
         <div class="pr uk-margin-bottom">
             <input value="{{old('name', $request->name)}}" class="uk-search-input" type="search" placeholder="Nombre ..." name="name">
+        </div>
+        <div class="pr uk-margin-bottom">
+          <input value="{{old('name', $request->price)}}" class="uk-search-input" type="search" placeholder="Precio ..." name="price">
         </div>
         <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
         <div class="pr uk-margin-bottom">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Stocks;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Str;
 
@@ -22,20 +23,23 @@ class WarehouseController extends Controller
   // }
 
 
-  public function list() {
-      return view('warehouses.warehouses', [
-          'warehouses' => Warehouse::all()
-          ]);
+  public function list()
+  {
+    return view('warehouses.warehouses', [
+      'warehouses' => Warehouse::all()
+    ]);
   }
 
-  public function edit() {
+  public function edit()
+  {
     $warehouses = Warehouse::all();
     $vac = compact('warehouses');
     return view('warehouses.createWarehouse', $vac);
   }
 
-  public function store(Request $request) {
-    $warehouse= new Warehouse();
+  public function store(Request $request)
+  {
+    $warehouse = new Warehouse();
     $warehouse->name = $request->name;
     $warehouse->slug = Str::slug($request->name, '-');
     $warehouse->address = $request->address;
@@ -45,7 +49,7 @@ class WarehouseController extends Controller
 
 
     return redirect('/warehouses')
-        ->with('success', 'Depósito creado exitosamente');
+      ->with('success', 'Depósito creado exitosamente');
   }
 
   public function update(Request $request, int $id)
@@ -55,7 +59,7 @@ class WarehouseController extends Controller
     $warehouse->address = $request->address;
 
     $warehouse->save();
-   
+
     return redirect('/warehouses')
       ->with('success', 'Depósito editado exitosamente');
   }
@@ -66,15 +70,15 @@ class WarehouseController extends Controller
     $warehouse->delete();
 
     DB::table('stocks')
-        ->where('warehouse_id', '=', $id)->delete();
+      ->where('warehouse_id', '=', $id)->delete();
 
     return redirect('/warehouses')
-          ->with('success', 'Depósito eliminado exitosamente');
+      ->with('success', 'Depósito eliminado exitosamente');
   }
 
-  public function transferingUnits(Request $request, int $id) 
+  public function transferingUnits(Request $request, int $id)
   {
-    
+
     $product = getProduct($id);
     $quantity = $request->quantity;
     $warehouseOrigin = $request->warehouseOrigin;
@@ -84,28 +88,27 @@ class WarehouseController extends Controller
     $stockInOrigin = Warehouse::getProductStock($warehouseOrigin, $id);
     if ($request->quantity > $stockInOrigin) {
       return redirect()->back()
-          ->with('error', 'No hay tanta cantidad de stock');
+        ->with('error', 'No hay tanta cantidad de stock');
     } else {
 
       db::table('stocks')
-          ->where('warehouse_id', '=', $warehouseOrigin)
-          ->where('product_id', '=', $product->id)
-          ->update(['quantity' => $stockInOrigin-$quantity]);
+        ->where('warehouse_id', '=', $warehouseOrigin)
+        ->where('product_id', '=', $product->id)
+        ->update(['quantity' => $stockInOrigin - $quantity]);
 
-      Stocks::
-          updateOrCreate(
-            ['warehouse_id' => $warehouseDestiny, 'product_id' => $product->id],
-            ['quantity' => $stockInDestiny+$quantity]
-          );    
+      Stocks::updateOrCreate(
+        ['warehouse_id' => $warehouseDestiny, 'product_id' => $product->id],
+        ['quantity' => $stockInDestiny + $quantity]
+      );
 
       return redirect()->back()
-          ->with('success', 'Stock actualizado exitosamente');
+        ->with('success', 'Stock actualizado exitosamente');
     }
   }
 
-  public function transferingBoxes(Request $request, int $id) 
+  public function transferingBoxes(Request $request, int $id)
   {
-    
+
     $product = getProduct($id);
     $quantity = $request->quantity * $product->units_in_box;
     $warehouseOrigin = $request->warehouseOrigin;
@@ -116,21 +119,61 @@ class WarehouseController extends Controller
     $boxesInOrigin = intval(Warehouse::getProductStock($warehouseOrigin, $id) / $product->units_in_box);
     if ($request->quantity > $boxesInOrigin) {
       return redirect()->back()
-          ->with('error', 'No hay tanta cantidad de stock');
+        ->with('error', 'No hay tanta cantidad de stock');
     } else {
       db::table('stocks')
-          ->where('warehouse_id', '=', $warehouseOrigin)
-          ->where('product_id', '=', $product->id)
-          ->update(['quantity' => $stockInOrigin-$quantity]);
+        ->where('warehouse_id', '=', $warehouseOrigin)
+        ->where('product_id', '=', $product->id)
+        ->update(['quantity' => $stockInOrigin - $quantity]);
 
       db::table('stocks')
-          ->where('warehouse_id', '=', $warehouseDestiny)
-          ->where('product_id', '=', $product->id)
-          ->update(['quantity' => $stockInDestiny+$quantity]);
+        ->where('warehouse_id', '=', $warehouseDestiny)
+        ->where('product_id', '=', $product->id)
+        ->update(['quantity' => $stockInDestiny + $quantity]);
 
       return redirect()->back()
-          ->with('success', 'Stock actualizado exitosamente');
+        ->with('success', 'Stock actualizado exitosamente');
     }
   }
 
+  public function exportCsv($id)
+  {
+    $warehouse = Warehouse::find($id);
+    $products = Warehouse::getProductsByWarehouse($warehouse->id)->get();
+
+    $filename = $warehouse->name .' - '.Carbon::now()->format('Y-m-d') . '.csv';
+    $headers = array(
+      "Content-type"        => "text/csv",
+      "Content-Disposition" => "attachment; filename=$filename",
+      "Pragma"              => "no-cache",
+      "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+      "Expires"             => "0"
+    );
+    $columns = array(
+      "ID",
+      "SKU",
+      "Nombre",
+      "Precio",
+      "Uni/caja",
+      "Stock",
+    );
+    $callback = function () use ($products, $columns) {
+      $file = fopen('php://output', 'w');
+      fputcsv($file, $columns);
+
+      foreach ($products as $product) {
+        $row['ID']  = $product->id;
+        $row['SKU']    = $product->sku;
+        $row['Nombre']    = $product->name;
+        $row['Price']    = $product->name;
+        $row['Uni/caja']    = $product->units_in_box;
+        $row['Stock']  = $product->quantity;
+
+        fputcsv($file, array($row['ID'], $row['SKU'], $row['Nombre'], $row['Price'], $row['Uni/caja'], $row['Stock']));
+      }
+
+      fclose($file);
+    };
+    return response()->stream($callback, 200, $headers);
+  }
 }

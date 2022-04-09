@@ -79,9 +79,10 @@ ZLE - Control de Stock
                 <input required min="1" max="{{$warehouse->getProductStock($warehouse->id, $product->id)}}" name="quantity" class="uk-input uk-form-width-medium" type="number" placeholder="Cantidad a transferir" value="">                    
                 <span uk-icon="arrow-right"></span>
                 <select class="uk-select uk-form-width-medium" name="warehouseDestiny" required>Depósito a transferir
-                  <option value="">Depósito destino</option>
+                  <option value="{{$warehouses->first()->id}}">{{$warehouses->first()->name}}</option>
+                  
                   @foreach ($warehouses as $transferWarehouse)
-                    @if ($transferWarehouse != $warehouse)
+                    @if ($transferWarehouse != $warehouse && $transferWarehouse != $warehouses->first())
                     <option value="{{$transferWarehouse->id}}">{{$transferWarehouse->name}}</option>                           
                     @endif
                   @endforeach                 

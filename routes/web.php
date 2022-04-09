@@ -89,6 +89,7 @@ Route::put('/transferingUnits/{id}', [WarehouseController::class, 'transferingUn
 
 Route::put('/transferingBoxes/{id}', [WarehouseController::class, 'transferingBoxes'])->name('transferingBoxes')->middleware('employee');
 
+Route::get('warehouse/export-csv/{id}', [WarehouseController::class, 'exportCsv'])->name('exportCsv')->middleware('auth');
 
 // Stock
 

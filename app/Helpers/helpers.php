@@ -24,8 +24,12 @@ unidades_por_caja: number
 
     foreach ($searchParams as $key => $value) {
       if(!empty($value)){
-        $value = str_replace(' ', '%', $value);
-        $productos->where($key, 'LIKE', '%' . $value . '%');
+        if($key === 'pml.max_price'){
+          $productos->where($key, '=', $value);
+        } else {
+          $value = str_replace(' ', '%', $value);
+          $productos->where($key, 'LIKE', '%' . $value . '%');
+        }
       }
     }
     return $hasPagination ? $productos->paginate(100) : $productos->get();
@@ -90,10 +94,9 @@ unidades_por_caja: number
   function getAllStock($productId) {
     // Trae la totalidad de stock que hay de un producto en todos los depósitos.
     
-    $stocks = Stocks::where('product_id', '=', $productId)->pluck('quantity');
-    $total = 0;
-    foreach ($stocks as $stock) {
-      $total = $stock + $total;
-    }
-    return $total;
+    $storages = Warehouse::where('type', $warehouseType = 'storage')->pluck('id')->toArray();
+    $stock = Stocks::where('product_id', '=', $productId)->whereIn('warehouse_id', $storages)->pluck('quantity')->toArray();
+    $totalStock = array_sum($stock);
+  
+    return $totalStock;
   }
