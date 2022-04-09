@@ -110,9 +110,9 @@ ZLE - Crear pedido
             <th>Uni/caja</th>
             <th>Precio</th>
             <th>Stock</th>
-            @foreach ($shops as $shop)
+            {{-- @foreach ($shops as $shop)
                   <th class="uk-text-nowrap">{{$shop->name}}</th>
-            @endforeach
+            @endforeach --}}
             <th></th>
             <th></th>
             {{-- <th>Acción</th> --}}
@@ -127,9 +127,9 @@ ZLE - Crear pedido
               <td>{{getProduct($product->id)->units_in_box}}</td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>            
               <td>{{getAllStock($product->id)}}</td>
-              @foreach ($shops as $shop)
+              {{-- @foreach ($shops as $shop)
                   <td>{{$shop->getProductStock($shop->id, $product->id)}}</td>
-              @endforeach
+              @endforeach --}}
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span uk-icon="icon: move"></span></a></td>
               <td class="uk-text-nowrap">
                 <form action="{{route('addProductToOrder')}}" method="post">

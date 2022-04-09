@@ -139,12 +139,7 @@ class WarehouseController extends Controller
   public function exportCsv($id)
   {
     $warehouse = Warehouse::find($id);
-    $products = DB::table('wpct_posts AS p')
-      ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-      ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-      ->select('s.product_id AS id', 'p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
-      ->where('warehouse_id', "=", $id)
-      ->where('quantity', '>', 0)->get();
+    $products = Warehouse::getProductsByWarehouse($warehouse->id)->get();
 
     $filename = $warehouse->name .' - '.Carbon::now()->format('Y-m-d') . '.csv';
     $headers = array(
@@ -158,6 +153,8 @@ class WarehouseController extends Controller
       "ID",
       "SKU",
       "Nombre",
+      "Precio",
+      "Uni/caja",
       "Stock",
     );
     $callback = function () use ($products, $columns) {
@@ -168,9 +165,11 @@ class WarehouseController extends Controller
         $row['ID']  = $product->id;
         $row['SKU']    = $product->sku;
         $row['Nombre']    = $product->name;
+        $row['Price']    = $product->name;
+        $row['Uni/caja']    = $product->units_in_box;
         $row['Stock']  = $product->quantity;
 
-        fputcsv($file, array($row['ID'], $row['SKU'], $row['Nombre'], $row['Stock']));
+        fputcsv($file, array($row['ID'], $row['SKU'], $row['Nombre'], $row['Price'], $row['Uni/caja'], $row['Stock']));
       }
 
       fclose($file);

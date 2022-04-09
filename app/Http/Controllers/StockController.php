@@ -76,7 +76,7 @@ class StockController extends Controller
     public function show(String $id)
     {
         $product = getProduct($id);
-        $warehouses = Warehouse::all();
+        $warehouses = Warehouse::orderBy('type', 'desc')->get();
 
         $vac = compact('product', 'warehouses');
 
@@ -95,12 +95,9 @@ class StockController extends Controller
         
         if ($warehouse && $warehouse->count() > 0) {
 
-            $products = DB::table('wpct_posts AS p')
-                            ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
-                            ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-                            ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity')
-                            ->where('warehouse_id', "=", $warehouse->id)
-                            ->where('quantity', '>', 0);
+
+            $products = Warehouse::getProductsByWarehouse($warehouse->id);
+            
 
             if(!empty($sku)){
                 $products = $products->where('pml.sku', 'LIKE', '%' . $sku . '%');

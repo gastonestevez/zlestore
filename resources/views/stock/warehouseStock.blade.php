@@ -81,6 +81,7 @@ ZLE - Control de Stock
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
+            <th>Uni/caja</th>
             <th>Stock</th>            
             {{-- <th class="uk-table-shrink">Unidades</th>
             <th class="uk-table-shrink">Cajas</th> --}}
@@ -93,6 +94,7 @@ ZLE - Control de Stock
               <td>{{ $product->sku }}</td>
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td>
               <td>${{ number_format($product->price, 0, ',','.') }}</td>
+              <td>{{ $product->units_in_box }}</td>
               <td>{{ $product->quantity }}</td>
               <form action="{{route('updatingBoxes', $product->id)}}" method="POST">
                 {{-- @method('put')

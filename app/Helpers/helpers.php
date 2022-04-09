@@ -94,10 +94,9 @@ unidades_por_caja: number
   function getAllStock($productId) {
     // Trae la totalidad de stock que hay de un producto en todos los depósitos.
     
-    $stocks = Stocks::where('product_id', '=', $productId)->pluck('quantity');
-    $total = 0;
-    foreach ($stocks as $stock) {
-      $total = $stock + $total;
-    }
-    return $total;
+    $storages = Warehouse::where('type', $warehouseType = 'storage')->pluck('id')->toArray();
+    $stock = Stocks::where('product_id', '=', $productId)->whereIn('warehouse_id', $storages)->pluck('quantity')->toArray();
+    $totalStock = array_sum($stock);
+  
+    return $totalStock;
   }
