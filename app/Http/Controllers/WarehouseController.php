@@ -165,7 +165,7 @@ class WarehouseController extends Controller
         $row['ID']  = $product->id;
         $row['SKU']    = $product->sku;
         $row['Nombre']    = $product->name;
-        $row['Price']    = $product->name;
+        $row['Price']    = $product->price;
         $row['Uni/caja']    = $product->units_in_box;
         $row['Stock']  = $product->quantity;
 
