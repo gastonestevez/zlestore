@@ -20,6 +20,9 @@ ZLE - Historial
             <input value="{{old('id', $request->id)}}" class="uk-search-input" type="search" placeholder="ID ..." name="id">
         </div>
         <div class="pr uk-margin-bottom">
+            <input value="{{old('info', $request->info)}}" class="uk-search-input" type="search" placeholder="Notas ..." name="info">
+        </div>
+        <div class="pr uk-margin-bottom">
             <input value="{{old('createdAt', $request->createdAt)}}" type="date" class="uk-search-input" name="createdAt">
         </div>
         <button class="uk-button uk-button-default limpiar-busqueda" style="margin-right: 15px; margin-bottom: 15px;">Buscar</button>
@@ -39,6 +42,7 @@ ZLE - Historial
                     <th>ID</th>
                     <th>Fecha</th>
                     <th>Concepto</th>
+                    <th>Notas</th>
                     <th>Autor</th>
                     <th>Estado</th>
                     <th>Total</th>
@@ -51,8 +55,13 @@ ZLE - Historial
                 @forelse ($orders as $order)
                 <tr>
                     <td>{{$order->id}}</td>
-                    <td>@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}} @endif</td>
+                    <td class="text-nowrap">@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}} @endif</td>
                     <td>@if(isset($order->concept->name)){{$order->concept->name}}@else -- @endif</td>
+                    <td>
+                        <div style="width:250px;" class="uk-text-truncate">
+                            <span">@if(isset($order->info)){{$order->info}}@else -- @endif</span>
+                        </div>
+                    </td>
                     <td>{{$order->orderAuthor()->name}}</td>
                     <td>
                         @if($order->status == 'in progress')

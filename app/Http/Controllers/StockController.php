@@ -7,6 +7,7 @@ use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
 use App\Models\Stocks;
 use App\Models\Order;
+use App\Models\Movement;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use Carbon\Carbon;
@@ -77,8 +78,9 @@ class StockController extends Controller
     {
         $product = getProduct($id);
         $warehouses = Warehouse::orderBy('type', 'desc')->get();
+        $movements = Movement::where('product_id', $id)->latest()->take(50)->get();
 
-        $vac = compact('product', 'warehouses');
+        $vac = compact('product', 'warehouses', 'movements');
 
         return view('stock.product', $vac);
     }

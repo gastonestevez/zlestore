@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Stocks;
+use App\Models\Movement;
 use Carbon\Carbon;
 use DB;
+use Auth;
 use Illuminate\Support\Str;
 
 class WarehouseController extends Controller
@@ -101,8 +103,18 @@ class WarehouseController extends Controller
         ['quantity' => $stockInDestiny + $quantity]
       );
 
+      $movement = new Movement();
+      $movement->product_id = $product->id;
+      $movement->user_id = Auth()->user()->id;
+      $movement->quantity = $request->quantity;
+      $movement->origin_warehouse_id = $warehouseOrigin;
+      $movement->destiny_warehouse_id = $warehouseDestiny;
+      $movement->remaining_stock = $stockInOrigin - $request->quantity;
+      $movement->status = 'completed';
+      $movement->save();
+
       return redirect()->back()
-        ->with('success', 'Stock actualizado exitosamente');
+        ->with('success', "Transferencia de  {$movement->quantity} unidades de {$movement->warehouseOrigin->name} a {$movement->warehouseDestiny->name}");
     }
   }
 

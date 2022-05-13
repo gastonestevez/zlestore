@@ -9,7 +9,63 @@ ZLE - Control de Stock
 
   <h1 class="uk-heading-divider">{{$product->name}}</h1>
 
-    <div class="uk-child-width-1-1@s uk-grid-match uk-margin" uk-grid>
+    
+    {{-- modal historial --}}
+
+    <a class="uk-button uk-button-default" href="#modal-overflow" uk-toggle>Historial de movimientos</a>
+
+<div id="modal-overflow" uk-modal>
+    <div class="uk-modal-dialog" style="width:100%;">
+
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Movimientos de stock {{$product->name}}</h2>
+        </div>
+
+        <div class="uk-modal-body" uk-overflow-auto>
+
+          <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-small uk-table-divider">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th class="text-nowrap">Depósito origen</th>
+                        <th class="text-nowrap">Depósito destino</th>
+                        <th class="text-nowrap">Stock restante</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  @foreach ($movements as $movement)
+                    <tr>
+                        <td>{{$movement->created_at}}</td>
+                        <td>{{$product->name}}</td>
+                        <td>{{$movement->quantity}}</td>
+                        <td>{{$movement->warehouseOrigin->name}}</td>
+                        <td>{{$movement->warehouseDestiny->name}}</td>
+                        <td>{{$movement->remaining_stock}}</td>
+                        <td>{{$movement->user->name}}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-primary uk-modal-close" type="button">Cerrar</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+    <div class="uk-child-width-1-2 uk-grid-match uk-margin" uk-grid>
         @forelse ($warehouses as $warehouse)
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
@@ -87,7 +143,7 @@ ZLE - Control de Stock
                     @endif
                   @endforeach                 
                 </select>
-                <button uk-tooltip="Transferir Unidades" class="uk-button uk-button-default">Transferir Unidades</button>
+                <button uk-tooltip="Transferir Unidades" class="uk-button uk-button-default mt-3">Transferir Unidades</button>
               </form> 
               {{-- <form method="post" action="/transferingBoxes/{{$product->id}}">
                 @csrf

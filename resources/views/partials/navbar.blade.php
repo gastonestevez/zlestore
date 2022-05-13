@@ -49,7 +49,7 @@
                         <ul class="uk-nav uk-navbar-dropdown-nav">
                           <li><a href="{{route('historySales')}}">Ventas offline</a></li>                    
                           <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>                    
-                          <li><a style="cursor:not-allowed" href="#">Movimientos de stock</a></li>                    
+                          <li><a class="text-nowrap" href="{{route('historyMovements')}}">Movimientos de stock</a></li>                    
                         </ul>
                     </div>
                   </li>
@@ -153,7 +153,7 @@
           <ul class="uk-nav-sub">
             <li><a href="{{route('showProfile', Auth::user()->id)}}">Ventas offline</a></li>
             <li><a style="cursor:not-allowed" href="#">Ventas online</a></li>
-            <li><a style="cursor:not-allowed" href="#">Movimientos de stock</a></li>
+            <li><a href="{{route('historyMovements')}}">Movimientos de stock</a></li>
 
           </ul>
         </li>

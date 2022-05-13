@@ -136,6 +136,7 @@ class OrderController extends Controller
             }
 
         $shops = Warehouse::getShops();
+        $storages = Warehouse::getStorages();
         
         $sku = $request->get('sku');
         $name = $request->get('name');
@@ -149,7 +150,7 @@ class OrderController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops');
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops', 'storages');
 
         return view('orders.createOrder', $vac);
     }
@@ -399,15 +400,20 @@ class OrderController extends Controller
     // Muesta la tabla de historial de ventas
     function historySales(Request $request) {
         $searchId = $request->get('id');
+        $info = $request->get('info');
         $createdAt = $request->get('createdAt');
 
         $searchParams = array(
             "id" => $searchId,
+            "info" => $info,
             "created_at" => $createdAt,
         );
         $orders = Order::orderBy('created_at', 'DESC');
         if(!empty($searchId)){
             $orders = Order::where('id', '=', $searchId);
+        }
+        if(!empty($info)){
+            $orders = Order::where('info', 'like', '%' . $info .'%');
         }
 
         if(!empty($createdAt)){

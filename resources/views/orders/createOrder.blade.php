@@ -4,6 +4,20 @@ ZLE - Crear pedido
 @endsection
 @section('main')
 
+<style>
+
+  html {
+    background-color: #f8fafc;
+    width: 100%;
+  }
+  .probando {
+    overflow: hidden;
+    width: 2200px;
+    display: block;
+    position: relative;
+  }
+</style>
+
 <div class="uk-container primer-div">
 
   <h1 class="uk-heading uk-margin-bottom">Armado de pedido</h1>
@@ -63,6 +77,7 @@ ZLE - Crear pedido
 
     @include('partials.filters')
 
+  <div class="probando">  
   <div class="uk-overflow-auto">
 
     <table class="uk-table uk-table-striped uk-table-hover">
@@ -71,30 +86,23 @@ ZLE - Crear pedido
             <th>Id</th>
             <th>SKU</th>
             <th>Nombre</th>
+            <th></th>
+            <th></th>
             <th>Uni/caja</th>
             <th>Precio</th>
             <th>Stock</th>
-            {{-- @foreach ($shops as $shop)
-                  <th class="uk-text-nowrap">{{$shop->name}}</th>
-            @endforeach --}}
-            <th></th>
-            <th></th>
-            {{-- <th>Acción</th> --}}
+            @foreach ($storages as $storage)
+                  <th class="uk-text-nowrap">{{$storage->name}}</th>
+            @endforeach
           </tr>
       </thead>
       <tbody>
         @foreach ($products as $product)
           <tr>
               <td>{{ $product->id }}</td>
-              <td>{{ $product->sku }}</td>
-              <td><a href="{{route('productStock', $product->id)}}">{{ $product->name }}</a></td> 
-              <td>{{getProduct($product->id)->units_in_box}}</td> 
-              <td>${{ number_format($product->price, 0,',','.') }}</td>            
-              <td>{{getAllStock($product->id)}}</td>
-              {{-- @foreach ($shops as $shop)
-                  <td>{{$shop->getProductStock($shop->id, $product->id)}}</td>
-              @endforeach --}}
-              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span uk-icon="icon: move"></span></a></td>
+              <td class="uk-text-nowrap">{{ $product->sku }}</td>
+              <td class="uk-text-nowrap"><a href="{{route('productStock', $product->id)}}">{{ $product->name }}</a></td> 
+              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="{{route('productStock',$product->id)}}"><span style="width: 20px;" uk-icon="icon: move; ratio: 2"></span></a></td>
               <td class="uk-text-nowrap">
                 <form action="{{route('addProductToOrder')}}" method="post">
                   @csrf
@@ -103,13 +111,28 @@ ZLE - Crear pedido
                   min="0" 
                   value="0" 
                   required>
+                  <select type="text" class="uk-select" style="width:150px;" name="storage" required>
+                    <option selected value="">Elegir depósito</option>
+                    @foreach ($storages as $storage)
+                      <option value="{{$storage->id}}">{{$storage->name}}</option>
+                    @endforeach     
+                  </select>
                   <input type="hidden" name="productId" value="{{$product->id}}">
                   <input type="hidden" name="name" value="{{$product->name}}">
                   <input type="hidden" name="sku" value="{{$product->sku}}">
                   <input type="hidden" name="price" value="{{$product->price}}">
                   {{-- <button class="uk-button uk-button-default" uk-tooltip="Agregar a la orden" type="submit"><span uk-icon="plus-circle"></span></button> --}}
                 </form>
-                </td>
+              </td>
+              <td>{{getProduct($product->id)->units_in_box}}</td> 
+              <td>${{ number_format($product->price, 0,',','.') }}</td>            
+              <td>{{getAllStock($product->id)}}</td>
+              @foreach ($storages as $storage)
+                  <td class="uk-text-nowrap">{{$storage->getProductStock($storage->id, $product->id)}}</td>
+              @endforeach           
+              {{-- @foreach ($shops as $shop)
+                  <td>{{$shop->getProductStock($shop->id, $product->id)}}</td>
+              @endforeach --}}
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach
@@ -117,6 +140,7 @@ ZLE - Crear pedido
       </tbody>
     </table>
 
+  </div>
   </div>
 
   
