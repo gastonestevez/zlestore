@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Automattic\WooCommerce\Client;
 use App\Models\Warehouse;
+use App\Models\Movement;
 use Carbon\Carbon;
 use App\Models\Stocks;
 use App\Models\Order;
@@ -403,11 +404,6 @@ class OrderController extends Controller
         $info = $request->get('info');
         $createdAt = $request->get('createdAt');
 
-        $searchParams = array(
-            "id" => $searchId,
-            "info" => $info,
-            "created_at" => $createdAt,
-        );
         $orders = Order::orderBy('created_at', 'DESC');
         if(!empty($searchId)){
             $orders = Order::where('id', '=', $searchId);
@@ -429,7 +425,33 @@ class OrderController extends Controller
     }
 
     // Muesta la tabla de historial de movimientos
-    function historyMovements() {
-        return view('history.movements');
+    function historyMovements(Request $request) {
+
+        // dd($request->all());
+
+        $createdAt = $request->get('createdAt');
+        $origin = $request->get('origin');
+        $destiny = $request->get('destiny');
+
+        $movements = Movement::orderBy('created_at', 'DESC');
+
+        if(!empty($origin)){
+            $movements = Movement::where('origin_warehouse_id', $request->origin);
+        }
+
+        if(!empty($destiny)){
+            $movements = Movement::where('destiny_warehouse_id', $request->destiny);
+        }
+
+        if(!empty($createdAt)){
+            $from = $createdAt . ' 00:00:00';
+            $to = $createdAt . ' 23:59:59';
+            $movements = $movements->whereBetween('created_at', array($from, $to));
+        }
+
+        $movements = $movements->paginate(100);
+        $warehouses = Warehouse::all();
+        $vac = compact('movements', 'warehouses', 'request');
+        return view('history.movements', $vac);
     }
 }

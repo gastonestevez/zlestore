@@ -35,13 +35,13 @@ ZLE - Control de Stock
                         <th class="text-nowrap">Depósito origen</th>
                         <th class="text-nowrap">Depósito destino</th>
                         <th class="text-nowrap">Stock restante</th>
-                        <th>Usuario</th>
+                        <th>Responsable</th>
                     </tr>
                 </thead>
                 <tbody>
                   @foreach ($movements as $movement)
                     <tr>
-                        <td>{{$movement->created_at}}</td>
+                        <td>{{ Carbon\Carbon::parse($movement->created_at)->format('d-m-Y H:i')}}</td>
                         <td>{{$product->name}}</td>
                         <td>{{$movement->quantity}}</td>
                         <td>{{$movement->warehouseOrigin->name}}</td>

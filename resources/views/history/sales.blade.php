@@ -93,7 +93,7 @@ ZLE - Historial
                 @include('partials.confirms.completeOrder',['url'=>"/orderToCompleted/{$order->id}", 'message'=>"Seguro quieres completar la orden #{$order->id}? El stock de cada item se descontará del local elegido", 'id' => $order->id])
                 @include('partials.confirms.cancelOrder',['url'=>"/orderToCancelled/{$order->id}", 'message'=>"Seguro quieres cancelar la orden #{$order->id}? No podrás volver a cambiar su estado", 'id' => $order->id])
                 @empty
-                <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> No Existen ordenes actualmente.</h3>
+                    <h3 class="uk-card-title"><i class="fas fa-warehouse icon"></i> Sin resultados.</h3>
                 @endforelse
 
             </tbody>
