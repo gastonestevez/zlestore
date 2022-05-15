@@ -98,6 +98,7 @@ ZLE - Crear pedido
       </thead>
       <tbody>
         @foreach ($products as $product)
+
           <tr>
               <td>{{ $product->id }}</td>
               <td class="uk-text-nowrap">{{ $product->sku }}</td>
@@ -111,8 +112,8 @@ ZLE - Crear pedido
                   min="0" 
                   value="0" 
                   required>
-                  <select type="text" class="uk-select" style="width:150px;" name="storage" required>
-                    <option selected value="">Elegir depósito</option>
+                  <select data-product-id="{{$product->id}}" data-product-name="{{$product->name}}" id="warehouse{{$product->id}}" type="text" class="uk-select warehouseInput" style="width:150px;" name="storage" required>
+                    <option value="0" selected value="">Elegir depósito</option>
                     @foreach ($storages as $storage)
                       <option value="{{$storage->id}}">{{$storage->name}}</option>
                     @endforeach     
@@ -174,6 +175,7 @@ const stockInputs = document.querySelectorAll('.stockInput')
 const cartButton = document.getElementById('cartButton')
 const formConfirmationModal = document.getElementById('formConfirmationModal')
 const cartAnchor = document.getElementById('cartAnchor')
+const warehouseInputs = document.querySelectorAll('.warehouseInput')
 
 const clearCart = () => {
   window.localStorage.clear()
@@ -181,10 +183,8 @@ const clearCart = () => {
 
 formConfirmationModal.addEventListener('submit', (e) => {
   e.preventDefault()
-  let items = []
-  Object.keys(window.localStorage).forEach(i => {
-    items.push(JSON.parse(window.localStorage.getItem(i)))
-  })
+  const items = JSON.parse(window.localStorage.getItem('cart')) || []
+
   const storageForm = document.getElementById('storageForm')
   const storageInput = document.createElement('input')
   storageInput.setAttribute('type', 'hidden')
@@ -198,16 +198,20 @@ formConfirmationModal.addEventListener('submit', (e) => {
 const uploadBadgeValues = () => {
   const badge = document.getElementById('badge')
   let totalCount = 0
-  Object.keys(window.localStorage).forEach(i => {
-    totalCount += parseInt(JSON.parse(window.localStorage.getItem(i)).quantity)
+  const cart = JSON.parse(window.localStorage.getItem('cart')) || []
+  Object.keys(cart).forEach(i => {
+    totalCount += parseInt(cart[i].quantity)
   })
   
   badge.innerHTML = `${totalCount}`
 }
 
 const refreshIconCart = () => {
-  if(!window.localStorage.length){
+  const cart = JSON.parse(window.localStorage.getItem('cart')) || []
+
+  if(!cart?.length){
     cartButton.style.display = 'none'
+    window.localStorage.setItem('cart', JSON.stringify([]))
   } else {
     cartButton.style.display = 'block'
     uploadBadgeValues()
@@ -231,7 +235,10 @@ const renderTable = (body) => `
   `
 
 const removeItem = (id) => {
-  window.localStorage.removeItem(id)
+  // window.localStorage.removeItem(id)
+  const cart = (JSON.parse(window.localStorage.getItem('cart')) || [])
+  const filteredCart = cart.filter(item => item.id != id)
+  window.localStorage.setItem('cart', JSON.stringify(filteredCart))
   const modalDescription = document.getElementById('modalDescription')
   const table = getTableComponent()
   modalDescription.innerHTML = table
@@ -240,8 +247,11 @@ const removeItem = (id) => {
 
 const onChangePreviewItem = (id) => {
   const itemInputValue = document.getElementById(`modal-${id}`).value
-  const item = JSON.parse(window.localStorage.getItem(id))
-  window.localStorage.setItem(id, JSON.stringify({...item, quantity: itemInputValue}));
+  const cart = JSON.parse(window.localStorage.getItem('cart')) || []
+  const item = cart.find(item => item.id == id)
+  const convertedCart = JSON.stringify(cart.map(item => item.id == id ? {...item, quantity: itemInputValue} : item))
+  window.localStorage.setItem('cart', convertedCart)
+  // window.localStorage.setItem(id, JSON.stringify({...item, quantity: itemInputValue}));
   refreshIconCart()
 
 }
@@ -252,18 +262,29 @@ const removeItemButton = (id) => `<td><button onclick="removeItem(${id})" class=
 
 const getTableComponent = () => {
   let items = ``
-  Object.keys(window.localStorage).forEach(i => {
-    const item = JSON.parse(window.localStorage.getItem(i));
-    if(item.quantity > 0) {
-      items += `
-        <tr>
-          ${renderItem(item.id)}
-          ${renderItem(item.name)}
-          ${renderInputItem(item.quantity, item.id)}
-          ${removeItemButton(item.id)}
-        </tr>`
-    }
-  });
+  const cart = JSON.parse(window.localStorage.getItem('cart')) || []
+  cart.forEach(item => {
+    items += `
+      <tr>
+        ${renderItem(item.id)}
+        ${renderItem(item.name)}
+        ${renderInputItem(item.quantity, item.id)}
+        ${removeItemButton(item.id)}
+      </tr>
+    `
+  })
+  // Object.keys(window.localStorage).forEach(i => {
+  //   const item = JSON.parse(window.localStorage.getItem(i));
+  //   if(item.quantity > 0) {
+  //     items += `
+  //       <tr>
+  //         ${renderItem(item.id)}
+  //         ${renderItem(item.name)}
+  //         ${renderInputItem(item.quantity, item.id)}
+  //         ${removeItemButton(item.id)}
+  //       </tr>`
+  //   }
+  // });
   return renderTable(items)
 }
 
@@ -274,24 +295,59 @@ cartAnchor.addEventListener('click', () => {
 })
 
 const getStartingValue = (id) => {
-  const storageItem = window.localStorage.getItem(id)
-  return storageItem ? JSON.parse(storageItem).quantity : 0
+  const cart = JSON.parse(window.localStorage.getItem('cart')) || []
+  const item = cart.find(item => item.id == id)
+  // const storageItem = window.localStorage.getItem(id)
+  return item
+  // return storageItem ? JSON.parse(storageItem).quantity : 0
 }
 
 stockInputs.forEach( i => {
-    i.value = getStartingValue(i.id)
+    i.value = getStartingValue(i.id)?.quantity || 0
     i.addEventListener("change", (e) => {
         const quantity = e.currentTarget.value;
         const id = e.currentTarget.id;
         const name = e.currentTarget.getAttribute('data-description')
+        const warehouseId = document.getElementById(`warehouse${id}`).value
         if(parseInt(quantity) === 0) {
-          console.log('hola');
-          window.localStorage.removeItem(id)
+          const cart = (JSON.parse(window.localStorage.getItem('cart')) || [])
+          const filteredCart = cart.filter(item => item.id != id)
+          window.localStorage.setItem('cart', JSON.stringify(filteredCart))
+          // window.localStorage.removeItem(id)
         } else {
-          window.localStorage.setItem(id, JSON.stringify({id, quantity, name}));
+          const cart = (JSON.parse(window.localStorage.getItem('cart')) || [])
+          const filteredCart = cart.filter(item => item.id != id)
+          const item = {id, name, quantity, warehouseId}
+          window.localStorage.setItem('cart', JSON.stringify([...filteredCart, item]))
+          // window.localStorage.setItem(id, JSON.stringify({id, quantity, name, warehouseId}));
         }
         refreshIconCart()
     });
+})
+
+warehouseInputs.forEach( i => {
+    const options = i.options
+    const productId = i.getAttribute('data-product-id')
+    i.selectedIndex = Array.from(options).find(o => o.value == getStartingValue(productId)?.warehouseId) || 0
+    i.value = getStartingValue(productId)?.warehouseId || 0
+    // i.value = i. getStartingValue(i.id).warehouseId
+    i.addEventListener("change", (e) => {
+        const warehouseId = e.currentTarget.value;
+        const productId = e.currentTarget.getAttribute('data-product-id');
+        const productName = e.currentTarget.getAttribute('data-product-name')
+        console.log({
+          warehouseId, productId, productName
+        })
+        const cart = (JSON.parse(window.localStorage.getItem('cart')) || [])
+        const filteredCart = cart.filter(item => item.id != productId)
+
+        const item = cart.find(item => item.id == productId)
+        if(item){
+          const newItem = {...item, warehouseId}
+          window.localStorage.setItem('cart', JSON.stringify([...filteredCart, newItem]))
+        }
+        
+      })
 })
 
 
