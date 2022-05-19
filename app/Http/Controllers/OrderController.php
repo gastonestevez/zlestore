@@ -294,7 +294,6 @@ class OrderController extends Controller
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
-        dd($request->all());
         $order = Order::find($id);   
 
         // si envia un descuento por request
