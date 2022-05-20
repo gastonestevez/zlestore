@@ -25,6 +25,7 @@ ZLE - Confirmar Orden
                 <th>Cantidad</th>
                 <th>Uni/caja</th>
                 <th>Tags</th>
+                <th>Depósito</th>
                 <th>Acción</th>
             </tr>
         </thead>
@@ -47,6 +48,7 @@ ZLE - Confirmar Orden
                         @endif 
                     @endforeach
                 </td>
+                <td>{{$item->warehouse ? $item->warehouse->name : 'No seleccionado'}}</td>
                 <td>
                     <form action="/removeProduct/{{$item->id}}" method="POST">
                         @method('DELETE')
