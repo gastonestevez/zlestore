@@ -138,7 +138,6 @@ class OrderController extends Controller
 
         $shops = Warehouse::getShops();
         $storages = Warehouse::getStorages();
-        
         $sku = $request->get('sku');
         $name = $request->get('name');
         $price = $request->get('price');
@@ -172,6 +171,7 @@ class OrderController extends Controller
     // Agrega un producto a una orden
     public function addProductToOrder(Request $request)  
     {
+
         if($request->storageItems) {
             $localStorage = json_decode($request->storageItems);
             
@@ -210,6 +210,7 @@ class OrderController extends Controller
                     'product_sku' => $product->sku,
                     'order_id' => $lastOrderId,
                     'subprice' => $product->price,
+                    'warehouse_id' => $item->warehouseId == 0 ? null : $item->warehouseId,
                     'price' => $product->price],
                     ['quantity' => $item->quantity]
                 );
