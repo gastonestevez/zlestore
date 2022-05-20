@@ -68,17 +68,17 @@ ZLE - Control de Stock
     <div style="cursor:not-allowed">
       <a href="#" style="cursor:not-allowed">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-            <span class="uk-label uk-margin-left" style="background:purple; font-size: 10px;">Próximamente V3</span>
+            <span class="uk-label uk-margin-left" style="background:purple; font-size: 10px;">Próximamente</span>
             <h3 class="uk-card-title"><i class="fas fa-qrcode"></i> Historial de ventas online</h3>
             <p>Lista de las ventas realizadas en la tienda online</p>
         </div>
       </a>
     </div>
 
-    <div style="cursor:not-allowed">
-      <a href="#" style="cursor:not-allowed">
+    <div>
+      <a href="{{route('historyMovements')}}">
         <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-dark">
-            <span class="uk-label uk-margin-left" style="background:purple; font-size: 10px;">Próximamente V3</span>
+            {{-- <span class="uk-label uk-margin-left" style="background:purple; font-size: 10px;">Próximamente V3</span> --}}
             <h3 class="uk-card-title"><i class="fas fa-truck-loading"></i> Historial de movimientos de stock</h3>
             <p>Lista de movimientos de stock entre depósitos/locales</p>
         </div>
