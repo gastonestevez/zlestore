@@ -260,7 +260,7 @@ const onChangePreviewItem = (id) => {
 const renderItem = (item) => `<td>${item}</td>`
 const renderInputItem = (item, id = 0) => `<td><input min='1' type="number" id="modal-${id}" onchange="onChangePreviewItem(${id})" value="${item}"></td>`
 const renderStorage = (storage) => `<td>${storage ? storage.name : 'No seleccionado'}</td>`
-const removeItemButton = (id) => `<td><button onclick="removeItem(${id})" class="uk-button uk-button-default" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>`
+const removeItemButton = (id) => `<td><button onclick="removeItem(${id})" class="uk-button" uk-tooltip="Remover producto"><span style="width:15px;" uk-icon="icon: close"></span></button></td>`
 
 const getTableComponent = () => {
   const storages = @json($storages);
