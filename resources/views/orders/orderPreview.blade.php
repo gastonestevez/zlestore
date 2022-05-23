@@ -15,6 +15,9 @@ ZLE - Confirmar Orden
     @endphp
     <div name='orderId' hidden id="{{$order->id}}"></div>
     <h4 class=" uk-heading-line  uk-text-center pt-5"> <span>Resumen de orden</span></h4>
+    <form class="uk-form-stacked" action="{{route('orderToPending', $id)}}" method="POST">
+        @method('post')
+        @csrf
     <table class="uk-table uk-table-divider uk-margin-bottom">
         <thead>
             <tr>
@@ -26,21 +29,26 @@ ZLE - Confirmar Orden
                 <th>Uni/caja</th>
                 <th>Tags</th>
                 <th>Depósito</th>
+                <th>Descuento</th>
                 <th>Acción</th>
             </tr>
         </thead>
+        
         <tbody>
+
             @foreach ($order->orderItems() as $item)
             <tr>
-                <td>{{$item->product_id}}</td>
+                <td>{{$item->product_id}}
+                    <input type="hidden" name="products[]" value="{{$item->product_id}}">
+                </td>
                 <td>{{$item->product_name}}</td>
                 <td>{{$item->product_sku}}</td>
                 <td>${{ number_format($item->price, 0,',','.')}}</td>
                 <td>{{$item->quantity}} </td>
                 <td>{{getProduct($item->product_id)->units_in_box}}</td>
-                <td>
+                <td data-product-id="{{$item->product_id}}" class="discountCategory">
                     @foreach (getProductTaxonomies($item->product_id) as $taxonomy)        
-                        <span class="uk-badge" style="background: #008F72; padding: 3px 10px 3px 10px;">{{$taxonomy}}</span>
+                        <span data-product-id="{{$item->product_id}}" class="uk-badge" style="background: #008F72; padding: 3px 10px 3px 10px;">{{$taxonomy}}</span>
                         @if (array_search($taxonomy, $taxonomies) === false)
                             @php
                                 $taxonomies[] = $taxonomy
@@ -50,18 +58,25 @@ ZLE - Confirmar Orden
                 </td>
                 <td>{{$item->warehouse ? $item->warehouse->name : 'No seleccionado'}}</td>
                 <td>
-                    <form action="/removeProduct/{{$item->id}}" method="POST">
-                        @method('DELETE')
-                        @csrf
-                        <button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button> <br>
-                    </form>
+                    <input 
+                        id="discount{{$item->product_id}}" 
+                        type="number" 
+                        value=0
+                        name="discount[]"
+                        class="uk-input discountInput" 
+                        min=0 
+                        max=100
+                        data-product-id="{{$item->product_id}}"
+                    >
+                </td>
+                <td>
+                    <button onclick="onClickDeleteProduct('{{$item->id}}')" class="uk-button uk-button-default" type="button" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button> <br>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
     
-    {{-- {{dd($taxonomies);}} --}}
     <div class="uk-margin-top uk-flex">
         <strong>Total:&nbsp;${{ number_format($order->total, 0,',','.')}}</strong>
     </div>
@@ -71,9 +86,7 @@ ZLE - Confirmar Orden
 
     <div class="uk-container-xsmall">
 
-        <form class="uk-form-stacked" action="{{route('orderToPending', $id)}}" method="POST">
-            @method('post')
-            @csrf
+        
             <div class="uk-margin">
                 <div class="uk-form-label">Concepto</div>
                     <div class="uk-form-controls">
@@ -97,36 +110,36 @@ ZLE - Confirmar Orden
                 </div>
             </div>
 
-            <div id='discounts' hidden>
+            <h4 class=" uk-heading-line  uk-text-center uk-margin-top"> <span>Descuentos</span></h4>
+
+
+            <div class="discounts-container">
                 <div class="uk-margin">
-                    <div class="uk-form-label">Descuento {DISCOUNT_NUMBER}</div>
-                    <div class="uk-form-controls">
-                        <select required class="uk-select" name="category_discount[]" id="">
-                            <option value="">Elige una categoria</option> 
-                            <option value="all">Todas</option> 
-                            @foreach ($taxonomies as $taxonomy)
-                            <option value="{{$taxonomy}}">{{$taxonomy}}</option> 
-                            @endforeach
-                        </select>
+                    <span>Categoría: Todos</span>
+                    <div class="uk-margin uk-flex">
+                        <input id="dto0" class="uk-input" value=0 type="number" min=0 max=100>
+                        <button type="button" onclick="addCategoryDiscount(0, 'Todos')" class="uk-button uk-margin-left">Aplicar</button>
                     </div>
                 </div>
-                
-                <div class="uk-margin">
-                    <div class='uk-form-label'>Valor de descuento</div>
-                    <div class="uk-form-controls">
-                        <input required class="uk-input" min="1" type="number" name="discount[]" max="100">
+                @foreach ($taxonomies as $taxonomy)
+                    <div class="uk-margin">
+                        <span>Categoría: {{$taxonomy}}</span>
+                        <div class="uk-margin uk-flex">
+                            <input id="dto{{$loop->iteration}}" class="uk-input" value=0 type="number" min=0 max=100>
+                            <button type="button" onclick="addCategoryDiscount({{$loop->iteration}}, '{{$taxonomy}}')" class="uk-button uk-margin-left">Aplicar</button>
+                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-            <div class="uk-margin">
-                <button id='addDiscountButton' type="button" class="uk-button uk-button-default">Nuevo Descuento</button>
-            </div>
-            <div class="uk-margin">
-                <button hidden id='removeDiscountsButton' type="button" class="uk-button uk-button-default">Remover Descuentos</button>
-            </div>
+
             <div class="uk-margin">
                 <button class="uk-button uk-button-default" type="submit">Finalizar orden</button>
             </div>
+        </form>
+
+        <form id="removeProductForm" method="POST">
+            @method('DELETE')
+            @csrf
         </form>
 
     </div>
@@ -134,6 +147,9 @@ ZLE - Confirmar Orden
 </div>
 
 @endsection
+<script>
+    
+</script>
 <script src="/js/discounts.js" charset="utf-8"></script>
 <script>
     function show_my_receipt() {

@@ -1,23 +1,36 @@
 window.addEventListener('load', () => {
-    let discountNumber = 1
-    const discountContainer = document.getElementById('discounts')
-    const addDiscountButton = document.getElementById('addDiscountButton')
-    const removeDiscountsButton = document.getElementById('removeDiscountsButton')
-    const discountElements = discountContainer.innerHTML
-    discountContainer.innerHTML = ''
-    discountContainer.removeAttribute('hidden')
-
-    addDiscountButton.addEventListener('click', () => {
-        const newElement = document.createElement('div')
-        newElement.innerHTML = discountElements.replace('{DISCOUNT_NUMBER}', discountNumber)
-        discountContainer.appendChild(newElement)
-        discountNumber++
-        removeDiscountsButton.removeAttribute('hidden')
-    })
-
-    removeDiscountsButton.addEventListener('click', () => {
-        removeDiscountsButton.setAttribute('hidden', '')
-        discountContainer.innerHTML = ''
-        discountNumber = 1
-    })
+    // No-op
 })
+
+const addCategoryDiscount = (inputId, taxonomy) => {
+    const discountInputs = document.querySelectorAll('.discountInput')
+    const discountCategories = document.querySelectorAll('.discountCategory')
+    const discount = document.getElementById(`dto${inputId}`)
+    if(taxonomy === 'Todos'){
+        discountInputs.forEach(input => {
+            input.value = parseInt(input.value) + parseInt(discount.value)
+        })
+        return;
+    }
+
+    discountInputs.forEach(discountInput => {
+        const groupOfCategories = [...discountCategories].find(c => {
+            const dpi = discountInput.getAttribute('data-product-id')
+            return c.getAttribute('data-product-id') === dpi
+        })
+
+        const anyCategory = [...groupOfCategories.childNodes].some(a => {
+            return a.innerHTML === taxonomy
+        })
+        if(anyCategory) {
+            discountInput.value = parseInt(discountInput.value) + parseInt(discount.value)
+        }
+    })
+}
+
+const onClickDeleteProduct = (id) => {
+    const action = "/removeProduct/" + id
+    const form = document.getElementById('removeProductForm')
+    form.action = action
+    form.submit()
+}
