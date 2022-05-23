@@ -87,15 +87,15 @@
                     <th style="width: 50px">SKU</th>
                     <th style="width: 30px">Cant.</th>
                     <th style="width: 30px">U/caja</th>
-                    <th style="width: 50px">Depósito</th>
-                    <th>Precio U.</th>
-                    {{-- @if ($request->category_discount) --}}
-                        <th>Precio T.</th>
+                    <th style="width: 50px">Dep.</th>
+                    <th>$ Uni</th>
+                    @if ($order->subtotal != $order->total)
+                        <th>$ Total</th>
                         <th>% Dto.</th>
                         <th>Total c/Dto.</th>
-                    {{-- @else  --}}
-                        {{-- <th>Total.</th> --}}
-                    {{-- @endif --}}
+                    @else 
+                        <th>$ Total</th>
+                    @endif
                 </tr>
                 
                 @foreach ($order->orderItems() as $item)
@@ -106,10 +106,10 @@
                     <td>{{getProduct($item->product_id)->units_in_box}}</td>
                     <td class="warehouse">{{$item->warehouse ? $item->warehouse->name : ""}}</td>
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
-                    {{-- @if ($request->category_discount) --}}
+                    @if ($order->subtotal != $order->total)
                         <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
                         <td>{{$item->discounts}}</td>
-                    {{-- @endif --}}
+                    @endif
                     <td>${{number_format(($item->price * $item->quantity), 2,',','.')}}</td>
                 </tr>
                 @endforeach
