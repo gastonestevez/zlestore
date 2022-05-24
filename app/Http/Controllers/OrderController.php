@@ -321,9 +321,9 @@ class OrderController extends Controller
 
         $order->status = 'pending';
         $order->info = $request->info;
-        if($request->conecept_id){
-            $order->concept_id = $request->concept_id;
-        }
+
+        $order->concept_id = $request->concept_id;
+
         $order->document_link = 'storage' . '/' . $filename;
         
 
