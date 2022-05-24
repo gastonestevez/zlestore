@@ -2,10 +2,14 @@ window.addEventListener('load', () => {
     // No-op
 })
 
-const addCategoryDiscount = (inputId, taxonomy) => {
+const addCategoryDiscount = () => {
+
+    const taxonomy = document.getElementById('taxonomySelect').value
+    const discount = document.getElementById('taxonomyDiscount')
+
     const discountInputs = document.querySelectorAll('.discountInput')
     const discountCategories = document.querySelectorAll('.discountCategory')
-    const discount = document.getElementById(`dto${inputId}`)
+    // const discount = document.getElementById(`dto${inputId}`)
     if(taxonomy === 'Todos'){
         discountInputs.forEach(input => {
             input.value = parseInt(input.value) + parseInt(discount.value)

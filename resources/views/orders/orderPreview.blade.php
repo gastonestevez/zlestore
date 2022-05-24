@@ -114,22 +114,19 @@ ZLE - Confirmar Orden
 
 
             <div class="discounts-container">
-                <div class="uk-margin">
-                    <span>Categoría: Todos</span>
-                    <div class="uk-margin uk-flex">
-                        <input id="dto0" class="uk-input" value=0 type="number" min=0 max=100>
-                        <button type="button" onclick="addCategoryDiscount(0, 'Todos')" class="uk-button uk-margin-left">Aplicar</button>
-                    </div>
+                <div class="uk-margin uk-flex uk-flex-middle">
+                    <span>Categoria: </span>
+                    <select id='taxonomySelect' class="uk-select uk-margin-left">
+                        <option value='Todos' selected>Todos</option>
+                        @foreach ($taxonomies as $taxonomy)
+                            <option value="{{$taxonomy}}">{{$taxonomy}}</option>
+                        @endforeach
+                    </select>
                 </div>
-                @foreach ($taxonomies as $taxonomy)
-                    <div class="uk-margin">
-                        <span>Categoría: {{$taxonomy}}</span>
-                        <div class="uk-margin uk-flex">
-                            <input id="dto{{$loop->iteration}}" class="uk-input" value=0 type="number" min=0 max=100>
-                            <button type="button" onclick="addCategoryDiscount({{$loop->iteration}}, '{{$taxonomy}}')" class="uk-button uk-margin-left">Aplicar</button>
-                        </div>
-                    </div>
-                @endforeach
+                <div class="uk-margin uk-flex uk-flex-middle">
+                    <input id="taxonomyDiscount" class="uk-input" value=0 type="number" min=0 max=100>
+                    <button type="button" onclick="addCategoryDiscount()" class="uk-button uk-margin-left">Aplicar</button>
+                </div>
             </div>
 
             <div class="uk-margin">
