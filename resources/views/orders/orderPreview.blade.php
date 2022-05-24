@@ -95,7 +95,7 @@ ZLE - Confirmar Orden
                             @foreach ($concepts as $concept)
                             <option value="{{$concept->id}}">{{$concept->name}}</option>
                             @endforeach  
-                            <option value="2">otros</option>  
+                            <option value="">otros</option>  
                         </select>
                     </div>
                 <small>
