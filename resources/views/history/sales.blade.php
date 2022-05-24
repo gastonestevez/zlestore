@@ -56,10 +56,10 @@ ZLE - Historial
                 <tr>
                     <td>{{$order->id}}</td>
                     <td class="text-nowrap">@if(isset($order->created_at)) {{ Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i')}} @endif</td>
-                    <td>@if(isset($order->concept->name)){{$order->concept->name}}@else -- @endif</td>
+                    <td>@if(isset($order->concept->name)){{$order->concept->name}}@else otros @endif</td>
                     <td>
                         <div style="width:250px;" class="uk-text-truncate">
-                            <span">@if(isset($order->info)){{$order->info}}@else -- @endif</span>
+                            <span>@if(isset($order->info)){{$order->info}}@else -- @endif</span>
                         </div>
                     </td>
                     <td>{{$order->orderAuthor()->name}}</td>
