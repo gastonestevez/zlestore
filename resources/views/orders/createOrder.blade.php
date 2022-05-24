@@ -16,6 +16,9 @@ ZLE - Crear pedido
     display: block;
     position: relative;
   }
+  .uk-container {
+    margin-left: 0;
+  }
 </style>
 
 <div class="uk-container primer-div">
