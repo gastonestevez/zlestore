@@ -170,7 +170,7 @@ ZLE - Crear pedido
   ])
 
 
-{{-- <script>
+<script>
 const stockInputs = document.querySelectorAll('.stockInput')
 const cartButton = document.getElementById('cartButton')
 const formConfirmationModal = document.getElementById('formConfirmationModal')
@@ -360,7 +360,7 @@ window.onload = () => {
   refreshIconCart()
 }
 
-</script> --}}
+</script>
 @endsection
 
 
