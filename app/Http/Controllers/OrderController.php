@@ -149,9 +149,13 @@ class OrderController extends Controller
             "pml.max_price" => $price,
             "pml.sku" => $sku
         );
-        $products = getProducts($searchParams, true);
+        if(!$id && !$name && !$price && !$sku){
+            $products = [];
+        } else {
+            $products = getProducts($searchParams, true);
+        }
+        
         $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops', 'storages');
-
         return view('orders.createOrder', $vac);
     }
 
