@@ -14,6 +14,14 @@
   if (!isset($method)){
     $method = 'delete';
   }
+
+  if (!isset($primaryButton)){
+    $primaryButton = 'Aceptar';
+  }
+
+  if (!isset($secondaryButton)){
+    $secondaryButton = 'Cancelar';
+  }
 // dd($id, $message, $enableModalDescription);
 @endphp
 
@@ -36,11 +44,11 @@
 
     <div class="uk-modal-footer uk-text-right">
       <form id='formConfirmationModal' action="{{$url}}" method="post">
-        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+        <button class="uk-button uk-button-default uk-modal-close" type="button">{{$secondaryButton}}</button>
         @method($method)
         @csrf
         <input type="hidden" name="{{$name}}" value="{{$id}}">
-        <button class="uk-button uk-button-secondary" type="submit">Aceptar</button>
+        <button class="uk-button uk-button-secondary" type="submit">{{$primaryButton}}</button>
       </form>
     </div>
   </div>
