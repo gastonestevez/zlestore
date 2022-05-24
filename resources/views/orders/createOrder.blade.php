@@ -36,39 +36,46 @@ ZLE - Crear pedido
     <div class="uk-overflow-auto uk-margin-bottom">
       <h4 class=" uk-heading-line  uk-text-center"> <span> Pedido en progreso: #{{$orderInProgress->id}}</span></h4>     
       
-      <table class="uk-table uk-table-divider uk-table-justify uk-table-middle">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>SKU</th>
-                <th>Uni/caja</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-          @foreach ($orderItems as $item)
-          <form action="/removeProduct/{{$item->id}}" method="POST">
-            @method('DELETE')
-            @csrf
-            <tr>
-              <td>{{$item->product_id}}</td>
-              <td>{{$item->product_name}}</td>
-              <td>{{$item->product_sku}}</td>
-              <td>{{getProduct($item->product_id)->units_in_box}}</td>
-              <td>${{ number_format($item->price, 0,',','.')}}</td>
-              <td>{{$item->quantity}}</td>
-              <td><button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>
-            </tr>
-          </form>
-          @endforeach  
-        </tbody>
-    </table>
+      <button href="#toggle-animation" class="uk-button uk-button-default" type="button" uk-toggle="target: #toggle-animation; animation: uk-animation-fade">Ver pedido</button>
+      <div hidden id="toggle-animation" class="uk-card uk-card-default uk-card-body uk-margin-small">
+
+        <table class="uk-table uk-table-divider uk-table-justify uk-table-middle">
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>SKU</th>
+                  <th>Uni/caja</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Acción</th>
+              </tr>
+          </thead>
+          <tbody>
+            @foreach ($orderItems as $item)
+            <form action="/removeProduct/{{$item->id}}" method="POST">
+              @method('DELETE')
+              @csrf
+              <tr>
+                <td>{{$item->product_id}}</td>
+                <td>{{$item->product_name}}</td>
+                <td>{{$item->product_sku}}</td>
+                <td>{{getProduct($item->product_id)->units_in_box}}</td>
+                <td>${{ number_format($item->price, 0,',','.')}}</td>
+                <td>{{$item->quantity}}</td>
+                <td><button class="uk-button uk-button-default" type="submit" uk-tooltip="Remover producto"><span uk-icon="icon: close"></span></button></td>
+              </tr>
+            </form>
+            @endforeach  
+          </tbody>
+      </table>
+
       <div class="uk-flex uk-margin-bottom">
-          <strong>Total:&nbsp;</strong> ${{ number_format($orderInProgress->total, 0,',','.')}}
+        <strong>Total:&nbsp;</strong> ${{ number_format($orderInProgress->total, 0,',','.')}}
       </div>
+  
+    </div>
+
       <div class="uk-flex uk-margin-top">
           <a class="uk-button uk-button-default" href="{{route('orderPreview', ['id' => $orderInProgress->id])}}">Confirmar pedido</a>
       </div>
