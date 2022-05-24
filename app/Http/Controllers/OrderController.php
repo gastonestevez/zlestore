@@ -155,6 +155,51 @@ class OrderController extends Controller
         return view('orders.createOrder', $vac);
     }
 
+    public function debugCreateOrder(Request $request)
+    {
+        DB::enableQueryLog();
+
+        var_dump('Showing request vars:');
+        var_dump($request->all());
+
+        var_dump('Getting user order...');
+        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
+            if($orderInProgress)
+            {
+                var_dump('Order found!');
+                var_dump('Getting order items...');
+                $orderItems = $orderInProgress->orderItems();
+            } else {
+                $orderItems = null;
+            }
+
+        var_dump('Getting Warehouse shops');
+        $shops = Warehouse::getShops();
+        var_dump('Getting Warehouse storages');
+        $storages = Warehouse::getStorages();
+        var_dump('Getting request search params');
+        $sku = $request->get('sku');
+        $name = $request->get('name');
+        $price = $request->get('price');
+        $id = $request->get('id');
+        
+        var_dump('Creating array of search params');
+        $searchParams = array(
+            "p.id" => $id,
+            "p.post_title" => $name,
+            "pml.max_price" => $price,
+            "pml.sku" => $sku
+        );
+
+        var_dump('Getting products helpers function.');
+        $products = debugGetProducts($searchParams, true);
+        var_dump('Compacting vars to view.');
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops', 'storages');
+
+        dd($vac, DB::getQueryLog());
+        
+    }
+
     // Muestra la order en formato in progress antes de generar los descuentos y el pdf
     public static function orderPreview(int $id) {
         $order = Order::where('id', '=', $id)->where('status', '=', 'in progress')->first();
