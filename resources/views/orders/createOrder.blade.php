@@ -171,7 +171,7 @@ ZLE - Crear pedido
   <form id="storageForm" action="{{route('addProductToOrder')}}" method="post">@csrf</form>
 </div>
 
-@include('partials.confirms.confirm', ['primaryButton' => 'Continuar', 'secondaryButton' => 'Finalizar'],
+@include('partials.confirms.confirm', ['primaryButton' => 'Finalizar', 'secondaryButton' => 'Continuar'],
   [
     'url'=>"#", 
     'message'=>"Estos son los productos agregados:",
