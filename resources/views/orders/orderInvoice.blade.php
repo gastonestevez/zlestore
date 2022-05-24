@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ZLE - PDF orden #{{$order->id}}</title>
 </head>
@@ -70,6 +71,7 @@
         padding: 10px;
         display: inline-block;
     }
+
 </style>
 <body>
     <header class="header">
@@ -82,17 +84,17 @@
             <table>
                 <tr>
                     <th>Nombre</th>
-                    <th style="width: 100px">SKU</th>
-                    <th style="width: 50px">Cant.</th>
-                    <th style="width: 50px">Uni/caja</th>
-                    <th style="width: 100px">Depósito</th>
-                    <th>Precio U.</th>
-                    @if ($request->category_discount)
-                        <th>Precio T.</th>
+                    <th style="width: 50px">SKU</th>
+                    <th style="width: 30px">Cant.</th>
+                    <th style="width: 30px">U/caja</th>
+                    <th style="width: 50px">Dep.</th>
+                    <th>$ Uni</th>
+                    @if ($order->subtotal != $order->total)
+                        <th>$ Total</th>
                         <th>% Dto.</th>
                         <th>Total c/Dto.</th>
                     @else 
-                        <th>Total.</th>
+                        <th>$ Total</th>
                     @endif
                 </tr>
                 
@@ -102,9 +104,9 @@
                     <td>{{$item->product_sku}}</td>
                     <td width=50px>{{$item->quantity}}</td>
                     <td>{{getProduct($item->product_id)->units_in_box}}</td>
-                    <td>{{$item->warehouse ? $item->warehouse->name : ""}}</td>
+                    <td class="warehouse">{{$item->warehouse ? $item->warehouse->name : ""}}</td>
                     <td>${{number_format($item->subprice, 0,',','.')}}</td>
-                    @if ($request->category_discount)
+                    @if ($order->subtotal != $order->total)
                         <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
                         <td>{{$item->discounts}}</td>
                     @endif
@@ -128,7 +130,7 @@
                 @endforeach
             @endif --}}
             <div class="total-container">
-                @if ($request->category_discount)
+                @if ($order->subtotal != $order->total)
                 <h4 class="total">
                     Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
                 </h4>

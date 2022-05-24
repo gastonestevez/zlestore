@@ -16,6 +16,9 @@ ZLE - Crear pedido
     display: block;
     position: relative;
   }
+  .uk-container {
+    margin-left: 0;
+  }
 </style>
 
 <div class="uk-container primer-div">
@@ -76,10 +79,10 @@ ZLE - Crear pedido
     <p>Productos por página: {{count($products)}}</p>
 
     @include('partials.filters')
+    @if (count($products) > 0)
 
   <div class="probando">  
   <div class="uk-overflow-auto">
-
     <table class="uk-table uk-table-striped uk-table-hover">
       <thead>
           <tr>
@@ -140,13 +143,15 @@ ZLE - Crear pedido
 
       </tbody>
     </table>
-
+  
+    
   </div>
-  </div>
+</div>
 
+{{ $products->appends($_GET)->links() }}
+@endif
   
 
-  {{ $products->appends($_GET)->links() }}
 
   <a href="#confirmgetproducts" id='cartAnchor' uk-toggle>
     <div class="cart-absolute" id='cartButton'>

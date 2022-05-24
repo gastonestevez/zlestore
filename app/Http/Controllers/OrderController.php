@@ -149,9 +149,13 @@ class OrderController extends Controller
             "pml.max_price" => $price,
             "pml.sku" => $sku
         );
-        $products = getProducts($searchParams, true);
+        if(!$id && !$name && !$price && !$sku){
+            $products = [];
+        } else {
+            $products = getProducts($searchParams, true);
+        }
+        
         $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'shops', 'storages');
-
         return view('orders.createOrder', $vac);
     }
 
@@ -295,43 +299,53 @@ class OrderController extends Controller
 
     // Genera un pdf con la factura de la orden y pasa el estado a pending
     function orderToPending(int $id, Request $request) {
-        $order = Order::find($id);   
+        // dd($id, $request->all());
+        $products = $request->products;
+        $discounts = $request->discount;
 
-        // si envia un descuento por request
-        $isTotalDiscount = 0;
-        if ($request->category_discount && $request->discount) {
-            // si el descuento es para toda la orden
-            foreach ($request->category_discount as $index => $categoryDiscount) {
-                # code...
-                if($request->discount[$index]){
-                    if ($categoryDiscount == "all") {
-                        $isTotalDiscount = $request->discount[$index];
-                    } else {
-                    // recorro todos los productos de la orden. 
-                        foreach ($order->orderItemsIds() as $itemId) {
-                            // llamo a sus categorías con getProductTaxonomies($productId) y dentro del array encuentra la categoria enviada por request aplico un descuento a su order_item->price o creo otra tabla discount_price?
-                            if(in_array($categoryDiscount, getProductTaxonomies($itemId))){
-                                $orderItem = Order_item::where('product_id', '=', $itemId)->where('order_id', '=', $order->id)->first();
-                                $orderItem->price = $orderItem->price - ($orderItem->price * $request->discount[$index] / 100);
-                                $orderItem->discounts = $orderItem->discounts . ' ' . $request->discount[$index] . '%,';
-                                $orderItem->save();
-                            }
-                        }
-                    }
-                }
-            }
-            // vuelvo a calcular el total de la orden con los nuevos precios
-            $total = 0;
-
-            foreach ($order->orderItems() as $item) {
-                $total += ($item->quantity * $item->price);
-            }
-            $order->total = $total;
-            if($isTotalDiscount > 0) {
-                $order->total = $order->total - ($isTotalDiscount * $order->total / 100);
-            }
-            
+        $order = Order::find($id);
+        for ($i=0; $i < count($products); $i++) { 
+            $orderItem = Order_item::where('product_id', '=', $products[$i])->where('order_id', '=', $order->id)->first();
+            $orderItem->price = $orderItem->price - ($orderItem->price * $discounts[$i] / 100);
+            $orderItem->discounts = $orderItem->discounts . ' ' . $discounts[$i] . '%';
+            $orderItem->save();
         }
+        
+        // si envia un descuento por request
+        // $isTotalDiscount = 0;
+        // if ($request->category_discount && $request->discount) {
+        //     // si el descuento es para toda la orden
+        //     foreach ($request->category_discount as $index => $categoryDiscount) {
+        //         # code...
+        //         if($request->discount[$index]){
+        //             if ($categoryDiscount == "all") {
+        //                 $isTotalDiscount = $request->discount[$index];
+        //             } else {
+        //             // recorro todos los productos de la orden. 
+        //                 foreach ($order->orderItemsIds() as $itemId) {
+        //                     // llamo a sus categorías con getProductTaxonomies($productId) y dentro del array encuentra la categoria enviada por request aplico un descuento a su order_item->price o creo otra tabla discount_price?
+        //                     if(in_array($categoryDiscount, getProductTaxonomies($itemId))){
+        //                         $orderItem = Order_item::where('product_id', '=', $itemId)->where('order_id', '=', $order->id)->first();
+        //                         $orderItem->price = $orderItem->price - ($orderItem->price * $request->discount[$index] / 100);
+        //                         $orderItem->discounts = $orderItem->discounts . ' ' . $request->discount[$index] . '%,';
+        //                         $orderItem->save();
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+            // vuelvo a calcular el total de la orden con los nuevos precios
+        $total = 0;
+
+        foreach ($order->orderItems() as $item) {
+            $total += ($item->quantity * $item->price);
+        }
+        $order->total = $total;
+            // if($isTotalDiscount > 0) {
+            //     $order->total = $order->total - ($isTotalDiscount * $order->total / 100);
+            // }
+            
+        // }
 
         $filename = $this->createAndSavePdf($id, $request, $order);
 

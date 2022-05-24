@@ -32,7 +32,7 @@ unidades_por_caja: number
         }
       }
     }
-    return $hasPagination ? $productos->paginate(100) : $productos->get();
+    return $hasPagination ? $productos->paginate(20) : $productos->get();
   }
 
   function getProduct($id) {
