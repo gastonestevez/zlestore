@@ -7,6 +7,11 @@ ZLE - Historial
 {{-- 4956 Variacion
 4955 PADRE
 4852 SIMPLE --}}
+<style>
+    .uk-container {
+        margin-left: 0px;
+    }
+</style>
 
 <div class="uk-container primer-div">
 
@@ -35,7 +40,7 @@ ZLE - Historial
         <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
     </form>
 
-    <div class="uk-overflow-auto">
+    <div>
         <table class="uk-table uk-table-striped">
             <thead>
                 <tr>
