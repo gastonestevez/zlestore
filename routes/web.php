@@ -41,6 +41,8 @@ Route::post('/storeWcOrder/{id}', [OrderController::class, 'storeWcOrder'])->mid
 // Orders - Feature - sales-system
 
 Route::get('/createOrder', [orderController::class, 'createOrder'])->name('createOrder')->middleware('auth');
+Route::get('/debugCreateOrder', [orderController::class, 'debugCreateOrder'])->name('createOrder')->middleware('auth');
+
 
 Route::get('/orderPreview/{id}', [OrderController::class, 'orderPreview'])->name('orderPreview')->middleware('auth');
 
