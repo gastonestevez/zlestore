@@ -232,7 +232,7 @@ class OrderController extends Controller
             $lastOrder->save();
 
             // return back()->with('success', 'Producto agregado a la orden');
-            return self::orderPreview($lastOrderId);
+            return redirect()->route('orderPreview', $lastOrderId);
         }
 
         // Si no hay orden en progreso creo una nueva orden

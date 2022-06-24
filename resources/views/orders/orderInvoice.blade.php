@@ -110,7 +110,7 @@
                         <td>${{number_format(($item->subprice * $item->quantity), 0,',','.')}}</td>
                         <td>{{$item->discounts}}</td>
                     @endif
-                    <td>${{number_format(($item->price * $item->quantity), 2,',','.')}}</td>
+                    <td>${{number_format(($item->price * $item->quantity), 0,',','.')}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -135,7 +135,7 @@
                     Total sin descuentos: ${{number_format($order->subtotal, 0,',','.')}}
                 </h4>
                 <h4 class="total">
-                    Total con descuentos: ${{number_format($order->total, 2,',','.')}}
+                    Total con descuentos: ${{number_format($order->total, 0,',','.')}}
                 </h4>
                 @else
                 <h4 class="total">
