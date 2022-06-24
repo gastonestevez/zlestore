@@ -32,6 +32,13 @@ const addCategoryDiscount = () => {
     })
 }
 
+const clearDiscounts = () => {
+    const discountInputs = document.querySelectorAll('.discountInput')
+    discountInputs.forEach(input => {
+        input.value = 0
+    })
+}
+
 const onClickDeleteProduct = (id) => {
     const action = "/removeProduct/" + id
     const form = document.getElementById('removeProductForm')

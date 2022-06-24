@@ -114,6 +114,10 @@ ZLE - Confirmar Orden
 
 
             <div class="discounts-container">
+                <div class="uk-margin uk-flex uk-flex-right">
+                    <button type="button" onclick="clearDiscounts()" class="uk-button"><span uk-icon="icon: close"></span> Limpiar descuentos</button>
+                    
+                </div>
                 <div class="uk-margin uk-flex uk-flex-middle">
                     <span>Categoria: </span>
                     <select id='taxonomySelect' class="uk-select uk-margin-left">
