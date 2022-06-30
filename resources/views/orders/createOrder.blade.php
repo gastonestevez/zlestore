@@ -19,6 +19,9 @@ ZLE - Crear pedido
   .uk-container {
     margin-left: 0;
   }
+  thead {
+    background-color: #f0f0f0;
+  }
 </style>
 
 <div class="uk-container primer-div">
@@ -183,6 +186,8 @@ ZLE - Crear pedido
 
 
 <script>
+$("table").stickyTableHeaders();
+
 const stockInputs = document.querySelectorAll('.stockInput')
 const cartButton = document.getElementById('cartButton')
 const formConfirmationModal = document.getElementById('formConfirmationModal')

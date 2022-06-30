@@ -5,7 +5,6 @@ ZLE - Control de Stock
 @section('main')
 
 <div class="uk-container primer-div">
-
   <h1 class="uk-heading-divider">Todos los productos</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
@@ -13,7 +12,7 @@ ZLE - Control de Stock
       <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouses/edit')}}">aquí</a>.</p>
     </div>
   @endif
-
+    <button id='alterStock'>Guardar Stock</button>
     <p>Productos por página: {{count($products)}}</p>
 
     <div class="uk-flex">
@@ -83,15 +82,34 @@ ZLE - Control de Stock
 
 </div>
 <script>
-  const handleSync = () => {
-    const syncButton = document.getElementById('syncButton')
-    syncButton.innerHTML = `  
-    <button class="uk-button uk-button-secondary uk-margin">
-      <i class="fas fa-sync fa-spin"></i> 
-      &nbsp;&nbsp;Sincronizando...
-    </button>
-`
-  }
+  $("#alterStock").click(function (e) {
+    const productId = 1870
+    const route = `{{route('updatingUnits', 1870)}}`
+    const token = `{{csrf_token()}}`
+    const data = {
+      quantity: 321,
+      warehouse_id: 3,
+      _token: token,
+      noRedirect: true,
+    }
+    $.ajax({
+      type: 'PUT',
+      url: route,
+      data: data,
+      success: function (data) {
+        console.log(data)
+      }
+    })
+  });
+//   const handleSync = () => {
+//     const syncButton = document.getElementById('syncButton')
+//     syncButton.innerHTML = `  
+//     <button class="uk-button uk-button-secondary uk-margin">
+//       <i class="fas fa-sync fa-spin"></i> 
+//       &nbsp;&nbsp;Sincronizando...
+//     </button>
+// `
+//   }
 </script>
 @endsection
 

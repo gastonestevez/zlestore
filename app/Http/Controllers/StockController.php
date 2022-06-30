@@ -132,13 +132,16 @@ class StockController extends Controller
         $warehouseId = $request->warehouse_id;
         $product = getProduct($id);
         $quantity = $request->quantity;
+        $noRedirect = $request->noRedirect;
 
         // Use update orCreate en lugar de updateOrInsert por tema de timestamps
         Stocks::updateOrCreate(
                 ['warehouse_id' => $warehouseId, 'product_id' => $product->id],
                 ['quantity' => $quantity]
             );
-
+        if($noRedirect){
+            return response()->json(['success' => true, 'message' => 'it fucking works lol']);
+        } 
         return back()->with('success', 'Stock actualizado correctamente');
     }
 
