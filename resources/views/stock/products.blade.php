@@ -27,6 +27,7 @@ ZLE - Control de Stock
   }
 </style>
 
+
 <div class="uk-container primer-div">
   <h1 class="uk-heading-divider">Todos los productos</h1>
   @if(\Session::has('noWarehouses'))
@@ -156,7 +157,7 @@ ZLE - Control de Stock
   
 
   {{ $products->appends($_GET)->links() }}
-
+<div id='messagesContainer'></div>
   {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
 </div>
@@ -266,10 +267,7 @@ ZLE - Control de Stock
       error: function(data) {
         console.error(data)
         console.log(data.responseJSON.message)
-        UIkit.notification({
-          message: '<span uk-icon=\'icon: warning\'></span> ' + data.responseJSON.message, 
-          pos: 'bottom-right', 
-          status: 'danger'});
+        showMessage(data.responseJSON?.message, 'error')
       }
     })
   }
@@ -297,20 +295,27 @@ ZLE - Control de Stock
       url: route,
       data: data,
       success: function (data) {
-        UIkit.notification({
-          message: '<span uk-icon=\'icon: check\'></span> Stock actualizado.', 
-          pos: 'bottom-right', 
-          status: 'success'});
+        showMessage('Stock actualizado.', 'success')
         resetLists();
       },
       error: function (data) {
-        UIkit.notification({
-          message: '<span uk-icon=\'icon: warning\'></span> Error al actualizar el stock.', 
-          pos: 'bottom-right', 
-          status: 'danger'});
+        showMessage('Error al actualizar el stock', 'error')
       }
     })
   });
+
+  const showMessage = (message = '', status) => {
+
+    const html = `
+        <div class="wow animated fadeInDown alert sticky-notification notification-${status}">
+          ${message}
+        </div>
+    `
+    $('#messagesContainer').html(html)
+    $("#messagesContainer").fadeTo(6000, 500).slideUp(500, function(){
+    $("#messagesContainer").slideUp(500);
+  });
+  }
 
 </script>
 @endsection
