@@ -23,7 +23,15 @@ ZLE - Control de Stock
     </div>
   @endif
 
+  <div style="display: flex; justify-content: space-between">
     <p>Productos por página: {{count($products)}}</p>
+    <label style="display: flex; justify-content: space-between; align-items:center;"  for="transferCheck">
+      <span style="margin-right: 10px" uk-icon="icon: social"></span>
+      Transferir entre depósitos
+      <input style="margin-left: 20px" type="checkbox" id='transferCheck'>
+    </label>
+  </div>
+
 
     <div class="uk-flex">
 
@@ -66,8 +74,11 @@ ZLE - Control de Stock
             <th>Nombre</th>
             <th>Precio</th>
             @foreach ($storages as $storage)
-            <th class="uk-text-nowrap">{{$storage->name}}</th>
+            <th class="uk-text-nowrap warehouse">{{$storage->name}}</th>
             @endforeach
+            <th class="transfer">Desde</th>
+            <th class="transfer">Hasta</th>
+            <th class="transfer">Cantidad</th>
             <th>Acciones</th>
           </tr>
       </thead>
@@ -79,7 +90,7 @@ ZLE - Control de Stock
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>
               @foreach ($storages as $storage)
-                  <td>
+                  <td class="warehouse">
                     <input 
                       warehouse-id="{{$storage->id}}" 
                       product-id="{{$product->id}}" 
@@ -91,7 +102,35 @@ ZLE - Control de Stock
                     >
                   </td>
               @endforeach            
+              <td class="transfer">
+                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
+                  <option value="0" selected value="">Elegir depósito</option>
+                  @foreach ($storages as $storage)
+                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                  @endforeach     
+                </select>
+              </td>
+              <td class="transfer">
+                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
+                  <option value="0" selected value="">Elegir depósito</option>
+                  @foreach ($storages as $storage)
+                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                  @endforeach     
+                </select>
+              </td>
+              <td class="transfer">
+                <input 
+                  warehouse-id="{{$storage->id}}" 
+                  product-id="{{$product->id}}" 
+                  class="uk-input uk-form-width-small transferCount" 
+                  type="number" 
+                  min="0" 
+                  max="9999" 
+                  value="0"
+                >
+              </td>
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
+
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach
@@ -110,8 +149,22 @@ ZLE - Control de Stock
 </div>
 <script>
   $("table").stickyTableHeaders();
+  $(".transfer").hide();
+  $(".warehouse").show();
+  let stockList = [];
+  let transferList = [];
 
-  const stockList = [];
+  $("#transferCheck").on("click", function(){
+    if($(this).is(":checked")){
+      $(".transfer").show();
+      $(".warehouse").hide();
+      $("#alterStock").html("Transferir stock");
+    }else{
+      $(".transfer").hide();
+      $(".warehouse").show();
+      $("#alterStock").html("Guardar stock");
+    }
+  });
 
   $(".stockCount").on("change", function(e) {
     $("#alterStock").prop("disabled", false);
@@ -131,7 +184,91 @@ ZLE - Control de Stock
     }
   });
 
+  $(".transferCount").on("change", function(e) {
+    $("#alterStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const stock = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId)
+    if(found) {
+      found.stock = stock
+    } else {
+      transferList.push({
+        productId: productId,
+        stock: stock
+      })
+    }
+  });
+
+  $(".warehouseFrom").on("change", function(e) {
+    $("#transferStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId == productId)
+    if(found) {
+      found.warehouseFrom = warehouseId
+    } else {
+      transferList.push({
+        productId: productId,
+        warehouseFrom: warehouseId
+      })
+    }
+    console.log(transferList)
+  });
+
+  $(".warehouseTo").on("change", function(e) {
+    $("#transferStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId == productId)
+    if(found) {
+      found.warehouseTo = warehouseId
+    } else {
+      transferList.push({
+        productId: productId,
+        warehouseTo: warehouseId
+      })
+    }
+    console.log(transferList)
+  });
+
+  const transferStock = () => {
+    const route = `{{route('transferingUnits', 0)}}`
+    const token = `{{csrf_token()}}`
+    $.ajax({
+      url: route,
+      type: "PUT",
+      data: {
+        _token: token,
+        batch: true,
+        transferList: transferList
+      },
+      success: function(data) {
+        location.reload()
+      },
+      error: function(data) {
+        console.error(data)
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: warning\'></span> Error al transferir el stock.', 
+          pos: 'bottom-right', 
+          status: 'danger'});
+      }
+    })
+  }
+
+  const resetLists = () => {
+    stockList = [];
+    transferList = [];
+  }
+
   $("#alterStock").click(function (e) {
+    if($("#transferCheck").is(":checked")){
+      transferStock();
+      resetLists();
+      return;
+    }
     const route = `{{route('updatingUnits', 0)}}`
     const token = `{{csrf_token()}}`
     const data = {
@@ -149,6 +286,7 @@ ZLE - Control de Stock
           message: '<span uk-icon=\'icon: check\'></span> Stock actualizado.', 
           pos: 'bottom-right', 
           status: 'success'});
+        resetLists();
       },
       error: function (data) {
         UIkit.notification({
@@ -158,15 +296,7 @@ ZLE - Control de Stock
       }
     })
   });
-//   const handleSync = () => {
-//     const syncButton = document.getElementById('syncButton')
-//     syncButton.innerHTML = `  
-//     <button class="uk-button uk-button-secondary uk-margin">
-//       <i class="fas fa-sync fa-spin"></i> 
-//       &nbsp;&nbsp;Sincronizando...
-//     </button>
-// `
-//   }
+
 </script>
 @endsection
 
