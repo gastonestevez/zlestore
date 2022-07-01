@@ -76,8 +76,8 @@ ZLE - Control de Stock
             @foreach ($storages as $storage)
             <th class="uk-text-nowrap warehouse">{{$storage->name}}</th>
             @endforeach
-            <th class="transfer">Desde</th>
-            <th class="transfer">Hasta</th>
+            <th class="transfer">Origen</th>
+            <th class="transfer">Destino</th>
             <th class="transfer">Cantidad</th>
             <th>Acciones</th>
           </tr>
@@ -189,7 +189,7 @@ ZLE - Control de Stock
     const productId = e.currentTarget.attributes['product-id'].value
     const stock = e.currentTarget.value
 
-    const found = transferList.find(item => item.productId)
+    const found = transferList.find(item => item.productId == productId)
     if(found) {
       found.stock = stock
     } else {
@@ -243,15 +243,18 @@ ZLE - Control de Stock
       data: {
         _token: token,
         batch: true,
-        transferList: transferList
+        transferList: transferList || []
       },
       success: function(data) {
+        console.log(data)
+        resetLists();
         location.reload()
       },
       error: function(data) {
         console.error(data)
+        console.log(data.responseJSON.message)
         UIkit.notification({
-          message: '<span uk-icon=\'icon: warning\'></span> Error al transferir el stock.', 
+          message: '<span uk-icon=\'icon: warning\'></span> ' + data.responseJSON.message, 
           pos: 'bottom-right', 
           status: 'danger'});
       }
@@ -266,7 +269,6 @@ ZLE - Control de Stock
   $("#alterStock").click(function (e) {
     if($("#transferCheck").is(":checked")){
       transferStock();
-      resetLists();
       return;
     }
     const route = `{{route('updatingUnits', 0)}}`

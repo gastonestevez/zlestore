@@ -80,6 +80,56 @@ class WarehouseController extends Controller
 
   public function transferingUnits(Request $request, int $id)
   {
+    $batch = $request->batch;
+    if($batch) {
+      $transferList = $request->transferList;
+      if(!$transferList){
+        return response()->json(['success' => false, 'message' => 'Hay campos incompletos.'], 500);
+      }
+      foreach ($transferList as $transfer) {
+        if(!array_key_exists('productId', $transfer) || 
+          !array_key_exists('warehouseFrom', $transfer) || 
+          !array_key_exists('stock', $transfer) || 
+          !array_key_exists('warehouseTo', $transfer)) {
+          return response()->json(['success' => false, 'message' => 'Hay campos incompletos.'], 500);
+        }
+      }
+
+      foreach ($transferList as $transfer) {
+        $product = getProduct($transfer['productId']);
+        $quantity = $transfer['stock'];
+        $warehouseOrigin = $transfer['warehouseFrom'];
+        $warehouseDestiny = $transfer['warehouseTo'];
+        $stockInDestiny = Warehouse::getProductStock($warehouseDestiny, $transfer['productId']);
+        $stockInOrigin = Warehouse::getProductStock($warehouseOrigin, $transfer['productId']);
+
+        if ($quantity > $stockInOrigin) {
+          return response()->json(['success' => false, 'message' => 'No hay tanta cantidad de stock.'], 500);
+        } else {
+
+          db::table('stocks')
+            ->where('warehouse_id', '=', $warehouseOrigin)
+            ->where('product_id', '=', $product->id)
+            ->update(['quantity' => $stockInOrigin - $quantity]);
+
+          Stocks::updateOrCreate(
+            ['warehouse_id' => $warehouseDestiny, 'product_id' => $product->id],
+            ['quantity' => $stockInDestiny + $quantity]
+          );
+
+          $movement = new Movement();
+          $movement->product_id = $product->id;
+          $movement->user_id = Auth()->user()->id;
+          $movement->quantity = $quantity;
+          $movement->origin_warehouse_id = $warehouseOrigin;
+          $movement->destiny_warehouse_id = $warehouseDestiny;
+          $movement->remaining_stock = $stockInOrigin - $quantity;
+          $movement->status = 'completed';
+          $movement->save();
+        }
+        return response()->json(['success' => true, 'message' => 'Transferencia exitosa.']);
+      }
+    }
 
     $product = getProduct($id);
     $quantity = $request->quantity;
