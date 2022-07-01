@@ -3,7 +3,9 @@
 
 
 {{-- Sticky nav, desktop --}}
-<div class="uk-visible@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
+{{-- <div class="uk-visible@m" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;"> --}}
+<div class="uk-visible@m">
+
     <img src="" alt="">
     <div class="uk-position-top">
         <nav class="uk-navbar-container uk-navbar-transparent subtle-background pl pr" uk-navbar>

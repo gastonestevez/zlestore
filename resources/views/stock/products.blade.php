@@ -4,8 +4,31 @@ ZLE - Control de Stock
 @endsection
 @section('main')
 
-<div class="uk-container primer-div">
+<style>
+  html {
+    background-color: #f8fafc;
+    width: 100%;
+  }
+  thead {
+    background-color: #f0f0f0;
+  }
+  .uk-notification-message {
+    background-color: #eaeaea;
+    border-radius: 6px;
+  }
+  #tablediv {
+    overflow: hidden;
+    display: block;
+    position: relative;
+    margin-right: 40px;
+  }
+  .uk-container {
+    margin-left: 0;
+  }
+</style>
 
+
+<div class="uk-container primer-div">
   <h1 class="uk-heading-divider">Todos los productos</h1>
   @if(\Session::has('noWarehouses'))
     <div class="uk-alert-danger" uk-alert>
@@ -14,7 +37,15 @@ ZLE - Control de Stock
     </div>
   @endif
 
+  <div style="display: flex; justify-content: space-between">
     <p>Productos por página: {{count($products)}}</p>
+    <label style="display: flex; justify-content: space-between; align-items:center;"  for="transferCheck">
+      <span style="margin-right: 10px" uk-icon="icon: social"></span>
+      Transferir entre depósitos
+      <input style="margin-left: 20px" type="checkbox" id='transferCheck'>
+    </label>
+  </div>
+
 
     <div class="uk-flex">
 
@@ -35,24 +66,33 @@ ZLE - Control de Stock
         <div class="pr uk-margin-bottom">
           <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
         </div>
-     </form>
+        <div class="pr uk-margin-bottom">
+          <button disabled type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda">Guardar Stock</button>
+        </div>
+    </form>
 
       <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
         <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
       </form>
 
+
     </div>
 
-  <div class="uk-overflow-auto">
+  <div id="tablediv" class="uk-overflow-auto probando">
 
-    <table class="uk-table uk-table-striped uk-table-hover">
+    <table id="table" class="uk-table uk-table-striped uk-table-hover">
       <thead>
           <tr>
             <th>Id</th>
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Stock total</th>
+            @foreach ($storages as $storage)
+            <th class="uk-text-nowrap warehouse">{{$storage->name}}</th>
+            @endforeach
+            <th class="transfer">Origen</th>
+            <th class="transfer">Destino</th>
+            <th class="transfer">Cantidad</th>
             <th>Acciones</th>
           </tr>
       </thead>
@@ -62,10 +102,54 @@ ZLE - Control de Stock
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
-              <td>${{ number_format($product->price, 0,',','.') }}</td>            
-              <td>{{getAllStock($product->id)}}</td>
+              <td>${{ number_format($product->price, 0,',','.') }}</td>
+              @foreach ($storages as $storage)
+                  <td class="warehouse">
+                    <input 
+                      warehouse-id="{{$storage->id}}" 
+                      product-id="{{$product->id}}" 
+                      class="uk-input uk-form-width-small stockCount"
+                      @auth
+                        @if(auth()->user()->role != 'admin')
+                          disabled
+                        @endif
+                      @endauth
+                      type="number" 
+                      min="0" 
+                      max="9999" 
+                      value="{{$storage->getProductStock($storage->id, $product->id)}}"
+                    >
+                  </td>
+              @endforeach            
+              <td class="transfer">
+                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
+                  <option value="0" selected value="">Elegir depósito</option>
+                  @foreach ($storages as $storage)
+                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                  @endforeach     
+                </select>
+              </td>
+              <td class="transfer">
+                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
+                  <option value="0" selected value="">Elegir depósito</option>
+                  @foreach ($storages as $storage)
+                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                  @endforeach     
+                </select>
+              </td>
+              <td class="transfer">
+                <input 
+                  warehouse-id="{{$storage->id}}" 
+                  product-id="{{$product->id}}" 
+                  class="uk-input uk-form-width-small transferCount" 
+                  type="number" 
+                  min="0" 
+                  max="9999" 
+                  value="0"
+                >
+              </td>
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
-              <td></td>
+
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach
@@ -78,20 +162,173 @@ ZLE - Control de Stock
   
 
   {{ $products->appends($_GET)->links() }}
-
+<div id='messagesContainer'></div>
   {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
 </div>
 <script>
-  const handleSync = () => {
-    const syncButton = document.getElementById('syncButton')
-    syncButton.innerHTML = `  
-    <button class="uk-button uk-button-secondary uk-margin">
-      <i class="fas fa-sync fa-spin"></i> 
-      &nbsp;&nbsp;Sincronizando...
-    </button>
-`
+  $("table").stickyTableHeaders();
+  $(".transfer").hide();
+  $(".warehouse").show();
+  let stockList = [];
+  let transferList = [];
+
+  $("#transferCheck").on("click", function(){
+    if($(this).is(":checked")){
+      $(".transfer").show();
+      $(".warehouse").hide();
+      $("#alterStock").html("Transferir stock");
+    }else{
+      $(".transfer").hide();
+      $(".warehouse").show();
+      $("#alterStock").html("Guardar stock");
+    }
+  });
+
+  $(".stockCount").on("change", function(e) {
+    $("#alterStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.attributes['warehouse-id'].value
+    const stock = e.currentTarget.value
+
+    const found = stockList.find(item => item.productId == productId && item.warehouseId == warehouseId)
+    if(found) {
+      found.stock = stock
+    } else {
+      stockList.push({
+        productId: productId,
+        warehouseId: warehouseId,
+        stock: stock
+      })
+    }
+  });
+
+  $(".transferCount").on("change", function(e) {
+    $("#alterStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const stock = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId == productId)
+    if(found) {
+      found.stock = stock
+    } else {
+      transferList.push({
+        productId: productId,
+        stock: stock
+      })
+    }
+  });
+
+  $(".warehouseFrom").on("change", function(e) {
+    $("#transferStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId == productId)
+    if(found) {
+      found.warehouseFrom = warehouseId
+    } else {
+      transferList.push({
+        productId: productId,
+        warehouseFrom: warehouseId
+      })
+    }
+    console.log(transferList)
+  });
+
+  $(".warehouseTo").on("change", function(e) {
+    $("#transferStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.value
+
+    const found = transferList.find(item => item.productId == productId)
+    if(found) {
+      found.warehouseTo = warehouseId
+    } else {
+      transferList.push({
+        productId: productId,
+        warehouseTo: warehouseId
+      })
+    }
+    console.log(transferList)
+  });
+
+  const transferStock = () => {
+    const route = `{{route('transferingUnits', 0)}}`
+    const token = `{{csrf_token()}}`
+    $.ajax({
+      url: route,
+      type: "PUT",
+      data: {
+        _token: token,
+        batch: true,
+        transferList: transferList || []
+      },
+      success: function(data) {
+        console.log(data)
+        resetLists();
+        location.reload()
+      },
+      error: function(data) {
+        console.error(data)
+        console.log(data.responseJSON.message)
+        showMessage(data.responseJSON?.message, 'error')
+      }
+    })
   }
+
+  const resetLists = () => {
+    stockList = [];
+    transferList = [];
+  }
+
+  $("#alterStock").click(function (e) {
+    if($("#transferCheck").is(":checked")){
+      transferStock();
+      return;
+    }
+    const route = `{{route('updatingUnits', 0)}}`
+    const token = `{{csrf_token()}}`
+    const data = {
+      _token: token,
+      noRedirect: true,
+      batch: true,
+      stockList: stockList
+    }
+    $.ajax({
+      type: 'PUT',
+      url: route,
+      data: data,
+      success: function (data) {
+        showMessage('Stock actualizado.', 'success')
+        resetLists();
+      },
+      error: function (data) {
+        showMessage('Error al actualizar el stock', 'error')
+      }
+    })
+  });
+
+  const showMessage = (message = '', status) => {
+
+    const html = `
+        <div class="wow animated fadeInDown alert sticky-notification notification-${status}">
+          ${message}
+        </div>
+    `
+    $('#messagesContainer').html(html)
+    $("#messagesContainer").fadeTo(6000, 500).slideUp(500, function(){
+    $("#messagesContainer").slideUp(500);
+  });
+  }
+
+
+  let table = document.getElementById('table');
+  let tablediv = document.getElementById('tablediv');
+  let width = table.offsetWidth;
+  console.log(width);
+  tablediv.style.width = width + 'px';
+
 </script>
 @endsection
 
