@@ -21,7 +21,7 @@
 
       {{-- Navbar --}}
 
-      {{-- @include('partials.navbar') --}}
+      @include('partials.navbar')
 
     </header>
 

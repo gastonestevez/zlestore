@@ -16,37 +16,6 @@ use DB;
 class StockController extends Controller
 {
 
-    public function loadcsv(Request $request)
-    {
-        $warehouses = Warehouse::all();
-        if (count($warehouses) == 0) {
-            return redirect('/')->with('noWarehouses', 'No hay depósitos para distribuir los nuevos productos.');
-        }
-        return view('/products/csv');
-    }
-
-    public function storecsv(Request $request)
-    {
-
-        $csv = Excel::import(new ProductsImport, $request->file('file'));
-        $products =Product::all();
-        $warehouses = Warehouse::all();
-        $lastProduct = Product::orderBy('id','desc')->first();
-        $wc = $this->getWcConfig();
-        $lastSyncDateCreated = $wc->get('products/' . $lastProduct->woo_id)->date_created;
-        $lastProduct->update(['woo_created' => $lastSyncDateCreated]);
-        foreach ($products as $product) {
-            foreach ($warehouses as $warehouse) {
-                $product->getWarehouses()->attach($product->id, [
-                    'warehouse_id' => $warehouse->id,
-                    'quantity' => 0,
-                ]);
-            }
-        }
-
-        return back()->with('success', 'Los productos fueron agregados a la base.');
-    }
-
     public function allStock(Request $request)
     {
         $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
@@ -69,7 +38,8 @@ class StockController extends Controller
             "pml.sku" => $sku
         );
         $products = getProducts($searchParams, true);
-        $vac = compact('products', 'request', 'orderInProgress', 'orderItems');
+        $storages = Warehouse::all();
+        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'storages');
 
         return view('stock.products', $vac);
     }
@@ -133,14 +103,26 @@ class StockController extends Controller
         $product = getProduct($id);
         $quantity = $request->quantity;
         $noRedirect = $request->noRedirect;
+        $batch = $request->batch;
+
+        if($batch) {
+            $stockList = $request->stockList;
+            foreach ($stockList as $item) {
+                Stocks::updateOrCreate(
+                    ['warehouse_id' => $item['warehouseId'], 'product_id' => $item['productId']],
+                    ['quantity' => $item['stock']]
+                );
+            }
+        } else {
+            Stocks::updateOrCreate(
+                    ['warehouse_id' => $warehouseId, 'product_id' => $product->id],
+                    ['quantity' => $quantity]
+            );
+        }
 
         // Use update orCreate en lugar de updateOrInsert por tema de timestamps
-        Stocks::updateOrCreate(
-                ['warehouse_id' => $warehouseId, 'product_id' => $product->id],
-                ['quantity' => $quantity]
-            );
         if($noRedirect){
-            return response()->json(['success' => true, 'message' => 'it fucking works lol']);
+            return response()->json(['success' => true, 'message' => 'Stock actualizado correctamente']);
         } 
         return back()->with('success', 'Stock actualizado correctamente');
     }

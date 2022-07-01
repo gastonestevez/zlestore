@@ -4,6 +4,16 @@ ZLE - Control de Stock
 @endsection
 @section('main')
 
+<style>
+  thead {
+    background-color: #f0f0f0;
+  }
+  .uk-notification-message {
+    background-color: #eaeaea;
+    border-radius: 6px;
+  }
+</style>
+
 <div class="uk-container primer-div">
   <h1 class="uk-heading-divider">Todos los productos</h1>
   @if(\Session::has('noWarehouses'))
@@ -12,7 +22,7 @@ ZLE - Control de Stock
       <p>{{\Session::get('noWarehouses')}} Pruebe agregar uno haciendo click <a href="{{url('/warehouses/edit')}}">aquí</a>.</p>
     </div>
   @endif
-    <button id='alterStock'>Guardar Stock</button>
+
     <p>Productos por página: {{count($products)}}</p>
 
     <div class="uk-flex">
@@ -34,11 +44,15 @@ ZLE - Control de Stock
         <div class="pr uk-margin-bottom">
           <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
         </div>
-     </form>
+        <div class="pr uk-margin-bottom">
+          <button disabled type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda">Guardar Stock</button>
+        </div>
+    </form>
 
       <form class="uk-search uk-search-default" style="pointer-events: none;" method="get">
         <button id='limpiar' hidden class="uk-button uk-button-default limpiar-busqueda">Limpiar Búsqueda</button>
       </form>
+
 
     </div>
 
@@ -51,7 +65,9 @@ ZLE - Control de Stock
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Stock total</th>
+            @foreach ($storages as $storage)
+            <th class="uk-text-nowrap">{{$storage->name}}</th>
+            @endforeach
             <th>Acciones</th>
           </tr>
       </thead>
@@ -61,10 +77,21 @@ ZLE - Control de Stock
               <td>{{ $product->id }}</td>
               <td>{{ $product->sku }}</td>
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
-              <td>${{ number_format($product->price, 0,',','.') }}</td>            
-              <td>{{getAllStock($product->id)}}</td>
+              <td>${{ number_format($product->price, 0,',','.') }}</td>
+              @foreach ($storages as $storage)
+                  <td>
+                    <input 
+                      warehouse-id="{{$storage->id}}" 
+                      product-id="{{$product->id}}" 
+                      class="uk-input uk-form-width-small stockCount" 
+                      type="number" 
+                      min="0" 
+                      max="9999" 
+                      value="{{$storage->getProductStock($storage->id, $product->id)}}"
+                    >
+                  </td>
+              @endforeach            
               <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
-              <td></td>
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
         @endforeach
@@ -82,22 +109,52 @@ ZLE - Control de Stock
 
 </div>
 <script>
+  $("table").stickyTableHeaders();
+
+  const stockList = [];
+
+  $(".stockCount").on("change", function(e) {
+    $("#alterStock").prop("disabled", false);
+    const productId = e.currentTarget.attributes['product-id'].value
+    const warehouseId = e.currentTarget.attributes['warehouse-id'].value
+    const stock = e.currentTarget.value
+
+    const found = stockList.find(item => item.productId == productId && item.warehouseId == warehouseId)
+    if(found) {
+      found.stock = stock
+    } else {
+      stockList.push({
+        productId: productId,
+        warehouseId: warehouseId,
+        stock: stock
+      })
+    }
+  });
+
   $("#alterStock").click(function (e) {
-    const productId = 1870
-    const route = `{{route('updatingUnits', 1870)}}`
+    const route = `{{route('updatingUnits', 0)}}`
     const token = `{{csrf_token()}}`
     const data = {
-      quantity: 321,
-      warehouse_id: 3,
       _token: token,
       noRedirect: true,
+      batch: true,
+      stockList: stockList
     }
     $.ajax({
       type: 'PUT',
       url: route,
       data: data,
       success: function (data) {
-        console.log(data)
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: check\'></span> Stock actualizado.', 
+          pos: 'bottom-right', 
+          status: 'success'});
+      },
+      error: function (data) {
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: warning\'></span> Error al actualizar el stock.', 
+          pos: 'bottom-right', 
+          status: 'danger'});
       }
     })
   });
