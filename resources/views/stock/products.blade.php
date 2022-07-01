@@ -16,11 +16,11 @@ ZLE - Control de Stock
     background-color: #eaeaea;
     border-radius: 6px;
   }
-  .probando {
+  #tablediv {
     overflow: hidden;
-    width: 2200px;
     display: block;
     position: relative;
+    margin-right: 40px;
   }
   .uk-container {
     margin-left: 0;
@@ -78,9 +78,9 @@ ZLE - Control de Stock
 
     </div>
 
-  <div class="uk-overflow-auto probando">
+  <div id="tablediv" class="uk-overflow-auto probando">
 
-    <table class="uk-table uk-table-striped uk-table-hover">
+    <table id="table" class="uk-table uk-table-striped uk-table-hover">
       <thead>
           <tr>
             <th>Id</th>
@@ -108,7 +108,12 @@ ZLE - Control de Stock
                     <input 
                       warehouse-id="{{$storage->id}}" 
                       product-id="{{$product->id}}" 
-                      class="uk-input uk-form-width-small stockCount" 
+                      class="uk-input uk-form-width-small stockCount"
+                      @auth
+                        @if(auth()->user()->role != 'admin')
+                          disabled
+                        @endif
+                      @endauth
                       type="number" 
                       min="0" 
                       max="9999" 
@@ -316,6 +321,13 @@ ZLE - Control de Stock
     $("#messagesContainer").slideUp(500);
   });
   }
+
+
+  let table = document.getElementById('table');
+  let tablediv = document.getElementById('tablediv');
+  let width = table.offsetWidth;
+  console.log(width);
+  tablediv.style.width = width + 'px';
 
 </script>
 @endsection
