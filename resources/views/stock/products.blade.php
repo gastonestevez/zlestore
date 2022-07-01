@@ -5,12 +5,25 @@ ZLE - Control de Stock
 @section('main')
 
 <style>
+  html {
+    background-color: #f8fafc;
+    width: 100%;
+  }
   thead {
     background-color: #f0f0f0;
   }
   .uk-notification-message {
     background-color: #eaeaea;
     border-radius: 6px;
+  }
+  .probando {
+    overflow: hidden;
+    width: 2200px;
+    display: block;
+    position: relative;
+  }
+  .uk-container {
+    margin-left: 0;
   }
 </style>
 
@@ -64,7 +77,7 @@ ZLE - Control de Stock
 
     </div>
 
-  <div class="uk-overflow-auto">
+  <div class="uk-overflow-auto probando">
 
     <table class="uk-table uk-table-striped uk-table-hover">
       <thead>
