@@ -170,6 +170,10 @@ ZLE - Control de Stock
   $("table").stickyTableHeaders();
   $(".transfer").hide();
   $(".warehouse").show();
+  $("#transferCheck").prop("checked", "checked");
+  $(".transfer").show();
+  $(".warehouse").hide();
+  $("#alterStock").html("Transferir stock");
   let stockList = [];
   let transferList = [];
 
