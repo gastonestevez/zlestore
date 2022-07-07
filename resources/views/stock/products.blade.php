@@ -67,7 +67,7 @@ ZLE - Control de Stock
           <label for="limpiar" class="uk-button uk-button-default limpiar-busqueda" style="min-width: 168px;">Limpiar Búsqueda</label>
         </div>
         <div class="pr uk-margin-bottom">
-          <button disabled type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda">Guardar Stock</button>
+          <button disabled type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda alterStock">Guardar Stock</button>
         </div>
     </form>
 
@@ -124,16 +124,23 @@ ZLE - Control de Stock
               <td class="transfer">
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
-                  @foreach ($storages as $storage)
-                    <option value="{{$storage->id}}">{{$storage->name}}</option>
-                  @endforeach     
+                  <option value="{{$storages[0]->id}}" selected>{{$storages[0]->name}} ({{$storages[0]->getProductStock($storages[0]->id, $product->id)}}) </option>
+                  @for ($i = 1; $i < count($storages); $i++)
+                    <option value="{{$storages[$i]->id}}">{{$storages[$i]->name}} ({{$storages[$i]->getProductStock($storages[$i]->id, $product->id)}})</option>
+                  @endfor
                 </select>
               </td>
               <td class="transfer">
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
                   @foreach ($storages as $storage)
-                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                    <option 
+                      value="{{$storage->id}}"
+                      @if ($storage->type == 'shop')
+                        selected
+                          
+                      @endif
+                    >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>
                   @endforeach     
                 </select>
               </td>
@@ -148,7 +155,9 @@ ZLE - Control de Stock
                   value="0"
                 >
               </td>
-              <td><a class="uk-button uk-button-default" uk-tooltip="Gestionar Stock" href="/product/{{$product->id}}"><span uk-icon="icon: move"></span></a></td>
+              <td>
+                <button type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda alterStock">Transferir</button>
+              </td>
 
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
           </tr>
@@ -173,7 +182,8 @@ ZLE - Control de Stock
   $("#transferCheck").prop("checked", "checked");
   $(".transfer").show();
   $(".warehouse").hide();
-  $("#alterStock").html("Transferir stock");
+  $(".alterStock").html("Transferir stock");
+
   let stockList = [];
   let transferList = [];
 
@@ -181,16 +191,16 @@ ZLE - Control de Stock
     if($(this).is(":checked")){
       $(".transfer").show();
       $(".warehouse").hide();
-      $("#alterStock").html("Transferir stock");
+      $(".alterStock").html("Transferir stock");
     }else{
       $(".transfer").hide();
       $(".warehouse").show();
-      $("#alterStock").html("Guardar stock");
+      $(".alterStock").html("Guardar stock");
     }
   });
 
   $(".stockCount").on("change", function(e) {
-    $("#alterStock").prop("disabled", false);
+    $(".alterStock").prop("disabled", false);
     const productId = e.currentTarget.attributes['product-id'].value
     const warehouseId = e.currentTarget.attributes['warehouse-id'].value
     const stock = e.currentTarget.value
@@ -208,7 +218,7 @@ ZLE - Control de Stock
   });
 
   $(".transferCount").on("change", function(e) {
-    $("#alterStock").prop("disabled", false);
+    $(".alterStock").prop("disabled", false);
     const productId = e.currentTarget.attributes['product-id'].value
     const stock = e.currentTarget.value
 
@@ -231,10 +241,14 @@ ZLE - Control de Stock
     const found = transferList.find(item => item.productId == productId)
     if(found) {
       found.warehouseFrom = warehouseId
+      if(!found.stock) {
+        found.stock = 0
+      }
     } else {
       transferList.push({
         productId: productId,
-        warehouseFrom: warehouseId
+        warehouseFrom: warehouseId,
+        stock: 0
       })
     }
     console.log(transferList)
@@ -248,10 +262,14 @@ ZLE - Control de Stock
     const found = transferList.find(item => item.productId == productId)
     if(found) {
       found.warehouseTo = warehouseId
+      if(!found.stock) {
+        found.stock = 0
+      }
     } else {
       transferList.push({
         productId: productId,
-        warehouseTo: warehouseId
+        warehouseTo: warehouseId,
+        stock: 0
       })
     }
     console.log(transferList)
@@ -286,7 +304,7 @@ ZLE - Control de Stock
     transferList = [];
   }
 
-  $("#alterStock").click(function (e) {
+  $(".alterStock").click(function (e) {
     if($("#transferCheck").is(":checked")){
       transferStock();
       return;
