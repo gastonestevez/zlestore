@@ -133,12 +133,16 @@ ZLE - Control de Stock
               <td class="transfer">
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
+                  @php
+                    $storages = $storages->sortByDesc(function($storage) use ($product) {
+                      return $storage->getProductStock($storage->id, $product->id);
+                    });
+                  @endphp
                   @foreach ($storages as $storage)
                     <option 
                       value="{{$storage->id}}"
                       @if ($storage->type == 'shop')
                         selected
-                          
                       @endif
                     >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>
                   @endforeach     
