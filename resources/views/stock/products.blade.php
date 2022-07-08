@@ -122,26 +122,44 @@ ZLE - Control de Stock
                   </td>
               @endforeach            
               <td class="transfer">
+                @php
+                    $storages = $storages->sortByDesc(function($storage) use ($product) {
+                      return $storage->getProductStock($storage->id, $product->id);
+                    });
+                    $storageSelected = false;
+                    $shopSelected = false;
+                @endphp
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
-                  <option value="{{$storages[0]->id}}" selected>{{$storages[0]->name}} ({{$storages[0]->getProductStock($storages[0]->id, $product->id)}}) </option>
-                  @for ($i = 1; $i < count($storages); $i++)
-                    <option value="{{$storages[$i]->id}}">{{$storages[$i]->name}} ({{$storages[$i]->getProductStock($storages[$i]->id, $product->id)}})</option>
-                  @endfor
+                  @foreach ($storages as $storage)
+                    <option
+                      value="{{$storage->id}}"
+                      @if(!$storageSelected && $storage->type == 'storage')
+                      @php
+                        $storageSelected = true;
+                      @endphp
+                        selected
+                      @endif
+                    >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>                    
+                  @endforeach
+
                 </select>
               </td>
               <td class="transfer">
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
-                  @php
+                  {{-- @php
                     $storages = $storages->sortByDesc(function($storage) use ($product) {
                       return $storage->getProductStock($storage->id, $product->id);
                     });
-                  @endphp
+                  @endphp --}}
                   @foreach ($storages as $storage)
                     <option 
                       value="{{$storage->id}}"
-                      @if ($storage->type == 'shop')
+                      @if (!$shopSelected && $storage->type == 'shop')
+                        @php
+                          $shopSelected = true;
+                        @endphp
                         selected
                       @endif
                     >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>
@@ -188,8 +206,26 @@ ZLE - Control de Stock
   $(".warehouse").hide();
   $(".alterStock").html("Transferir stock");
 
+  const getInitialValues = () => {
+    const from = document.querySelectorAll('.warehouseFrom');
+    const to = document.querySelectorAll(".warehouseTo");
+    const transferCount = document.querySelectorAll(".transferCount");
+    // do an array of objects with from to transferCount
+    const initialValues = [];
+    for (let i = 0; i < from.length; i++) {
+      initialValues.push({
+        warehouseFrom: from[i].value,
+        warehouseTo: to[i].value,
+        stock: transferCount[i].value,
+        productId: from[i].getAttribute('product-id')
+      });
+    }
+    return initialValues
+    
+  }
+
   let stockList = [];
-  let transferList = [];
+  let transferList = getInitialValues();
 
   $("#transferCheck").on("click", function(){
     if($(this).is(":checked")){
