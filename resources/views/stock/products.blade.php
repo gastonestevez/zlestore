@@ -78,6 +78,8 @@ ZLE - Control de Stock
 
     </div>
 
+  @if (count($products) > 0)
+
   <div id="tablediv" class="">
 
     <table id="table" class="uk-table uk-table-striped uk-table-hover">
@@ -193,6 +195,7 @@ ZLE - Control de Stock
   
 
   {{ $products->appends($_GET)->links() }}
+  @endif
 <div id='messagesContainer'></div>
   {{-- {{$products->appends(['name' => $request->name, 'sku' => $request->sku, 'id' => $request->id, 'price' => $request->price])->links()}} --}}
 
