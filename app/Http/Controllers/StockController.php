@@ -18,13 +18,6 @@ class StockController extends Controller
 
     public function allStock(Request $request)
     {
-        $orderInProgress = Order::where('status', '=', 'in progress')->where('user_id', '=', auth()->user()->id)->get()->last();
-            if($orderInProgress)
-            {
-                $orderItems = $orderInProgress->orderItems();
-            } else {
-                $orderItems = null;
-            }
         
         $sku = $request->get('sku');
         $name = $request->get('name');
@@ -37,9 +30,15 @@ class StockController extends Controller
             "pml.max_price" => $price,
             "pml.sku" => $sku
         );
-        $products = getProducts($searchParams, true);
+
+        if(!$id && !$name && !$price && !$sku){
+            $products = [];
+        } else {
+            $products = getProducts($searchParams, true);
+        }
+        
         $storages = Warehouse::all();
-        $vac = compact('products', 'request', 'orderInProgress', 'orderItems', 'storages');
+        $vac = compact('products', 'request', 'storages');
 
         return view('stock.products', $vac);
     }
