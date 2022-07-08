@@ -17,10 +17,10 @@ ZLE - Control de Stock
     border-radius: 6px;
   }
   #tablediv {
-    overflow: hidden;
+    /* overflow: hidden;
     display: block;
     position: relative;
-    margin-right: 40px;
+    margin-right: 40px; */
   }
   .uk-container {
     margin-left: 0;
@@ -78,7 +78,7 @@ ZLE - Control de Stock
 
     </div>
 
-  <div id="tablediv" class="uk-overflow-auto probando">
+  <div id="tablediv" class="">
 
     <table id="table" class="uk-table uk-table-striped uk-table-hover">
       <thead>
@@ -178,7 +178,7 @@ ZLE - Control de Stock
                 >
               </td>
               <td>
-                <button type="button" id='alterStock' class="uk-button uk-button-default limpiar-busqueda alterStock">Transferir</button>
+                <button type="button" id='alterStock' class= "uk-text-nowrap uk-button uk-button-default limpiar-busqueda alterStock">Transferir</button>
               </td>
 
               {{-- <td><a href="" uk-icon="icon: close"></a></td> --}}
@@ -204,7 +204,7 @@ ZLE - Control de Stock
   $("#transferCheck").prop("checked", "checked");
   $(".transfer").show();
   $(".warehouse").hide();
-  $(".alterStock").html("Transferir stock");
+  $(".alterStock").html("Transferir");
 
   const getInitialValues = () => {
     const from = document.querySelectorAll('.warehouseFrom');
@@ -231,7 +231,7 @@ ZLE - Control de Stock
     if($(this).is(":checked")){
       $(".transfer").show();
       $(".warehouse").hide();
-      $(".alterStock").html("Transferir stock");
+      $(".alterStock").html("Transferir");
     }else{
       $(".transfer").hide();
       $(".warehouse").show();
