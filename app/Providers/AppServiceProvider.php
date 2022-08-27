@@ -30,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
     {
       Paginator::useBootstrap();
 
+      //alternativa
+      $warehouses = Warehouse::all();
+      // solo compartimos la variable warehouse globalmente en la vista warehouses
+      // tambien podemos solo llamarlo en el controlador que muestra esa vista
+      View::share('warehouses', $warehouses);
+
        // https://www.youtube.com/watch?v=7QWZxjgvEQc
       // Especificamos las vistas donde queremos compartir estas variables
       View::composer(['partials.navbar'], function($view){
@@ -42,11 +48,11 @@ class AppServiceProvider extends ServiceProvider
         // if ternario
         $id = isset($orderInProgress)?$orderInProgress->id:'';
         
-        $warehouses = Warehouse::all();
+        // $warehouses = Warehouse::all();
 
         // Especificamos los nombres y valores de las variables a compartir
         // $view->with('orderInProgress', $orderInProgress)->with('id', $id);
-        $view->with(['orderInProgress' => $orderInProgress, 'id' => $id, 'warehouses' => $warehouses]);
+        $view->with(['orderInProgress' => $orderInProgress, 'id' => $id]);
       });
     }
 }

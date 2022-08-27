@@ -31,16 +31,7 @@
                         </div>
                   </li>
                     <li>
-                        <a class="uk-text-bold" href="#">Stock</a>
-                        <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li><a href="{{route('stockList')}}">Stock general</a></li>
-                                <li class="uk-nav-divider"></li>
-                                @foreach ($warehouses as $warehouse)
-                                    <li><a href="{{route('warehouseStock', $warehouse->slug)}}">{{$warehouse->name}}</a></li></li>
-                                @endforeach
-                            </ul>
-                        </div>
+                        <a class="uk-text-bold" href="{{route('stockList')}}">Stock</a>
                     </li>
                     <li>
                         <a class="uk-text-bold" href="{{route('warehouses')}}">Depósitos</a>
@@ -135,16 +126,7 @@
           </ul>
         <li><a onclick="UIkit.offcanvas('#navbarMobile').hide();" href="/wcOrders" uk-scroll>Pedidos</a></li>
         <li class="uk-parent">
-          <a href="#">Stock</a>
-          @if (Auth::user()->role == 'admin')
-              <ul class="uk-nav-sub">
-                  <li><a href="{{route('stockList')}}">Stock general</a></li>
-                  <li class="uk-nav-divider"></li>
-                  @foreach ($warehouses as $warehouse)
-                      <li><a href="{{route('warehouseStock', $warehouse->slug)}}">{{$warehouse->name}}</a></li></li>
-                  @endforeach
-              </ul>
-          @endif
+          <a href="{{route('stockList')}}">Stock</a>
         </li>
         <li>
           <a href="{{route('warehouses')}}">Depósitos</a>
