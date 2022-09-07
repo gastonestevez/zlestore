@@ -105,10 +105,22 @@ ZLE - Control de Stock
               <td>{{ $product->sku }}</td>
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>
+              @php
+
+              @endphp
               @foreach ($storages as $storage)
+                @php
+                  $obj = new \stdClass;
+                  $obj->data = $storage;
+                  $obj->stock = $storage->getProductStock($storage->id, $product->id);
+                  $newStorages[] = $obj;
+                @endphp
+              @endforeach
+              
+              @foreach ($newStorages as $storage)
                   <td class="warehouse">
                     <input 
-                      warehouse-id="{{$storage->id}}" 
+                      warehouse-id="{{$storage->data->id}}" 
                       product-id="{{$product->id}}" 
                       class="uk-input uk-form-width-small stockCount"
                       @auth
@@ -119,30 +131,31 @@ ZLE - Control de Stock
                       type="number" 
                       min="0" 
                       max="9999" 
-                      value="{{$storage->getProductStock($storage->id, $product->id)}}"
+                      value="{{$storage->stock}}"
                     >
                   </td>
               @endforeach            
               <td class="transfer">
                 @php
-                    $storages = $storages->sortByDesc(function($storage) use ($product) {
-                      return $storage->getProductStock($storage->id, $product->id);
-                    });
+                     usort($newStorages, function($a, $b)
+                      {
+                          return strcmp($b->stock, $a->stock);
+                      });
                     $storageSelected = false;
                     $shopSelected = false;
                 @endphp
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
-                  @foreach ($storages as $storage)
+                  @foreach ($newStorages as $storage)
                     <option
-                      value="{{$storage->id}}"
-                      @if(!$storageSelected && $storage->type == 'storage')
+                      value="{{$storage->data->id}}"
+                      @if(!$storageSelected && $storage->data->type == 'storage')
                       @php
                         $storageSelected = true;
                       @endphp
                         selected
                       @endif
-                    >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>                    
+                    >{{$storage->data->name}} ({{$storage->stock}})</option>                    
                   @endforeach
 
                 </select>
@@ -155,22 +168,22 @@ ZLE - Control de Stock
                       return $storage->getProductStock($storage->id, $product->id);
                     });
                   @endphp --}}
-                  @foreach ($storages as $storage)
+                  @foreach ($newStorages as $storage)
                     <option 
-                      value="{{$storage->id}}"
-                      @if (!$shopSelected && $storage->type == 'shop')
+                      value="{{$storage->data->id}}"
+                      @if (!$shopSelected && $storage->data->type == 'shop')
                         @php
                           $shopSelected = true;
                         @endphp
                         selected
                       @endif
-                    >{{$storage->name}} ({{$storage->getProductStock($storage->id, $product->id)}})</option>
+                    >{{$storage->data->name}} ({{$storage->stock}})</option>
                   @endforeach     
                 </select>
               </td>
               <td class="transfer">
                 <input 
-                  warehouse-id="{{$storage->id}}" 
+                  warehouse-id="{{$storage->data->id}}" 
                   product-id="{{$product->id}}" 
                   class="uk-input uk-form-width-small transferCount" 
                   type="number" 
