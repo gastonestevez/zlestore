@@ -89,9 +89,9 @@ ZLE - Control de Stock
             <th>SKU</th>
             <th>Nombre</th>
             <th>Precio</th>
-            @foreach ($storages as $storage)
+            {{-- @foreach ($storages as $storage)
             <th class="uk-text-nowrap warehouse">{{$storage->name}}</th>
-            @endforeach
+            @endforeach --}}
             <th class="transfer">Origen</th>
             <th class="transfer">Destino</th>
             <th class="transfer">Cantidad</th>
@@ -117,7 +117,7 @@ ZLE - Control de Stock
                 @endphp
               @endforeach
               
-              @foreach ($newStorages as $storage)
+              {{-- @foreach ($newStorages as $storage)
                   <td class="warehouse">
                     <input 
                       warehouse-id="{{$storage->data->id}}" 
@@ -134,7 +134,7 @@ ZLE - Control de Stock
                       value="{{$storage->stock}}"
                     >
                   </td>
-              @endforeach            
+              @endforeach             --}}
               <td class="transfer">
                 @php
                      usort($newStorages, function($a, $b)
