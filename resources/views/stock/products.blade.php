@@ -26,7 +26,8 @@ ZLE - Control de Stock
     margin-left: 0;
   }
 </style>
-
+@php   
+@endphp
 
 <div class="uk-container primer-div">
   <h1 class="uk-heading-divider">Todos los productos</h1>
@@ -79,7 +80,6 @@ ZLE - Control de Stock
     </div>
 
   @if (count($products) > 0)
-
   <div id="tablediv" class="">
 
     <table id="table" class="uk-table uk-table-striped uk-table-hover">
@@ -106,13 +106,13 @@ ZLE - Control de Stock
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>
               @php
-
+                $newStorages = [];
               @endphp
               @foreach ($storages as $storage)
                 @php
                   $obj = new \stdClass;
                   $obj->data = $storage;
-                  $obj->stock = $storage->getProductStock($storage->id, $product->id);
+                  // $obj->stock = $storage->getProductStock($storage->id, $product->id);
                   $newStorages[] = $obj;
                 @endphp
               @endforeach
@@ -131,16 +131,16 @@ ZLE - Control de Stock
                       type="number" 
                       min="0" 
                       max="9999" 
-                      value="{{$storage->stock}}"
+                      value="{{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}}"
                     >
                   </td>
               @endforeach            
               <td class="transfer">
                 @php
-                     usort($newStorages, function($a, $b)
-                      {
-                          return strcmp($b->stock, $a->stock);
-                      });
+                    //  usort($newStorages, function($a, $b)
+                    //   {
+                    //       return strcmp($b->stock, $a->stock);
+                    //   });
                     $storageSelected = false;
                     $shopSelected = false;
                 @endphp
@@ -155,7 +155,7 @@ ZLE - Control de Stock
                       @endphp
                         selected
                       @endif
-                    >{{$storage->data->name}} ({{$storage->stock}})</option>                    
+                    >{{$storage->data->name}} ({{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}})</option>                    
                   @endforeach
 
                 </select>
@@ -177,7 +177,7 @@ ZLE - Control de Stock
                         @endphp
                         selected
                       @endif
-                    >{{$storage->data->name}} ({{$storage->stock}})</option>
+                    >{{$storage->data->name}} ({{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}})</option>
                   @endforeach     
                 </select>
               </td>

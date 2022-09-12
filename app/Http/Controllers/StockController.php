@@ -36,10 +36,34 @@ class StockController extends Controller
         } else {
             $products = getProducts($searchParams, true);
         }
-        
+
+        $stocks = Stocks::all();
+
+        foreach ($products as $product) {
+            //filter de warehouse
+            $stock = $stocks->where('product_id', $product->id)->sortByDesc('quantity')->pluck('quantity', 'warehouse_id')->toArray();
+            $product->stock = $stock;
+            // array_filter($stocks, function ($stock) {
+            //     return $stock->product_id === $product->id;
+            // });
+        }
+
+        /*
+            product = {
+                id: '123124',
+                name: 'cajon peruano',
+                warehouses: [
+                    {
+                        id: 3,
+                        name: 'storage1',
+                        quantity: '1335'
+                    }, ...
+                ]
+            }
+
+        */
         $storages = Warehouse::all();
         $vac = compact('products', 'request', 'storages');
-
         return view('stock.products', $vac);
     }
 
