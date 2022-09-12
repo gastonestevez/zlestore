@@ -106,7 +106,7 @@ ZLE - Control de Stock
               <td><a href="{{route('productStock', $product->id)}}"> {{ $product->name }} </a></td> 
               <td>${{ number_format($product->price, 0,',','.') }}</td>
               @php
-
+                  $newStorages = [];
               @endphp
               @foreach ($storages as $storage)
                 @php
