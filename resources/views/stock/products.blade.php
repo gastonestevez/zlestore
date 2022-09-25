@@ -145,10 +145,10 @@ ZLE - Control de Stock
                     $shopSelected = false;
                 @endphp
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
-                  <option value="0" selected value="">Elegir depósito</option>
                   @foreach ($newStorages as $storage)
                     <option
                       value="{{$storage->data->id}}"
+                      data-stock="{{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}}"
                       @if(!$storageSelected && $storage->data->type == 'storage')
                       @php
                         $storageSelected = true;
@@ -221,7 +221,28 @@ ZLE - Control de Stock
   $(".transfer").show();
   $(".warehouse").hide();
   $(".alterStock").html("Transferir");
+  
+  $(document).ready(function () {
+    const uware = document.querySelectorAll('.warehouseFrom');
+    uware.forEach(u => {
+      let optionsArray = []
+      for (let index = 0; index < u.options.length; index++) {
+          optionsArray.push(u.options[index]);
+      }
+      optionsArray = optionsArray.sort((a, b) => {
+        return parseInt(b.getAttribute('data-stock')) - parseInt(a.getAttribute('data-stock'))
+      })
+      for (let index = 0; index < u.options.length; index++) {
+        u.options[index] = optionsArray[index]
+      }
 
+      u.options[0].selected = true
+      
+    })
+    
+    return;
+  });
+  
   const getInitialValues = () => {
     const from = document.querySelectorAll('.warehouseFrom');
     const to = document.querySelectorAll(".warehouseTo");
