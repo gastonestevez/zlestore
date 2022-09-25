@@ -137,10 +137,6 @@ ZLE - Control de Stock
               @endforeach            
               <td class="transfer">
                 @php
-                    //  usort($newStorages, function($a, $b)
-                    //   {
-                    //       return strcmp($b->stock, $a->stock);
-                    //   });
                     $storageSelected = false;
                     $shopSelected = false;
                 @endphp
@@ -239,6 +235,17 @@ ZLE - Control de Stock
       u.options[0].selected = true
       
     })
+    const checkbox = $("#transferCheck")
+    checkbox.prop("checked", localStorage.getItem('checked') === 'true')
+    if($("#transferCheck").is(":checked")){
+      $(".transfer").show();
+      $(".warehouse").hide();
+      $(".alterStock").html("Transferir");
+    }else{
+      $(".transfer").hide();
+      $(".warehouse").show();
+      $(".alterStock").html("Guardar stock");
+    }
     
     return;
   });
@@ -265,15 +272,8 @@ ZLE - Control de Stock
   let transferList = getInitialValues();
 
   $("#transferCheck").on("click", function(){
-    if($(this).is(":checked")){
-      $(".transfer").show();
-      $(".warehouse").hide();
-      $(".alterStock").html("Transferir");
-    }else{
-      $(".transfer").hide();
-      $(".warehouse").show();
-      $(".alterStock").html("Guardar stock");
-    }
+    localStorage.setItem('checked', localStorage.getItem('checked') === 'true' ? 'false' : 'true')
+    location.reload()
   });
 
   $(".stockCount").on("change", function(e) {
@@ -328,7 +328,6 @@ ZLE - Control de Stock
         stock: 0
       })
     }
-    console.log(transferList)
   });
 
   $(".warehouseTo").on("change", function(e) {
@@ -349,7 +348,6 @@ ZLE - Control de Stock
         stock: 0
       })
     }
-    console.log(transferList)
   });
 
   const transferStock = () => {
@@ -364,12 +362,10 @@ ZLE - Control de Stock
         transferList: transferList || []
       },
       success: function(data) {
-        console.log(data)
         resetLists();
         location.reload()
       },
       error: function(data) {
-        console.error(data)
         console.log(data.responseJSON.message)
         showMessage(data.responseJSON?.message, 'error')
       }
@@ -425,7 +421,6 @@ ZLE - Control de Stock
   let table = document.getElementById('table');
   let tablediv = document.getElementById('tablediv');
   let width = table.offsetWidth;
-  console.log(width);
   tablediv.style.width = width + 'px';
 
 </script>
