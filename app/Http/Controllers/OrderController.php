@@ -281,6 +281,7 @@ class OrderController extends Controller
         }
 
         $order->total = $total;
+        $order->subtotal = $total;
         $order->save();
 
         return back()->with('success', 'Producto removido');
@@ -342,7 +343,6 @@ class OrderController extends Controller
         $warehouse = Warehouse::find($request->shopId);
         // encuentro el id del warehouse
         $warehouseId = $warehouse->id;
-
         // itero todos los items de la orden y les resto el stock en el warehouse elegido
         foreach ($orderItems as $item) {
             $productId = $item->product_id;
