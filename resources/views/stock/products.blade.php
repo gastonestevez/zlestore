@@ -142,16 +142,18 @@ ZLE - Control de Stock
                 @endphp
                 <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
                   @foreach ($newStorages as $storage)
-                    <option
-                      value="{{$storage->data->id}}"
-                      data-stock="{{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}}"
-                      @if(!$storageSelected && $storage->data->type == 'storage')
-                      @php
-                        $storageSelected = true;
-                      @endphp
-                        selected
-                      @endif
-                    >{{$storage->data->name}} ({{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}})</option>                    
+                    @if($storage->data->type != 'shop')           
+                      <option
+                        value="{{$storage->data->id}}"
+                        data-stock="{{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}}"
+                        @if(!$storageSelected && $storage->data->type == 'storage')
+                        @php
+                          $storageSelected = true;
+                        @endphp
+                          selected
+                        @endif
+                      >{{$storage->data->name}} ({{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}})</option>                    
+                    @endif  
                   @endforeach
 
                 </select>
