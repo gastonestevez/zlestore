@@ -59,9 +59,9 @@ class WooCommerceController extends Controller
 
 
 
-     $productosLocos = DB::table('wpct_posts AS p')
-              ->join('wpct_postmeta AS pm', 'p.id', '=', 'pm.post_id')
-              ->join('wpct_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+     $productosLocos = DB::table('ewg62__posts AS p')
+              ->join('ewg62__postmeta AS pm', 'p.id', '=', 'pm.post_id')
+              ->join('ewg62__wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
               ->select('p.id', 'pml.sku', 'p.post_title', 'pml.max_price', 'pm.meta_value AS unidades por caja')       
               ->where('pm.meta_key',  '=', 'unidades_por_caja')            
               ->where('p.id', '=', '4957')
