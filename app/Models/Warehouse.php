@@ -16,10 +16,10 @@ class Warehouse extends Model
 
     public static function getProductsByWarehouse($warehouseId)
     {
-      $products = DB::table('ewg62__posts AS p')
-                            ->join('ewg62__wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+      $products = DB::table('ewg62_posts AS p')
+                            ->join('ewg62_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
                             ->join('stocks AS s', 'pml.product_id', '=', 's.product_id')
-                            ->join('ewg62__postmeta AS pm', 'p.id', '=', 'pm.post_id')
+                            ->join('ewg62_postmeta AS pm', 'p.id', '=', 'pm.post_id')
                             ->select('s.product_id AS id','p.post_title AS name', 'pml.sku', 'pml.max_price AS price', 's.quantity', 'pm.meta_value AS units_in_box')
                             ->where('warehouse_id', "=", $warehouseId)
                             ->where('quantity', '>', 0)

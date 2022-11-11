@@ -14,9 +14,9 @@ unidades_por_caja: number
 */
 
   function getProducts($searchParams = [], $hasPagination = false) {
-    $productos = DB::table('ewg62__posts AS p')
-              ->join('ewg62__postmeta AS pm', 'p.id', '=', 'pm.post_id')
-              ->join('ewg62__wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+    $productos = DB::table('ewg62_posts AS p')
+              ->join('ewg62_postmeta AS pm', 'p.id', '=', 'pm.post_id')
+              ->join('ewg62_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
               ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
               ->where('pm.meta_key',  '=', 'unidades_por_caja')
               // ->orderBy('id', 'DESC');
@@ -36,9 +36,9 @@ unidades_por_caja: number
   }
 
   function getProduct($id) {
-    $producto = DB::table('ewg62__posts AS p')
-              ->join('ewg62__postmeta AS pm', 'p.id', '=', 'pm.post_id')
-              ->join('ewg62__wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
+    $producto = DB::table('ewg62_posts AS p')
+              ->join('ewg62_postmeta AS pm', 'p.id', '=', 'pm.post_id')
+              ->join('ewg62_wc_product_meta_lookup AS pml', 'p.id', '=', 'pml.product_id')
               ->select('p.id', 'pml.sku', 'p.post_title AS name', 'pml.max_price AS price', 'pm.meta_value AS units_in_box')       
               ->where('pm.meta_key',  '=', 'unidades_por_caja')              
               ->orderBy('post_title', 'ASC')  
@@ -49,10 +49,10 @@ unidades_por_caja: number
   }
 
   function getParentProductsId() {
-    $productosPadre = DB::table('ewg62__posts AS p')
-                ->join('ewg62__term_relationships AS r', 'p.id', '=', 'r.object_id')
-                ->join('ewg62__term_taxonomy AS tt', 'r.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
-                ->join('ewg62__terms AS t', 't.term_id', '=', 'tt.term_id')
+    $productosPadre = DB::table('ewg62_posts AS p')
+                ->join('ewg62_term_relationships AS r', 'p.id', '=', 'r.object_id')
+                ->join('ewg62_term_taxonomy AS tt', 'r.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
+                ->join('ewg62_terms AS t', 't.term_id', '=', 'tt.term_id')
                 ->select('p.id')
                 ->where('tt.taxonomy', '=', 'product_type')
                 ->where('t.name', '=', 'variable')                 
@@ -66,7 +66,7 @@ unidades_por_caja: number
   function getProductTaxonomies($productId) {
 
     // Detecto si el producto que me pasan es padre, simple o variacion
-    $productParentId = DB::table('ewg62__posts AS p')
+    $productParentId = DB::table('ewg62_posts AS p')
                 ->where('p.id', '=', $productId)
                 ->select('p.post_parent')
                 ->pluck('post_parent')
@@ -77,9 +77,9 @@ unidades_por_caja: number
       $productId = $productParentId;
     }
 
-    $taxonomies = DB::table('ewg62__term_relationships AS tr')
-                ->join('ewg62__term_taxonomy AS tt', 'tt.term_taxonomy_id', '=', 'tr.term_taxonomy_id')
-                ->join('ewg62__terms AS t', 't.term_id', '=', 'tr.term_taxonomy_id')
+    $taxonomies = DB::table('ewg62_term_relationships AS tr')
+                ->join('ewg62_term_taxonomy AS tt', 'tt.term_taxonomy_id', '=', 'tr.term_taxonomy_id')
+                ->join('ewg62_terms AS t', 't.term_id', '=', 'tr.term_taxonomy_id')
                 ->select('t.name')
                 ->where('tr.object_id', '=', $productId) 
                 ->where('t.name', '!=', 'Variable')             
