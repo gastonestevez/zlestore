@@ -230,7 +230,7 @@ ZLE - Control de Stock
   $(".alterStock").html("Transferir");
   let stockList = [];
   let transferList = [];
-  
+
   const getInitialValues = () => {
     const from = document.querySelectorAll('.warehouseFrom');
     const to = document.querySelectorAll(".warehouseTo");
@@ -315,7 +315,7 @@ ZLE - Control de Stock
     const warehouseFrom = document.querySelectorAll(`[from-product-id="${productId}"]`)[0].value
     const warehouseTo = document.querySelectorAll(`[to-product-id="${productId}"]`)[0].value
     const found = transferList.find(item => item.productId == productId)
-    console.log({warehouseFrom, warehouseTo})
+
     if(found) {
       found.stock = stock
       found.warehouseFrom = warehouseFrom
@@ -328,7 +328,7 @@ ZLE - Control de Stock
         warehouseTo,
       })
     }
-    console.log(transferList)
+
   });
 
   $(".warehouseFrom").on("change", function(e) {
