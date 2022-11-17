@@ -385,7 +385,8 @@ ZLE - Control de Stock
       },
       success: function(data) {
         resetLists();
-        location.reload()
+        showMessage('¡Transferencia exitosa!', 'success')
+        setTimeout(() => { location.reload() }, 3000);
       },
       error: function(data) {
         console.log(data.responseJSON.message)
