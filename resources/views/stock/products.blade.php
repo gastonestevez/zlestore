@@ -121,7 +121,7 @@ ZLE - Control de Stock
                   <td class="warehouse">
                     <input 
                       warehouse-id="{{$storage->data->id}}" 
-                      product-id="{{$product->id}}" 
+                      product-id="{{$product->id}}"
                       class="uk-input uk-form-width-small stockCount"
                       @auth
                         @if(auth()->user()->role != 'admin')
@@ -139,8 +139,10 @@ ZLE - Control de Stock
                 @php
                     $storageSelected = false;
                     $shopSelected = false;
+                    $warehouseFrom = $newStorages[0]->data->id;
+
                 @endphp
-                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
+                <select from-product-id="{{$product->id}}" product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseFrom" style="width:150px;" name="storage" required>
                   @foreach ($newStorages as $storage)
                     @if($storage->data->type != 'shop')           
                       <option
@@ -148,6 +150,7 @@ ZLE - Control de Stock
                         data-stock="{{array_key_exists($storage->data->id, $product->stock) ? $product->stock[$storage->data->id] : 0}}"
                         @if(!$storageSelected && $storage->data->type == 'storage')
                         @php
+
                           $storageSelected = true;
                         @endphp
                           selected
@@ -159,7 +162,10 @@ ZLE - Control de Stock
                 </select>
               </td>
               <td class="transfer">
-                <select product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
+                @php
+                    $warehouseTo = $newStorages[0]->data->id;
+                @endphp
+                <select to-product-id="{{$product->id}}" product-id="{{$product->id}}" type="text" class="uk-select warehouseInput warehouseTo" style="width:150px;" name="storage" required>
                   <option value="0" selected value="">Elegir depósito</option>
                   {{-- @php
                     $storages = $storages->sortByDesc(function($storage) use ($product) {
@@ -171,6 +177,7 @@ ZLE - Control de Stock
                       value="{{$storage->data->id}}"
                       @if (!$shopSelected && $storage->data->type == 'shop')
                         @php
+                        $warehouseTo = $storage->data->id;
                           $shopSelected = true;
                         @endphp
                         selected
@@ -181,7 +188,9 @@ ZLE - Control de Stock
               </td>
               <td class="transfer">
                 <input 
-                  warehouse-id="{{$storage->data->id}}" 
+                  warehouse-from-id="{{$warehouseFrom}}"
+                  warehouse-to-id="{{$warehouseTo}}" 
+
                   product-id="{{$product->id}}" 
                   class="uk-input uk-form-width-small transferCount" 
                   type="number" 
@@ -219,7 +228,26 @@ ZLE - Control de Stock
   $(".transfer").show();
   $(".warehouse").hide();
   $(".alterStock").html("Transferir");
-  
+  let stockList = [];
+  let transferList = [];
+
+  const getInitialValues = () => {
+    const from = document.querySelectorAll('.warehouseFrom');
+    const to = document.querySelectorAll(".warehouseTo");
+    const transferCount = document.querySelectorAll(".transferCount");
+    // do an array of objects with from to transferCount
+    const initialValues = [];
+    for (let i = 0; i < from.length; i++) {
+      initialValues.push({
+        warehouseFrom: from[i].value,
+        warehouseTo: to[i].value,
+        stock: transferCount[i].value,
+        productId: from[i].getAttribute('product-id')
+      });
+    }
+    return initialValues
+    
+  }  
   $(document).ready(function () {
     const uware = document.querySelectorAll('.warehouseFrom');
     uware.forEach(u => {
@@ -237,6 +265,8 @@ ZLE - Control de Stock
       u.options[0].selected = true
       
     })
+    transferList = getInitialValues();
+    
     const checkbox = $("#transferCheck")
     checkbox.prop("checked", localStorage.getItem('checked') === 'true')
     if($("#transferCheck").is(":checked")){
@@ -252,26 +282,9 @@ ZLE - Control de Stock
     return;
   });
   
-  const getInitialValues = () => {
-    const from = document.querySelectorAll('.warehouseFrom');
-    const to = document.querySelectorAll(".warehouseTo");
-    const transferCount = document.querySelectorAll(".transferCount");
-    // do an array of objects with from to transferCount
-    const initialValues = [];
-    for (let i = 0; i < from.length; i++) {
-      initialValues.push({
-        warehouseFrom: from[i].value,
-        warehouseTo: to[i].value,
-        stock: transferCount[i].value,
-        productId: from[i].getAttribute('product-id')
-      });
-    }
-    return initialValues
-    
-  }
+  
 
-  let stockList = [];
-  let transferList = getInitialValues();
+ 
 
   $("#transferCheck").on("click", function(){
     localStorage.setItem('checked', localStorage.getItem('checked') === 'true' ? 'false' : 'true')
@@ -283,7 +296,6 @@ ZLE - Control de Stock
     const productId = e.currentTarget.attributes['product-id'].value
     const warehouseId = e.currentTarget.attributes['warehouse-id'].value
     const stock = e.currentTarget.value
-
     const found = stockList.find(item => item.productId == productId && item.warehouseId == warehouseId)
     if(found) {
       found.stock = stock
@@ -300,16 +312,23 @@ ZLE - Control de Stock
     $(".alterStock").prop("disabled", false);
     const productId = e.currentTarget.attributes['product-id'].value
     const stock = e.currentTarget.value
-
+    const warehouseFrom = document.querySelectorAll(`[from-product-id="${productId}"]`)[0].value
+    const warehouseTo = document.querySelectorAll(`[to-product-id="${productId}"]`)[0].value
     const found = transferList.find(item => item.productId == productId)
+
     if(found) {
       found.stock = stock
+      found.warehouseFrom = warehouseFrom
+      found.warehouseTo = warehouseTo
     } else {
       transferList.push({
         productId: productId,
-        stock: stock
+        stock: stock,
+        warehouseFrom,
+        warehouseTo,
       })
     }
+
   });
 
   $(".warehouseFrom").on("change", function(e) {
@@ -355,6 +374,7 @@ ZLE - Control de Stock
   const transferStock = () => {
     const route = `{{route('transferingUnits', 0)}}`
     const token = `{{csrf_token()}}`
+    console.log({transferList})
     $.ajax({
       url: route,
       type: "PUT",
@@ -365,7 +385,8 @@ ZLE - Control de Stock
       },
       success: function(data) {
         resetLists();
-        location.reload()
+        showMessage('¡Transferencia exitosa!', 'success')
+        setTimeout(() => { location.reload() }, 3000);
       },
       error: function(data) {
         console.log(data.responseJSON.message)
