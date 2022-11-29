@@ -57,7 +57,7 @@ ZLE - Movimientos de Stock
                 <tr>
                     <td>{{$movement->id}}</td>
                     <td class="text-nowrap">@if(isset($movement->created_at)) {{ Carbon\Carbon::parse($movement->created_at)->format('d-m-Y H:i')}} @endif</td>
-                    <td class="text-nowrap">{{getProduct($movement->product_id)->name}}</td>
+                    <td class="text-nowrap">{{isset(getProduct($movement->product_id)->name)?getProduct($movement->product_id)->name: 'Producto eliminado'}}</td>
                     <td>{{$movement->quantity}}</td>
                     <td>{{$movement->warehouseOrigin->name}}</td>
                     <td>{{$movement->warehouseDestiny->name}}</td>

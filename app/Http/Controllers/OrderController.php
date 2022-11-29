@@ -424,20 +424,20 @@ class OrderController extends Controller
         $origin = $request->get('origin');
         $destiny = $request->get('destiny');
 
-        $movements = Movement::orderBy('created_at', 'DESC');
+        $movements = Movement::orderBy('created_at', 'DESC')->with('warehouseOrigin', 'warehouseDestiny');
 
         if(!empty($origin)){
-            $movements = Movement::where('origin_warehouse_id', $request->origin);
+            $movements = Movement::where('origin_warehouse_id', $request->origin)->with('warehouseOrigin', 'warehouseDestiny');
         }
 
         if(!empty($destiny)){
-            $movements = Movement::where('destiny_warehouse_id', $request->destiny);
+            $movements = Movement::where('destiny_warehouse_id', $request->destiny)->with('warehouseOrigin', 'warehouseDestiny');
         }
 
         if(!empty($createdAt)){
             $from = $createdAt . ' 00:00:00';
             $to = $createdAt . ' 23:59:59';
-            $movements = $movements->whereBetween('created_at', array($from, $to));
+            $movements = $movements->whereBetween('created_at', array($from, $to))->with('warehouseOrigin', 'warehouseDestiny');
         }
 
         $movements = $movements->paginate(100);
