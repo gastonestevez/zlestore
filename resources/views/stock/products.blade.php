@@ -374,25 +374,29 @@ ZLE - Control de Stock
   const transferStock = () => {
     const route = `{{route('transferingUnits', 0)}}`
     const token = `{{csrf_token()}}`
-    console.log({transferList})
-    $.ajax({
-      url: route,
-      type: "PUT",
-      data: {
-        _token: token,
-        batch: true,
-        transferList: transferList || []
-      },
-      success: function(data) {
-        resetLists();
-        showMessage('¡Transferencia exitosa!', 'success')
-        setTimeout(() => { location.reload() }, 3000);
-      },
-      error: function(data) {
-        console.log(data.responseJSON.message)
-        showMessage(data.responseJSON?.message, 'error')
-      }
-    })
+    const filteredTransferList = transferList?.filter(item => parseInt(item.stock) > 0) || []
+    if(!filteredTransferList.length) {
+      showMessage('Debe agregar al menos una unidad a transferir.', 'error')
+    } else {
+      $.ajax({
+        url: route,
+        type: "PUT",
+        data: {
+          _token: token,
+          batch: true,
+          transferList: filteredTransferList
+        },
+        success: function(data) {
+          resetLists();
+          showMessage('¡Transferencia exitosa!', 'success')
+          setTimeout(() => { location.reload() }, 3000);
+        },
+        error: function(data) {
+          console.log(data.responseJSON.message)
+          showMessage(data.responseJSON?.message, 'error')
+        }
+      })
+    }
   }
 
   const resetLists = () => {
